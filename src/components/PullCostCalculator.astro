@@ -1,0 +1,151 @@
+---
+// Pull cost calculator: estimates primogems and real money needed to reach a
+// chosen constellation, with 50/50 win-loss math. Static default renders in
+// initial HTML for crawlers; inline script upgrades it.
+const targets = [
+  { c: "C0", note: "1 copy. Worst case ~90 pulls (hard pity), average ~75 pulls." },
+  { c: "C1", note: "2 copies. Worst case ~180 pulls, average ~150 pulls." },
+  { c: "C2", note: "3 copies. Worst case ~270 pulls, average ~225 pulls. The whale-friendly stopping point." },
+  { c: "C6", note: "7 copies (1 base + 6 constellations). Worst case ~630 pulls, average ~525 pulls." },
+];
+
+const pitySettings = {
+  avgPerCopy: 75,
+  worstPerCopy: 90,
+};
+
+const moneyChart = [
+  { tier: "¥6", crystals: "60", pulls: "≈ 0.38 pulls" },
+  { tier: "¥30", crystals: "330", pulls: "≈ 2.1 pulls" },
+  { tier: "¥98", crystals: "1090", pulls: "≈ 6.8 pulls" },
+  { tier: "¥198", crystals: "2240", pulls: "≈ 14 pulls" },
+  { tier: "¥328", crystals: "3880", pulls: "≈ 24 pulls" },
+  { tier: "¥648", crystals: "8080", pulls: "≈ 50.5 pulls" },
+];
+---
+
+<section id="cost" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      Lohen Pull Cost Calculator
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
+      How much does Lohen actually cost? Pick a target constellation to see the
+      worst-case and average primogem budget, and what that means in real money.
+      Assumes a fresh pity counter (no existing pity carry-over) and the standard
+      50/50 with one guarantee.
+    </p>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <h3 class="text-sm font-semibold text-slate-100">Pick your target</h3>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          {targets.map((t) => (
+            <button
+              type="button"
+              data-target={t.c}
+              class="cost-target rounded-xl border border-slate-700 p-4 text-left transition-colors hover:border-frost-500"
+            >
+              <p class="text-base font-bold text-frost-400">{t.c}</p>
+              <p class="mt-1 text-xs leading-relaxed text-slate-500">{t.note}</p>
+            </button>
+          ))}
+        </div>
+        <div class="mt-6 border-t border-slate-800/60 pt-4">
+          <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">
+            Genesis Crystal Packs (CN reference)
+          </p>
+          <div class="mt-3 divide-y divide-slate-800/60">
+            {moneyChart.map((m) => (
+              <div class="flex items-center justify-between py-1.5 text-xs">
+                <span class="text-slate-300">{m.tier}</span>
+                <span class="text-slate-500">{m.crystals} Crystals · {m.pulls}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="cost-output"
+        class="flex flex-col justify-center rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-6 sm:p-8"
+      >
+        <p class="text-sm font-medium uppercase tracking-[0.12em] text-slate-500">
+          Estimated cost for
+        </p>
+        <p id="cost-target" class="mt-1 text-3xl font-extrabold text-slate-50">C0</p>
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div class="rounded-xl border border-slate-800 p-4 text-center">
+            <p class="text-xs text-slate-500">Primogems (worst case)</p>
+            <p id="cost-primos-worst" class="mt-1 text-xl font-bold text-frost-400">14,400</p>
+          </div>
+          <div class="rounded-xl border border-slate-800 p-4 text-center">
+            <p class="text-xs text-slate-500">Primogems (average)</p>
+            <p id="cost-primos-avg" class="mt-1 text-xl font-bold text-frost-400">12,000</p>
+          </div>
+          <div class="rounded-xl border border-slate-800 p-4 text-center">
+            <p class="text-xs text-slate-500">USD (worst case)</p>
+            <p id="cost-usd-worst" class="mt-1 text-xl font-bold text-frost-400">$173</p>
+          </div>
+          <div class="rounded-xl border border-slate-800 p-4 text-center">
+            <p class="text-xs text-slate-500">USD (average)</p>
+            <p id="cost-usd-avg" class="mt-1 text-xl font-bold text-frost-400">$144</p>
+          </div>
+        </div>
+        <p id="cost-note" class="mt-5 text-xs leading-relaxed text-slate-500">
+          C0 assumes the worst case of 90 pulls (hard pity). The average is 75 pulls.
+          Prices estimate Genesis Crystal pack value at $1.92 per pull.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ targets, pitySettings }}>
+  const avgPerCopy = pitySettings.avgPerCopy;
+  const worstPerCopy = pitySettings.worstPerCopy;
+  const usdPerPull = 1.92;
+
+  const buttons = document.querySelectorAll(".cost-target");
+
+  function setActive(c) {
+    buttons.forEach((b) => {
+      const on = b.dataset.target === c;
+      b.classList.toggle("border-frost-500", on);
+      b.classList.toggle("bg-frost-950", on);
+      b.classList.toggle("text-frost-300", on);
+    });
+  }
+
+  function render(c) {
+    const t = targets.find((x) => x.c === c) || targets[0];
+    const copies = { C0: 1, C1: 2, C2: 3, C6: 7 }[c] || 1;
+    const worstPulls = worstPerCopy * copies;
+    const avgPulls = Math.round(avgPerCopy * copies);
+    const worstPrimos = worstPulls * 160;
+    const avgPrimos = avgPulls * 160;
+    document.getElementById("cost-target").textContent = c;
+    document.getElementById("cost-primos-worst").textContent =
+      worstPrimos.toLocaleString();
+    document.getElementById("cost-primos-avg").textContent =
+      avgPrimos.toLocaleString();
+    document.getElementById("cost-usd-worst").textContent =
+      "$" + Math.round(worstPulls * usdPerPull);
+    document.getElementById("cost-usd-avg").textContent =
+      "$" + Math.round(avgPulls * usdPerPull);
+    document.getElementById("cost-note").textContent =
+      c + " = " + copies + " character drop" + (copies > 1 ? "s" : "") +
+      " (1 base + " + (copies - 1) + " constellation" + (copies > 2 ? "s" : "") + ")" +
+      ". Worst case " + worstPulls + " pulls (hard pity), average " + avgPulls +
+      " pulls. USD estimate at ~$" + usdPerPull.toFixed(2) + " per pull.";
+  }
+
+  buttons.forEach((b) =>
+    b.addEventListener("click", () => {
+      setActive(b.dataset.target);
+      render(b.dataset.target);
+    })
+  );
+
+  setActive("C0");
+</script>

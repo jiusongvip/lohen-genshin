@@ -1,0 +1,2 @@
+# Canonical sitemap is sitemap-index.xml; legacy path redirects to it
+/sitemap.xml /sitemap-index.xml 301

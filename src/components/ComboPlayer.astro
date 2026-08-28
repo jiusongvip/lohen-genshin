@@ -1,0 +1,141 @@
+---
+// Hexerei combo player: a step-by-step visual playback of the optimal rotation.
+// Static sequence renders in initial HTML (SEO-safe); inline script animates it.
+const steps = [
+  { label: "Skill", name: "Enter Masterstroke", dmg: "180%", joy: "+100", note: "Convert full Will to Win into 100 Joy.", icon: "◆" },
+  { label: "NA1", name: "Hexerei Strike 1", dmg: "100%", joy: "-8", note: "First chain hit, triggers Melt on Pyro aura.", icon: "➊" },
+  { label: "NA2", name: "Hexerei Strike 2", dmg: "108%", joy: "-8", note: "Second chain hit, damage scales up.", icon: "➋" },
+  { label: "NA3", name: "Hexerei Strike 3", dmg: "116%", joy: "-8", note: "Third chain hit, forward arc peaks.", icon: "➌" },
+  { label: "NA4", name: "Hexerei Strike 4", dmg: "124%", joy: "-8", note: "Chain ender, highest chain multiplier.", icon: "➍" },
+  { label: "Skill", name: "Enhanced Skill", dmg: "320%", joy: "-20", note: "Highest single-hit multiplier, mid-chain.", icon: "★" },
+  { label: "NA1", name: "Second Chain (if Joy allows)", dmg: "100%", joy: "-8", note: "Spend leftover Joy on another full or partial chain.", icon: "➊" },
+  { label: "Burst", name: "Coup de Grace", dmg: "580%", joy: "0", note: "Finisher. Costs no Joy, closes the window.", icon: "✦" },
+];
+const initialStep = 1;
+---
+
+<section id="combo" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      Hexerei Combo Player
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
+      Click through the optimal Lohen rotation, one step at a time. Each step shows
+      the action, its damage multiplier, and its Joy cost. The loop: enter
+      Masterstroke, fire the Hexerei chain, spend Joy on the enhanced Skill, then
+      close with the Burst.
+    </p>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <div class="space-y-3">
+        {steps.map((s, i) => (
+          <button
+            type="button"
+            data-step={i + 1}
+            class="combo-step group flex w-full items-start gap-4 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 text-left transition-colors hover:border-frost-500"
+          >
+            <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-frost-950 text-sm font-bold text-frost-400" aria-hidden="true">
+              {s.icon}
+            </span>
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm font-bold text-slate-100">{s.name}</span>
+                <span class="rounded-full border border-frost-700/50 px-2 py-0.5 text-xs font-medium text-frost-400">
+                  Step {i + 1}
+                </span>
+              </div>
+              <p class="mt-1 text-xs leading-relaxed text-slate-400">{s.note}</p>
+            </div>
+            <div class="shrink-0 text-right">
+              <p class="text-base font-bold text-frost-400">{s.dmg}</p>
+              <p class="mt-0.5 text-xs font-medium text-slate-500">Joy {s.joy}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div
+        id="combo-output"
+        class="flex flex-col justify-center rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-6 sm:p-8"
+      >
+        <p class="text-sm font-medium uppercase tracking-[0.12em] text-slate-500">
+          Current action
+        </p>
+        <p id="combo-label" class="mt-2 text-3xl font-extrabold tracking-tight text-slate-50">
+          {steps[initialStep - 1].name}
+        </p>
+        <p id="combo-note" class="mt-3 text-sm leading-relaxed text-slate-400">
+          {steps[initialStep - 1].note}
+        </p>
+        <div class="mt-6 flex items-center justify-between rounded-xl border border-slate-800 p-4">
+          <div>
+            <p class="text-xs text-slate-500">Damage</p>
+            <p id="combo-dmg" class="mt-1 text-2xl font-bold text-frost-400">
+              {steps[initialStep - 1].dmg}
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-slate-500">Joy cost</p>
+            <p id="combo-joy" class="mt-1 text-2xl font-bold text-slate-100">
+              {steps[initialStep - 1].joy}
+            </p>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center gap-3">
+          <button
+            type="button"
+            id="combo-prev"
+            class="rounded-full border border-slate-700 px-5 py-2 text-sm font-semibold text-slate-300 transition-colors hover:border-frost-500 hover:text-frost-400"
+          >
+            ← Previous
+          </button>
+          <button
+            type="button"
+            id="combo-next"
+            class="rounded-full bg-frost-500 px-6 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-frost-400"
+          >
+            Next →
+          </button>
+        </div>
+        <p class="mt-5 text-xs leading-relaxed text-slate-500">
+          Joy budget across the loop: +100 on entry, −32 for a four-hit chain, −20 for
+          the enhanced Skill, and a second partial chain if 48+ Joy remains. The Burst
+          costs nothing and should always close the window.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ steps, initialStep }}>
+  let current = initialStep;
+  const labelEl = document.getElementById("combo-label");
+  const noteEl = document.getElementById("combo-note");
+  const dmgEl = document.getElementById("combo-dmg");
+  const joyEl = document.getElementById("combo-joy");
+  const stepBtns = document.querySelectorAll(".combo-step");
+  const prevBtn = document.getElementById("combo-prev");
+  const nextBtn = document.getElementById("combo-next");
+
+  function render(i) {
+    current = Math.max(1, Math.min(i, steps.length));
+    const s = steps[current - 1];
+    labelEl.textContent = s.name;
+    noteEl.textContent = s.note;
+    dmgEl.textContent = s.dmg;
+    joyEl.textContent = s.joy;
+    stepBtns.forEach((b, idx) => {
+      const on = idx + 1 === current;
+      b.classList.toggle("border-frost-500", on);
+      b.classList.toggle("bg-frost-950", on);
+    });
+  }
+
+  stepBtns.forEach((b) =>
+    b.addEventListener("click", () => render(Number(b.dataset.step)))
+  );
+  prevBtn.addEventListener("click", () => render(current - 1));
+  nextBtn.addEventListener("click", () => render(current + 1));
+
+  render(initialStep);
+</script>

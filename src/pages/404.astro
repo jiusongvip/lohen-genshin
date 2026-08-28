@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const title = "Page Not Found - Lohen Genshin Guide";
+const description = "The page you are looking for does not exist.";
+const canonical = "https://www.lohen-genshin.com/404";
+const noindex = true;
+---
+
+<Layout title={title} description={description} canonical={canonical} noindex={noindex}>
+  <main class="mx-auto flex min-h-[60dvh] max-w-6xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6">
+    <p class="text-sm font-medium uppercase tracking-[0.12em] text-frost-400">404</p>
+    <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl">
+      Page not found
+    </h1>
+    <p class="mt-4 max-w-md text-base leading-relaxed text-slate-400">
+      The page you are looking for does not exist. Head back to the Lohen guide home.
+    </p>
+    <a
+      href="/"
+      class="mt-8 inline-flex items-center rounded-full bg-frost-500 px-6 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-frost-400"
+    >
+      Back to guide
+    </a>
+  </main>
+</Layout>

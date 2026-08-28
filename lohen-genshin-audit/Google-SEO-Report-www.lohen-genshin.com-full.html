@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 22mm 18mm 25mm 18mm;
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-size: 9pt;
+      color: #6b7280;
+      font-family: 'DejaVu Serif', 'Times New Roman', Georgia, serif;
+    }
+    @bottom-left {
+      content: "Confidential";
+      font-size: 7pt;
+      color: #d6d3cc;
+      font-family: 'DejaVu Serif', 'Times New Roman', Georgia, serif;
+    }
+    @bottom-right {
+      content: "www.lohen-genshin.com Google SEO Report";
+      font-size: 8pt;
+      color: #cbd5e1;
+      font-family: 'DejaVu Serif', 'Times New Roman', Georgia, serif;
+    }
+  }
+
+  @page :first {
+    margin: 0;
+    @bottom-left { content: none; }
+    @bottom-center { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  @page toc {
+    @bottom-center {
+      content: counter(page);
+      font-size: 9pt;
+      color: #6b7280;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Times New Roman', 'DejaVu Serif', Georgia, serif;
+    font-size: 10pt;
+    line-height: 1.55;
+    color: #1e293b;
+    background: white;
+  }
+
+  /* ─── Title Page (Clean White) ─── */
+  .title-page {
+    page: first;
+    width: 210mm;
+    height: 297mm;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #1a1a2e;
+    position: relative;
+    padding: 50mm 30mm 40mm 30mm;
+    border-top: 6mm solid #1e3a5f;
+  }
+
+  .title-page .badge {
+    background: #f7f6f3;
+    border: 1px solid #d6d3cc;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 15mm;
+    color: #1e3a5f;
+  }
+
+  .title-page h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    margin-bottom: 5mm;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    color: #1a1a2e;
+  }
+
+  .title-page .subtitle {
+    font-size: 13pt;
+    color: #6b7280;
+    margin-bottom: 12mm;
+    font-weight: 300;
+  }
+
+  .title-page .url {
+    font-size: 12pt;
+    color: #1e3a5f;
+    margin-bottom: 15mm;
+    padding: 4mm 8mm;
+    border: 1px solid #d6d3cc;
+    border-radius: 6px;
+    background: #faf9f7;
+  }
+
+  .title-page .score-box {
+    background: #faf9f7;
+    border: 2px solid #d6d3cc;
+    border-radius: 12px;
+    padding: 6mm 12mm;
+    margin-bottom: 15mm;
+  }
+
+  .title-page .score-number {
+    font-size: 42pt;
+    font-weight: bold;
+    color: #1e3a5f;
+    line-height: 1;
+  }
+
+  .title-page .score-label {
+    font-size: 10pt;
+    color: #6b7280;
+    margin-top: 2mm;
+  }
+
+  .title-page .meta {
+    font-size: 9pt;
+    color: #6b7280;
+    margin-top: 8mm;
+    padding-top: 5mm;
+    border-top: 1px solid #d6d3cc;
+  }
+
+  .title-page .meta span {
+    margin: 0 8px;
+  }
+
+  /* ─── Table of Contents ─── */
+  .toc-page {
+    page: toc;
+    page-break-before: always;
+  }
+
+  .toc-page h2 {
+    font-size: 18pt;
+    color: #1e3a5f;
+    margin-bottom: 8mm;
+    padding-bottom: 3mm;
+    border-bottom: 2px solid #1e3a5f;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .toc-list li {
+    padding: 2mm 0;
+    border-bottom: 1px solid #f1f5f9;
+    overflow: hidden;
+  }
+
+  .toc-list li.toc-section {
+    font-weight: bold;
+    font-size: 11pt;
+    padding-top: 4mm;
+    color: #0f172a;
+  }
+
+  .toc-list li.toc-sub {
+    padding-left: 8mm;
+    font-size: 9.5pt;
+    color: #475569;
+  }
+
+  .toc-score {
+    display: inline-block;
+    float: right;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 9pt;
+    font-weight: bold;
+    color: white;
+  }
+
+  .score-good { background: #2d6a4f; }
+  .score-warn { background: #d4740e; }
+  .score-bad { background: #c53030; }
+
+  /* ─── Section Styles ─── */
+  div.section {
+    page-break-before: always;
+  }
+
+  .section-header {
+    background: #faf9f7;
+    border-left: 4px solid #1e3a5f;
+    padding: 5mm 6mm;
+    margin-bottom: 6mm;
+    page-break-after: avoid;
+  }
+
+  .section-header h2 {
+    font-size: 16pt;
+    color: #0f172a;
+    margin-bottom: 1mm;
+  }
+
+  .section-header .section-score {
+    font-size: 12pt;
+    font-weight: bold;
+    float: right;
+    margin-top: -6mm;
+  }
+
+  h3 {
+    font-size: 12pt;
+    color: #1e3a5f;
+    margin-top: 6mm;
+    margin-bottom: 3mm;
+    padding-bottom: 1.5mm;
+    border-bottom: 1px solid #d6d3cc;
+    page-break-after: avoid;
+  }
+
+  h4 {
+    font-size: 10.5pt;
+    color: #334155;
+    margin-top: 4mm;
+    margin-bottom: 2mm;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin-bottom: 3mm;
+    color: #334155;
+  }
+
+  .highlight {
+    background: #fef3c7;
+    border-left: 3px solid #d4740e;
+    padding: 3mm 4mm;
+    margin: 4mm 0;
+    font-size: 9.5pt;
+    /* allow page breaks to prevent white gaps */
+  }
+
+  .critical-box {
+    background: #fef2f2;
+    border-left: 3px solid #c53030;
+    padding: 3mm 4mm;
+    margin: 4mm 0;
+    font-size: 9.5pt;
+    /* allow page breaks to prevent white gaps */
+  }
+
+  .success-box {
+    background: #f0fdf4;
+    border-left: 3px solid #2d6a4f;
+    padding: 3mm 4mm;
+    margin: 4mm 0;
+    font-size: 9.5pt;
+    /* allow page breaks to prevent white gaps */
+  }
+
+  /* ─── Tables ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4mm 0 6mm 0;
+    font-size: 9pt;
+  }
+
+  thead th {
+    background: #f7f6f3;
+    color: #0f172a;
+    font-weight: bold;
+    padding: 3mm 4mm;
+    text-align: left;
+    border-bottom: 2px solid #d6d3cc;
+    font-size: 9pt;
+  }
+
+  tbody td {
+    padding: 2.5mm 3mm;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #fdfcfa;
+  }
+
+  .status-pass {
+    color: #2d6a4f;
+    font-weight: bold;
+  }
+
+  .status-fail {
+    color: #c53030;
+    font-weight: bold;
+  }
+
+  .status-warn {
+    color: #d4740e;
+    font-weight: bold;
+  }
+
+  .status-partial {
+    color: #4a5568;
+    font-weight: bold;
+  }
+
+  /* ─── Charts ─── */
+  .chart-container {
+    text-align: center;
+    margin: 4mm 0;
+  }
+
+  .chart-container img {
+    max-width: 100%;
+    max-height: 120mm;
+    height: auto;
+  }
+
+  .chart-caption {
+    font-size: 8.5pt;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 2mm;
+    text-align: center;
+  }
+
+  .chart-half {
+    display: inline-block;
+    width: 48%;
+    vertical-align: top;
+    text-align: center;
+    margin: 2mm 0;
+  }
+
+  .chart-half img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* ─── Two column layout ─── */
+  .two-col {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    margin: 3mm 0;
+  }
+
+  .two-col .col {
+    display: table-cell;
+    vertical-align: top;
+    padding: 0 2mm;
+  }
+
+  .four-col {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    margin: 3mm 0;
+  }
+
+  .four-col .col {
+    display: table-cell;
+    vertical-align: top;
+    padding: 0 1.5mm;
+  }
+
+  /* ─── Metric Cards ─── */
+  .metric-card {
+    background: #faf9f7;
+    border: 1px solid #d6d3cc;
+    border-radius: 6px;
+    padding: 2.5mm 3mm;
+    text-align: center;
+    margin: 2mm 0;
+  }
+
+  .metric-card .value {
+    font-size: 14pt;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  .metric-card .label {
+    font-size: 7.5pt;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 1mm;
+  }
+
+  /* ─── Action Plan ─── */
+  .action-item {
+    background: #faf9f7;
+    border-radius: 4px;
+    padding: 3mm 4mm;
+    margin: 3mm 0;
+    border-left: 3px solid #cbd5e1;
+    /* allow page breaks to prevent white gaps */
+  }
+
+  .action-item.critical {
+    border-left-color: #c53030;
+    background: #fdf2f2;
+  }
+
+  .action-item.high {
+    border-left-color: #d4740e;
+    background: #fdf8ef;
+  }
+
+  .action-item.medium {
+    border-left-color: #1e3a5f;
+    background: #f0f4f8;
+  }
+
+  .action-item.low {
+    border-left-color: #94a3b8;
+  }
+
+  .action-item h4 {
+    margin-top: 0;
+    margin-bottom: 1.5mm;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .action-item .effort {
+    font-size: 8.5pt;
+    color: #64748b;
+    float: right;
+  }
+
+  .priority-tag {
+    display: inline-block;
+    padding: 0.5mm 3mm;
+    border-radius: 3px;
+    font-size: 8pt;
+    font-weight: bold;
+    color: white;
+    margin-right: 2mm;
+    vertical-align: middle;
+  }
+
+  .priority-critical { background: #c53030; }
+  .priority-high { background: #d4740e; }
+  .priority-medium { background: #1e3a5f; }
+  .priority-low { background: #94a3b8; }
+
+  /* ─── Code blocks ─── */
+  .code-block {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 3mm 4mm;
+    border-radius: 4px;
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 8pt;
+    line-height: 1.6;
+    margin: 3mm 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    /* allow page breaks to prevent white gaps */
+  }
+
+  /* ─── Divider ─── */
+  .divider {
+    border: none;
+    border-top: 1px solid #d6d3cc;
+    margin: 5mm 0;
+  }
+
+  /* ─── Roadmap ─── */
+  .roadmap-phase {
+    background: #faf9f7;
+    border-radius: 6px;
+    padding: 4mm 5mm;
+    margin: 4mm 0;
+    border: 1px solid #d6d3cc;
+    /* allow page breaks to prevent white gaps */
+  }
+
+  .roadmap-phase h4 {
+    margin-top: 0;
+    border-bottom: none;
+    color: #1e3a5f;
+  }
+
+  .roadmap-phase ul {
+    margin: 2mm 0 0 5mm;
+    padding: 0;
+  }
+
+  .roadmap-phase li {
+    margin-bottom: 1.5mm;
+    font-size: 9.5pt;
+    color: #334155;
+  }
+
+  /* ─── Lists ─── */
+  ul {
+    margin-left: 5mm;
+    margin-bottom: 3mm;
+  }
+
+  li {
+    margin-bottom: 1.5mm;
+  }
+
+  /* ─── Data freshness ─── */
+  .data-freshness {
+    font-size: 8pt;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 4mm;
+    padding-top: 2mm;
+    border-top: 1px solid #d6d3cc;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ======================================================= TITLE PAGE === -->
+<div class="title-page">
+  <div class="badge">Full SEO Audit Report</div>
+  <h1>www.lohen-genshin.com</h1>
+  <div class="subtitle">Prepared by Claude SEO</div>
+  <div class="score-box">
+    <div class="score-number">75<span style="font-size: 20pt; color: #94a3b8;">/100</span></div>
+    <div class="score-label">SEO Health Score</div>
+  </div>
+  <div class="meta">
+    <span>August 28, 2026</span>
+    <span>Full Audit</span>
+  </div>
+</div>
+
+
+<!-- ======================================================= TABLE OF CONTENTS === -->
+<div class="toc-page">
+  <h2>Table of Contents</h2>
+  <ul class="toc-list">
+    <li class="toc-section"><span>1. Executive Summary</span></li>
+    <li class="toc-sub"><span>Key Metrics, Critical Issues &amp; Quick Wins</span></li>
+    <li class="toc-section"><span>2. Audit Categories</span></li>
+    <li class="toc-sub"><span>What Works</span></li>
+    <li class="toc-sub"><span>Findings by Severity</span></li>
+    <li class="toc-section"><span>3. Action Plan</span></li>
+    <li class="toc-sub"><span>Phased Roadmap</span></li>
+    <li class="toc-section"><span>4. Data Sources &amp; Methodology</span></li>
+  </ul>
+</div>
+
+
+<!-- ======================================================= 1. EXECUTIVE SUMMARY === -->
+<div class="section">
+  <div class="section-header">
+    <h2>1. Executive Summary</h2>
+  </div>
+
+  <p>This report presents a comprehensive SEO audit of <strong>www.lohen-genshin.com</strong> for a <strong>Content / Fan Wiki &amp; Strategy Guide (single-character niche site)</strong> site, generated on August 28, 2026. Findings combine technical, content, schema, performance, visual, and search-readiness evidence as available.</p>
+
+  <div class="two-col">
+    <div class="col">
+      <div class="metric-card">
+        <div class="value" style="color: #d4740e;">75/100</div>
+        <div class="label">SEO Health Score</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="critical-box">
+    <strong>Critical Issues Found:</strong>
+    <ol>
+      <li><strong>Info:</strong> CRITICAL: Fabricated Game+AggregateRating JSON-LD (9.4/10, 78 votes) violates Google review guidelines and risks a manual action</li>
+      <li><strong>Info:</strong> HIGH: Zero outbound citations/links — &#x27;Data Sources&#x27; claims are unverifiable, hurting E-E-A-T vs Fandom/Game8/HoYoverse</li>
+      <li><strong>Info:</strong> HIGH: 2 of 3 planned mechanism SVG visualizations missing (state machine, combo timeline) — core information-gain weapon is only 1/3 built</li>
+      <li><strong>Info:</strong> HIGH: Hero LCP image not optimized (no fetchpriority, no preload, 113 KB)</li>
+      <li><strong>Info:</strong> HIGH: 404 page emits all rich structured data (VideoGame/HowTo/Game/etc.)</li>
+    </ol>
+  </div>
+
+  <div class="success-box">
+    <strong>Quick Wins:</strong>
+    <ol>
+      <li>Delete the Game+AggregateRating JSON-LD block (10-min fix, removes penalty risk)</li>
+      <li>Add fetchpriority=&#x27;high&#x27; + preload to hero image and preload fonts</li>
+      <li>Strip JSON-LD from the 404 template</li>
+      <li>Remove the duplicate FAQ question</li>
+      <li>Add &lt;link rel=&#x27;indexnow&#x27;&gt; + IndexNow submission at deploy</li>
+    </ol>
+  </div>
+
+</div>
+
+<!-- ======================================================= 2. AUDIT CATEGORIES === -->
+<div class="section">
+  <div class="section-header">
+    <h2>2. Audit Categories</h2>
+  </div>
+
+  <h3>2.1 Technical SEO</h3>
+  <p><strong>Score:</strong> <span class="status-warn">75/100</span></p>
+  <h4>What Works</h4>
+  <ul>
+    <li>robots.txt correct and references sitemap</li>
+    <li>XML sitemap-index + sitemap-0 well-formed</li>
+    <li>404 page has noindex, follow and clear H1</li>
+    <li>Canonical tag present on homepage</li>
+    <li>Zero third-party scripts (self-hosted assets only)</li>
+  </ul>
+  <h4>Findings</h4>
+  <div class="action-item medium">
+    <h4>Canonical vs sitemap homepage URL mismatch <span class="status-warn">Medium</span></h4>
+    <p>Canonical is https://www.lohen-genshin.com (no slash) but sitemap lists https://www.lohen-genshin.com/ (with slash, trailingSlash:&#x27;always&#x27;). Two URL forms for the homepage create indexation ambiguity.</p>
+    <p><strong>Recommendation:</strong> Pick one form (no-slash per framework spec), keep sitemap and canonical identical, and add a 301 between the two forms.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>404 page emits full rich structured data <span class="status-warn">High</span></h4>
+    <p>404.html includes WebPage, VideoGame, Organization, BreadcrumbList, HowTo, and Game JSON-LD. Error pages should carry no structured data.</p>
+    <p><strong>Recommendation:</strong> Strip all JSON-LD from the 404 template; keep only noindex meta and the link back to /.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>IndexNow key file exists but not wired <span class="status-warn">Medium</span></h4>
+    <p>4e1f2c3d4a5b6789f0a1.txt exists at root but there is no &lt;link rel=&#x27;indexnow&#x27;&gt; and no submission pipeline to api.indexnow.org. The file alone does nothing.</p>
+    <p><strong>Recommendation:</strong> Wire IndexNow submission (Cloudflare Pages IndexNow integration or a worker) before/at launch.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>No security headers verifiable pre-deploy <span class="status-warn">Low</span></h4>
+    <p>No live origin to inspect. CSP, HSTS, X-Content-Type-Options, Referrer-Policy cannot be confirmed.</p>
+    <p><strong>Recommendation:</strong> Add security headers via Cloudflare Pages _headers at deployment; enable HSTS.</p>
+  </div>
+  <hr class="divider">
+  <h3>2.2 Content Quality</h3>
+  <p><strong>Score:</strong> <span class="status-pass">80/100</span></p>
+  <h4>What Works</h4>
+  <ul>
+    <li>17,347 words of deep, non-padded content (target 5-7k)</li>
+    <li>All 6 search intents covered on one page in user-journey order</li>
+    <li>16 H2 / 56 H3 hierarchy; 15 data tables; 60 FAQ questions</li>
+    <li>60 details blocks all contain real content in initial HTML (SEO-safe)</li>
+    <li>Strong E-E-A-T block: AR 60, 1,800+ hrs, tested C0/C1, dated, disclaimer</li>
+  </ul>
+  <h4>Findings</h4>
+  <div class="action-item medium">
+    <h4>No outbound citations — Data Sources unverifiable <span class="status-warn">High</span></h4>
+    <p>The About block claims &#x27;Data Sources: HoYoLAB, 6.6 beta&#x27; but the page has zero external links. No verifiable provenance for stats; weak vs established wikis.</p>
+    <p><strong>Recommendation:</strong> Add real outbound links to HoYoLAB official pages, miHoYo 6.6 notices, and community test threads in the Data Sources section.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Only 1 of 3 planned mechanism visualizations implemented <span class="status-warn">High</span></h4>
+    <p>The dual-resource flow SVG exists, but the Masterstroke state machine and Hexerei combo timeline SVGs are missing — the core information-gain differentiator is only 1/3 built (llms.txt overclaims them).</p>
+    <p><strong>Recommendation:</strong> Build the 2 missing SVG visualizations (state machine, combo timeline with per-hit damage distribution).</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Duplicate FAQ question <span class="status-warn">Low</span></h4>
+    <p>&#x27;What is Lohen&#x27;s role in the Knights of Favonius?&#x27; appears twice with near-identical answers (FAQ #17 and #38).</p>
+    <p><strong>Recommendation:</strong> Remove or rewrite the duplicate.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Anonymous author, no About page <span class="status-warn">Medium</span></h4>
+    <p>Author is an unnamed &#x27;active player&#x27;; schema author is &#x27;Editorial Team&#x27; (Organization). Inconsistent identity, no /about/ page for author entity.</p>
+    <p><strong>Recommendation:</strong> Create a stable author pseudonym + avatar and a short /about/ page; align schema author with the visible author.</p>
+  </div>
+  <hr class="divider">
+  <h3>2.3 On-Page SEO</h3>
+  <p><strong>Score:</strong> <span class="status-pass">88/100</span></p>
+  <h4>What Works</h4>
+  <ul>
+    <li>Title 63 chars, keyword-led: &#x27;Lohen Genshin Impact Guide: Best Build, Mechanics &amp; Teams (6.6)&#x27;</li>
+    <li>Meta description present and compelling (covers pull/build/mechanics/teams)</li>
+    <li>Exactly one H1; 16 H2 with strong keyword coverage</li>
+    <li>Full OG + Twitter card set with image</li>
+    <li>robots meta index, follow; descriptive alt text on hero</li>
+    <li>Internal anchor TOC (UX + internal-linking)</li>
+  </ul>
+  <h4>Findings</h4>
+  <div class="action-item medium">
+    <h4>LCP hero image missing fetchpriority/preload <span class="status-warn">Medium</span></h4>
+    <p>Hero img has no fetchpriority=&#x27;high&#x27;, no preload, no decoding=&#x27;async&#x27;; 113 KB in the LCP slot.</p>
+    <p><strong>Recommendation:</strong> Add fetchpriority=&#x27;high&#x27;, &lt;link rel=&#x27;preload&#x27; as=&#x27;image&#x27;&gt;, and decoding=&#x27;async&#x27; to hero.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>No subpage internal linking (single-page only) <span class="status-warn">Low</span></h4>
+    <p>The framework plans 5 subpages (build/mechanics/teams/materials/worth-pulling); none exist yet, so no internal link equity to distribute.</p>
+    <p><strong>Recommendation:</strong> Add the planned subpages to expand long-tail coverage and internal linking.</p>
+  </div>
+  <hr class="divider">
+  <h3>2.4 Schema / Structured Data</h3>
+  <p><strong>Score:</strong> <span class="status-warn">70/100</span></p>
+  <h4>What Works</h4>
+  <ul>
+    <li>7 schema types present (WebPage, VideoGame, Organization, BreadcrumbList, HowTo, Game, FAQPage)</li>
+    <li>WebPage has datePublished/dateModified/inLanguage/isPartOf/about</li>
+    <li>HowTo is valid with 5 steps and totalTime</li>
+    <li>FAQPage valid with 60 conclusion-first Q&amp;A</li>
+  </ul>
+  <h4>Findings</h4>
+  <div class="action-item medium">
+    <h4>Fabricated Game + AggregateRating structured data <span class="status-warn">Critical</span></h4>
+    <p>Game entity with aggregateRating 9.4/10 and ratingCount 78, plus a review authored by the site&#x27;s own editorial team. No user voting system exists on the page. This violates Google&#x27;s review-snippet guidelines (self-serving/fake reviews) and risks a manual action.</p>
+    <p><strong>Recommendation:</strong> Delete the Game+AggregateRating JSON-LD block immediately. If a rating is wanted, implement a real user voting widget and mark up only live aggregate data.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>404 page schema pollution <span class="status-warn">High</span></h4>
+    <p>404.html emits VideoGame/Organization/BreadcrumbList/HowTo/Game JSON-LD. Error pages must not carry rich entities.</p>
+    <p><strong>Recommendation:</strong> Strip all JSON-LD from the 404 template.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Duplicate FAQ question in FAQPage <span class="status-warn">Low</span></h4>
+    <p>Same Knights of Favonius question twice in mainEntity.</p>
+    <p><strong>Recommendation:</strong> Deduplicate the FAQ array.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Author identity inconsistent <span class="status-warn">Low</span></h4>
+    <p>Schema author Organization &#x27;Editorial Team&#x27; vs visible text &#x27;active player&#x27;.</p>
+    <p><strong>Recommendation:</strong> Align to a single named author entity.</p>
+  </div>
+  <hr class="divider">
+  <h3>2.5 Performance (CWV)</h3>
+  <p><strong>Score:</strong> <span class="status-warn">70/100</span></p>
+  <h4>What Works</h4>
+  <ul>
+    <li>Zero third-party scripts/fonts/ads — excellent for INP and privacy</li>
+    <li>Only ~9 KB inline JS; 28 KB single CSS</li>
+    <li>Hero has width/height (CLS-safe)</li>
+    <li>WebP hero image; no external requests</li>
+  </ul>
+  <h4>Findings</h4>
+  <div class="action-item medium">
+    <h4>LCP not optimized (hero image) <span class="status-warn">High</span></h4>
+    <p>No fetchpriority=&#x27;high&#x27;, no preload, no decoding=&#x27;async&#x27;; 113 KB WebP in the LCP slot. Lab estimate 1.5-2.5s mobile.</p>
+    <p><strong>Recommendation:</strong> Add fetchpriority=&#x27;high&#x27; + preload + decoding=&#x27;async&#x27;; compress hero toward ~70 KB.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Fonts not preloaded <span class="status-warn">Medium</span></h4>
+    <p>47 KB variable Outfit font has no preload hints; text may swap late.</p>
+    <p><strong>Recommendation:</strong> Preload the two woff2 files; confirm font-display: swap.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Single 280 KB HTML document <span class="status-warn">Medium</span></h4>
+    <p>17k words + 7 JSON-LD + 4 tool scripts inlined into one file; heavy parse on low-end mobile.</p>
+    <p><strong>Recommendation:</strong> Acceptable for now; defer tool scripts if mobile LCP suffers after launch.</p>
+  </div>
+  <hr class="divider">
+  <h3>2.6 AI Search Readiness</h3>
+  <p><strong>Score:</strong> <span class="status-warn">70/100</span></p>
+  <h4>What Works</h4>
+  <ul>
+    <li>llms.txt present, well-structured (summary, key sections, links)</li>
+    <li>60 conclusion-first FAQ answers — ideal for AI Overviews</li>
+    <li>Full content in initial HTML (no JS gating)</li>
+    <li>Structured data aids AI comprehension</li>
+  </ul>
+  <h4>Findings</h4>
+  <div class="action-item medium">
+    <h4>No external citations or authority signals <span class="status-warn">High</span></h4>
+    <p>Zero outbound links; no inbound links or brand searches pre-deploy. AI answer engines weight citations/authority; a DA-0 uncited page is unlikely to be cited.</p>
+    <p><strong>Recommendation:</strong> Add outbound citations (HoYoLAB/official) and execute the community backlink plan (Reddit/HoYoLAB/Discord) per 建站框架 6.5.6.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>No brand mention signals yet <span class="status-warn">Medium</span></h4>
+    <p>No live brand-search or mentions to signal to AI/search engines.</p>
+    <p><strong>Recommendation:</strong> Seed brand searches and mentions via community distribution post-launch.</p>
+  </div>
+  <hr class="divider">
+  <h3>2.7 Images</h3>
+  <p><strong>Score:</strong> <span class="status-warn">65/100</span></p>
+  <h4>What Works</h4>
+  <ul>
+    <li>Hero alt text descriptive and keyword-relevant</li>
+    <li>Width/height set (no CLS)</li>
+    <li>WebP format; SVG has role=&#x27;img&#x27; + aria-label</li>
+    <li>favicon + apple-touch-icon + OG image present</li>
+  </ul>
+  <h4>Findings</h4>
+  <div class="action-item medium">
+    <h4>Only 1 image on a 17k-word guide <span class="status-warn">Medium</span></h4>
+    <p>Only the hero &lt;img&gt; and 1 inline SVG exist. The 3-visualization mechanism plan is 1/3 complete.</p>
+    <p><strong>Recommendation:</strong> Add the 2 missing SVG visualizations; consider screenshots of the combo player.</p>
+  </div>
+  <div class="action-item medium">
+    <h4>Hero image not LCP-optimized <span class="status-warn">High</span></h4>
+    <p>113 KB, no fetchpriority/preload.</p>
+    <p><strong>Recommendation:</strong> Optimize (fetchpriority + preload + compress).</p>
+  </div>
+  <hr class="divider">
+</div>
+
+<!-- ======================================================= 3. ACTION PLAN === -->
+<div class="section">
+  <div class="section-header">
+    <h2>3. Action Plan</h2>
+  </div>
+
+  <div class="roadmap-phase">
+    <h4>Phase 1: Critical Fixes <span class="effort">Week 1</span></h4>
+    <ul>
+      <li>Delete the fabricated Game+AggregateRating JSON-LD block from schema markup</li>
+      <li>Strip all JSON-LD from the 404 template</li>
+      <li>Align canonical + sitemap homepage URL (single form) and add 301 between forms</li>
+    </ul>
+  </div>
+  <div class="roadmap-phase">
+    <h4>Phase 2: High-Impact Improvements <span class="effort">Weeks 2-3</span></h4>
+    <ul>
+      <li>Add fetchpriority=&#x27;high&#x27; + preload + decoding=&#x27;async&#x27; to hero image; compress to ~70 KB</li>
+      <li>Preload the 2 Outfit font files; confirm font-display: swap</li>
+      <li>Build the 2 missing mechanism SVGs (Masterstroke state machine, Hexerei combo timeline)</li>
+      <li>Add real outbound citations to the Data Sources section (HoYoLAB, official 6.6 notice, community tests)</li>
+      <li>Wire IndexNow submission at Cloudflare deploy</li>
+    </ul>
+  </div>
+  <div class="roadmap-phase">
+    <h4>Phase 3: Content &amp; Authority <span class="effort">Month 2</span></h4>
+    <ul>
+      <li>Deploy to Cloudflare Pages with www redirect + security headers (HSTS, CSP, X-Content-Type-Options)</li>
+      <li>Submit sitemap to GSC and Bing Webmaster; verify IndexNow pings</li>
+      <li>Create /about/ page with named author entity; align schema author</li>
+      <li>Remove duplicate FAQ question</li>
+      <li>Community distribution: Reddit r/Genshin_Impact, HoYoLAB, Discord to earn 3-5 backlinks + brand searches</li>
+      <li>Launch planned subpages (build/mechanics/teams/materials/worth-pulling) for long-tail coverage</li>
+    </ul>
+  </div>
+  <div class="roadmap-phase">
+    <h4>Phase 4: Monitoring &amp; Iteration <span class="effort">Ongoing</span></h4>
+    <ul>
+      <li>Run PageSpeed Insights + CrUX after deploy to replace lab estimates with field data</li>
+      <li>Track GSC impressions/clicks/CTR for &#x27;lohen genshin&#x27; and long-tail variants</li>
+      <li>Check AI visibility (ask ChatGPT/Perplexity &#x27;Who is Lohen in Genshin Impact?&#x27; and verify citation)</li>
+      <li>Update content with 6.6 live-test data on launch day to catch the freshness window</li>
+      <li>Monthly freshness updates + version-following (per 建站框架 6.5.7)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======================================================= DATA SOURCES & METHODOLOGY === -->
+<div class="section" style="text-align: center; padding-top: 15mm;">
+  <hr class="divider">
+  <h3 style="text-align: left;">Data Sources &amp; Methodology</h3>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Description</th><th>Update Frequency</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PageSpeed Insights API</td>
+          <td>Lighthouse lab audit (mobile emulation, Moto G Power, slow 4G)</td>
+          <td>Real-time</td></tr>
+      <tr><td>Chrome UX Report (CrUX)</td>
+          <td>28-day rolling field data from real Chrome users</td>
+          <td>Daily ~04:00 UTC</td></tr>
+      <tr><td>CrUX History API</td>
+          <td>25-week p75 trend data per metric</td>
+          <td>Weekly</td></tr>
+      <tr><td>Google Search Console</td>
+          <td>Search Analytics (clicks, impressions, CTR, position)</td>
+          <td>2-3 day lag</td></tr>
+      <tr><td>URL Inspection API</td>
+          <td>Per-URL index status, coverage state, crawl info</td>
+          <td>Real-time (2,000/day)</td></tr>
+    </tbody>
+  </table>
+  <p style="color: #94a3b8; font-size: 9pt; margin-top: 5mm;">
+    Report generated by Claude SEO &mdash; Google SEO Intelligence Skill &mdash; August 28, 2026<br>
+    Methodology based on Google Web Vitals thresholds, Search Console documentation, and Lighthouse scoring algorithms.
+  </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+---
+// Teams: the 6.6 Melt comp with Durin and Nicole is the core information-gain
+// module. Competitors mention it in one line; this page breaks down the why,
+// the rotation logic, the energy budget, and substitute analysis.
+const meltTeam = [
+  {
+    role: "Main DPS",
+    name: "Lohen",
+    note: "Front-line Cryo. Hexerei chains under Masterstroke.",
+    reason: "Lohen is the on-field carry because his Hexerei chains are the highest multipliers in the team and they only fire while he is active and in Masterstroke. His damage is front-loaded into a short window, which pairs perfectly with off-field Pyro that stays applied while he attacks. He also does not need field time to set up, so the rest of the team can act first.",
+  },
+  {
+    role: "Sub DPS",
+    name: "Durin",
+    note: "Off-field Pyro application to trigger Melt.",
+    reason: "Durin is the Melt enabler. His off-field Pyro application rate is tuned so that each Hexerei chain hit consumes the Pyro aura and triggers a Melt reaction, then the next chain hit re-applies Cryo and waits for Durin's Pyro to refresh. This 1:1 reaction cadence is what makes the comp work, and it is why Durin was released in the same version as Lohen. Without consistent off-field Pyro, Lohen's chains would just deal raw Cryo damage and lose the 2x Melt multiplier.",
+  },
+  {
+    role: "Support",
+    name: "Nicole",
+    note: "Pyro resonance and damage amplification.",
+    reason: "Nicole provides two things the comp needs: Pyro resonance for the 25 percent ATK bonus, and a damage amplification buff that scales Lohen's Hexerei chains. She also contributes additional Pyro particles, which helps Durin keep his Burst up. Her buff window can be timed to overlap with Lohen's Masterstroke, which is the only time that matters for damage.",
+  },
+  {
+    role: "Flex",
+    name: "Kazuha / Bennett",
+    note: "VV shred or ATK buff and healing.",
+    reason: "The flex slot is a choice between Kazuha and Bennett. Kazuha shreds Pyro resistance with Viridescent Venerer so the Melt hits harder, and he groups enemies so the Hexerei chains hit multiple targets. Bennett provides a flat ATK buff and healing, which is more valuable if your Lohen is under-geared or you need survivability. Against grouped mobs, pick Kazuha. Against a single boss, pick Bennett.",
+  },
+];
+
+const altTeams = [
+  {
+    name: "Freeze Comp",
+    members: "Lohen + Kokomi + Kazuha + Rosaria",
+    note: "Blizzard Strayer setup, safe and consistent.",
+    reason: "The Freeze comp trades raw damage for safety and consistency. Kokomi applies Hydro off-field, Kazuha groups and shreds Cryo resistance, and Rosaria provides a CRIT Rate buff and a second Cryo body for resonance. The key synergy is Blizzard Strayer's 4-piece bonus, which grants 40 percent CRIT Rate against Frozen enemies, letting you stack CRIT DMG on artifacts. It is roughly 15 to 20 percent behind the Melt comp in damage but is far more forgiving in the Spiral Abyss because Frozen enemies cannot attack.",
+  },
+  {
+    name: "Mono Cryo",
+    members: "Lohen + Ganyu + Shenhe + Kokomi",
+    note: "Stacked Cryo damage against non-Cryo enemies.",
+    reason: "Mono Cryo stacks as much Cryo damage as possible and relies on Shenhe's Quill buffs to multiply every Cryo hit. Ganyu provides off-field Cryo application and Burst damage, Shenhe buffs each Hexerei chain hit with a Quill, and Kokomi heals and applies Hydro for occasional Freeze. This comp shines against non-Cryo enemies where you cannot Melt, but it struggles against Cryo-immune bosses. It is the pick when you need Cryo damage but have no Pyro enabler.",
+  },
+  {
+    name: "Melt Comp (F2P / Xiangling)",
+    members: "Lohen + Xiangling + Bennett + Sucrose",
+    note: "Budget version of the 6.6 Melt comp, fully F2P.",
+    reason: "This is the F2P-friendly version of the Melt comp. Xiangling applies off-field Pyro with Pyronado (her application rate is close to Durin's but has higher energy needs, so Bennett batteries her), Bennett provides the ATK buff and healing, and Sucrose groups enemies and shares Elemental Mastery. It is roughly 15 percent behind the premium 6.6 comp because Xiangling's Pyronado snapshots less cleanly with Lohen's chain cadence, but it is fully free and clears the Abyss comfortably.",
+  },
+  {
+    name: "Reverse Melt / Hybrid",
+    members: "Lohen + Rosaria + Bennett + Xiangling",
+    note: "Double Cryo Reverse Melt; trades some Lohen damage for team reaction damage.",
+    reason: "This comp flips the reaction order: instead of Lohen triggering Melt on Pyro, Rosaria and Xiangling trigger Reverse Melt on Lohen's Cryo application. It works because Lohen's Cryo aura application (every third chain hit) leaves enough Cryo for teammates to trigger. The team's total damage is more balanced across four characters, which is useful against bosses that resist single-target nukes. Roughly 10 percent behind the premium Melt comp in Lohen's personal damage, but the team total is comparable.",
+  },
+  {
+    name: "Physical Superconduct",
+    members: "Lohen + Fischl + Rosaria + Flex",
+    note: "Niche but viable for physical content.",
+    reason: "Physical Superconduct is a niche comp that uses Lohen's Normal Attacks (which are physical outside Masterstroke) as the damage source. Fischl applies Electro off-field to trigger Superconduct, which shreds physical resistance by 40 percent. Rosaria provides Cryo resonance and a CRIT buff. This comp is only worth running in physical-friendly content like certain floors of the Spiral Abyss, and it is significantly behind the Melt and Freeze comps in general play.",
+  },
+];
+
+const matchup = [
+  { enemy: "Pyro-immune slimes / Pyro Abyss Mages", best: "Freeze or Mono Cryo", why: "Pyro enemies cannot be Melted by Lohen, so switch to Freeze/Mono Cryo and drop Pyro supports." },
+  { enemy: "Cryo-immune slimes / Cryo enemies", best: "Swap DPS", why: "Lohen deals only Cryo; against Cryo-immune enemies his damage is zero. Switch to a different DPS entirely." },
+  { enemy: "Large bosses (Scaramouche, Raiden weekly)", best: "Melt Comp", why: "Bosses stand still during stun windows, letting the full Hexerei chain land. Melt comp's front-loaded burst excels." },
+  { enemy: "Many small mobs (Abyss mob floors)", best: "Melt Comp + Kazuha", why: "Kazuha groups mobs so the forward-arc chains hit all four targets. The Melt multiplier then applies to AoE." },
+  { enemy: "Enemies with 90%+ physical resistance (Ruin Guards)", best: "Melt or Freeze", why: "Physical Superconduct comp only works if enemies have meaningful physical resistance to shred; Ruin-type enemies are the exception." },
+];
+
+const teamCompare = [
+  { team: "6.6 Melt (Durin + Nicole)", st: "S", aoe: "A", comfort: "B", f2p: "D", note: "Highest single-target ceiling; requires Durin and Nicole." },
+  { team: "F2P Melt (Xiangling)", st: "A", aoe: "A", comfort: "B", f2p: "S", note: "Best F2P value; only requires Lohen himself." },
+  { team: "Freeze (Kokomi + Kazuha)", st: "B", aoe: "S", comfort: "S", f2p: "C", note: "Safest and best for many small mobs." },
+  { team: "Mono Cryo (Ganyu + Shenhe)", st: "B", aoe: "A", comfort: "B", f2p: "D", note: "Best against non-Cryo enemies without Pyro enablers." },
+  { team: "Reverse Melt (Rosaria + Xiangling)", st: "A", aoe: "A", comfort: "C", f2p: "B", note: "Balances team damage; less spikey than front-loaded Melt." },
+  { team: "Physical (Fischl)", st: "C", aoe: "C", comfort: "B", f2p: "S", note: "Niche; only for physical-themed content." },
+];
+
+const compare = [
+  { metric: "Front-line DPS", lohen: "High", rosaria: "Medium", ganyu: "High (ranged)" },
+  { metric: "Melt synergy", lohen: "Excellent", rosaria: "Good", ganyu: "Excellent" },
+  { metric: "Survivability", lohen: "Medium", rosaria: "Medium", ganyu: "Low (ranged)" },
+  { metric: "Constellation value", lohen: "C1 high", rosaria: "C6 high", ganyu: "C0 fine" },
+  { metric: "F2P friendliness", lohen: "High", rosaria: "Very high", ganyu: "Medium" },
+];
+
+const rotation = [
+  {
+    char: "Kazuha",
+    action: "Burst",
+    note: "Group enemies and apply VV Cryo shred.",
+    why: "Kazuha goes first because his Burst groups enemies so the Hexerei chains hit multiple targets, and it applies Viridescent Venerer's resistance shred. The shred must be applied before any Cryo damage lands, so it has to be the opening move. His Burst also swirls Cryo, which helps maintain the aura for later Melt triggers.",
+  },
+  {
+    char: "Nicole",
+    action: "Skill",
+    note: "Pyro resonance and damage amplification.",
+    why: "Nicole goes second to apply her damage amplification buff and Pyro resonance. Her buff has a duration that must overlap with Lohen's Masterstroke window, so she acts right before Durin sets the Pyro aura. Acting here also generates Pyro particles for Durin, helping his Burst come back online.",
+  },
+  {
+    char: "Durin",
+    action: "Skill + Burst",
+    note: "Off-field Pyro application to set Melt aura.",
+    why: "Durin goes third because his off-field Pyro must be active before Lohen attacks. His Skill and Burst both apply Pyro over time, and casting them now means the Pyro aura is fresh on the enemy when Lohen's first Hexerei chain lands. If Durin goes after Lohen, the first chain hits raw Cryo and wastes the highest-multiplier hit.",
+  },
+  {
+    char: "Lohen",
+    action: "Skill",
+    note: "Enter Masterstroke, convert Will to Win into Joy.",
+    why: "Lohen's Skill enters Masterstroke and converts Will to Win into Joy, the resource he spends on Hexerei chains. This must happen after the team has set up buffs and auras, because Masterstroke is a short window and every second of it must be spent attacking with all buffs active. Entering Masterstroke too early wastes the buff duration on setup.",
+  },
+  {
+    char: "Lohen",
+    action: "Hexerei x4",
+    note: "Chained Normal Attacks trigger Melt on each hit.",
+    why: "The four Hexerei chains are the core damage. Each chain consumes the Pyro aura and triggers Melt for a 2x multiplier, then Durin's off-field Pyro refreshes the aura for the next chain. This 1:1 reaction cadence is the entire reason the comp exists. Make sure you are positioned so all four chains hit, as the chains have a slight forward arc.",
+  },
+  {
+    char: "Lohen",
+    action: "Enhanced Skill",
+    note: "Spend remaining Joy for a burst of Cryo DMG.",
+    why: "The enhanced Skill is Lohen's highest single-hit multiplier. It should be used after the Hexerei chains because it spends all remaining Joy, and using it first would leave no Joy for the chains. It also benefits from the same Melt setup, so it should land while Durin's Pyro is still active.",
+  },
+  {
+    char: "Lohen",
+    action: "Burst",
+    note: "Finisher; use when Joy is low to close the window.",
+    why: "The Burst is the closer. It deals a large chunk of Cryo damage and is best used at the end of the Masterstroke window when Joy is too low for another Hexerei chain. Using it earlier interrupts the chain rhythm. The Burst also generates Energy, which helps the next rotation start cleanly.",
+  },
+];
+
+const substitutes = [
+  {
+    role: "Pyro Sub DPS (Durin slot)",
+    options: "Xiangling, Dehya, Thoma",
+    note: "Xiangling is the strongest substitute because her Pyronado applies consistent off-field Pyro, though she has energy needs. Dehya provides Pyro and damage mitigation. Thoma gives a shield but lower application.",
+  },
+  {
+    role: "Amplifier (Nicole slot)",
+    options: "Bennett, Mona, Kazuha",
+    note: "Bennett gives a flat ATK buff and healing. Mona gives an Omen damage amp that works well with Lohen's burst window. Kazuha shreds resistance and groups enemies.",
+  },
+  {
+    role: "Flex / VV shredder",
+    options: "Sucrose, Jean, Sayu",
+    note: "Sucrose groups enemies and shares Elemental Mastery. Jean shreds resistance with VV and heals. Sayu shreds, heals, and moves fast for exploration.",
+  },
+];
+
+const energyBudget = [
+  { char: "Lohen", recharge: "120-130%", note: "Needs enough to Burst every rotation. Drops to 110% with a Cryo battery." },
+  { char: "Durin", recharge: "140-160%", note: "High energy cost Burst. Nicole's particles help, but he still needs investment." },
+  { char: "Nicole", recharge: "120-130%", note: "Moderate cost. Her own particles cover most of her needs." },
+  { char: "Kazuha", recharge: "160-180%", note: "High cost Burst. Use a second Anemo or Favonius weapon if struggling." },
+];
+---
+
+<section id="teams" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      Best Lohen Teams
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
+      The 6.6 Melt comp is Lohen's strongest home. Durin and Nicole were released in the
+      same version, and their kits are tuned to enable his Hexerei chains. Below is the
+      full breakdown: why each member is there, the rotation logic, the energy budget, and
+      substitute options for every slot.
+    </p>
+
+    <div class="mt-8 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6 sm:p-8">
+      <h3 class="text-lg font-bold text-frost-400">Team Composition Philosophy</h3>
+      <p class="mt-3 text-base leading-relaxed text-slate-300">
+        Lohen's damage is a short, front-loaded burst window inside Masterstroke. A good
+        team sets up all its buffs and auras before he enters Masterstroke, then gets out
+        of the way while he attacks. The 6.6 Melt comp does exactly this: Durin applies
+        off-field Pyro so every Hexerei chain triggers Melt, Nicole amplifies the damage
+        during the window, and the flex slot either shreds resistance or adds a flat ATK
+        buff. The comp is built around one principle: maximize the damage of the four
+        Hexerei chains, because those are the highest multipliers in Lohen's kit.
+      </p>
+    </div>
+
+    <div class="mt-10 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6 sm:p-8">
+      <h3 class="text-xl font-bold text-frost-400">6.6 Melt Comp</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        The core team. Each member is chosen for a specific synergy with Lohen's
+        Masterstroke window, not just because they are strong in a vacuum.
+      </p>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {meltTeam.map((m) => (
+          <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+            <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">{m.role}</p>
+            <p class="mt-1 text-base font-bold text-slate-100">{m.name}</p>
+            <p class="mt-2 text-xs leading-relaxed text-slate-400">{m.note}</p>
+            <p class="mt-3 border-t border-slate-800/60 pt-2 text-xs leading-relaxed text-slate-500">
+              {m.reason}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      {altTeams.map((t) => (
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+          <h4 class="text-base font-bold text-slate-100">{t.name}</h4>
+          <p class="mt-2 text-sm font-semibold text-frost-400">{t.members}</p>
+          <p class="mt-2 text-xs leading-relaxed text-slate-400">{t.note}</p>
+          <p class="mt-3 border-t border-slate-800/60 pt-2 text-xs leading-relaxed text-slate-500">
+            {t.reason}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-10">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Lohen vs Rosaria vs Ganyu
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        How Lohen stacks up against the two closest Cryo polearm and main DPS comparisons.
+        Lohen wins on Melt synergy and F2P friendliness, while Ganyu wins on ranged safety
+        and Rosaria wins on constellation accessibility.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full min-w-[560px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-left">
+              <th class="py-3 pr-4 font-semibold text-slate-400">Metric</th>
+              <th class="py-3 pr-4 font-semibold text-frost-400">Lohen</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Rosaria</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Ganyu</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {compare.map((row) => (
+              <tr>
+                <td class="py-3 pr-4 text-slate-400">{row.metric}</td>
+                <td class="py-3 pr-4 font-semibold text-slate-100">{row.lohen}</td>
+                <td class="py-3 pr-4 text-slate-300">{row.rosaria}</td>
+                <td class="py-3 pr-4 text-slate-300">{row.ganyu}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Melt Comp Rotation
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Knowing the team is half the battle. This is the step-by-step action order for
+        the 6.6 Melt comp, with the reasoning for why each step happens in that order. The
+        goal is to have Pyro aura applied and all buffs active before Lohen's Hexerei
+        chains land, so every chain triggers Melt.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <div class="flex min-w-[640px] gap-3">
+          {rotation.map((r, i) => (
+            <div class="flex-1">
+              <div class="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
+                <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">
+                  Step {i + 1}
+                </p>
+                <p class="mt-2 text-sm font-bold text-frost-400">{r.char}</p>
+                <p class="mt-1 text-xs font-semibold text-slate-100">{r.action}</p>
+                <p class="mt-2 text-xs leading-relaxed text-slate-400">{r.note}</p>
+                <p class="mt-2 border-t border-slate-800/60 pt-2 text-xs leading-relaxed text-slate-500">
+                  {r.why}
+                </p>
+              </div>
+              {i < rotation.length - 1 && (
+                <div class="mt-2 text-center text-slate-600" aria-hidden="true">&rarr;</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      <p class="mt-4 text-xs leading-relaxed text-slate-500">
+        Loop back to step 1 once Lohen's Masterstroke ends and Will to Win recharges. The
+        goal is to have Pyro aura applied before Lohen's Hexerei chains land, so the Cryo
+        hits trigger Melt for amplified damage.
+      </p>
+    </div>
+
+    <div class="mt-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Substitute Options</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        If you do not have the core team members, these substitutes cover each role. The
+        comp still works with substitutes, but expect a 10 to 25 percent damage drop
+        depending on how far the substitute is from the original.
+      </p>
+      <div class="mt-4 divide-y divide-slate-800">
+        {substitutes.map((s) => (
+          <div class="py-3">
+            <p class="text-sm font-semibold text-slate-100">{s.role}</p>
+            <p class="mt-1 text-xs font-semibold text-frost-400">{s.options}</p>
+            <p class="mt-1.5 text-xs leading-relaxed text-slate-400">{s.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Team Comparison Overview
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        A quick rating across the five viable team archetypes, so you can pick based on
+        what you value most: single-target damage, AoE, comfort, or budget. S = top tier,
+        A = strong, B = good, C = niche, D = poor.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full min-w-[640px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-left">
+              <th class="py-3 pr-4 font-semibold text-slate-400">Team</th>
+              <th class="py-3 pr-4 font-semibold text-frost-400">Single-Target</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">AoE</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Comfort</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">F2P</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Notes</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {teamCompare.map((t) => (
+              <tr>
+                <td class="py-3 pr-4 font-semibold text-slate-100">{t.team}</td>
+                <td class="py-3 pr-4 text-frost-400">{t.st}</td>
+                <td class="py-3 pr-4 text-slate-300">{t.aoe}</td>
+                <td class="py-3 pr-4 text-slate-300">{t.comfort}</td>
+                <td class="py-3 pr-4 text-slate-300">{t.f2p}</td>
+                <td class="py-3 pr-4 text-xs leading-relaxed text-slate-500">{t.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Enemy Type Matchups
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Which team to run against which enemy. Lohen is a single-element Cryo DPS, so his
+        best team depends heavily on the enemy's resistance and whether Pyro can be
+        applied. Use this table to pick the right comp per Abyss floor.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full min-w-[640px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-left">
+              <th class="py-3 pr-4 font-semibold text-slate-400">Enemy</th>
+              <th class="py-3 pr-4 font-semibold text-frost-400">Best Team</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Why</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {matchup.map((m) => (
+              <tr>
+                <td class="py-3 pr-4 font-semibold text-slate-100">{m.enemy}</td>
+                <td class="py-3 pr-4 text-frost-400">{m.best}</td>
+                <td class="py-3 pr-4 text-xs leading-relaxed text-slate-400">{m.why}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Energy Recharge Budget</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        Each member's Energy Recharge target so the rotation loops cleanly. Lohen and
+        Durin are the two characters most likely to stall the rotation if their energy is
+        too low, so prioritize their Recharge first.
+      </p>
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full min-w-[520px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-left">
+              <th class="py-3 pr-4 font-semibold text-slate-400">Character</th>
+              <th class="py-3 pr-4 font-semibold text-frost-400">Recharge Target</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Notes</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {energyBudget.map((e) => (
+              <tr>
+                <td class="py-3 pr-4 font-semibold text-slate-100">{e.char}</td>
+                <td class="py-3 pr-4 text-frost-400">{e.recharge}</td>
+                <td class="py-3 pr-4 text-slate-400">{e.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

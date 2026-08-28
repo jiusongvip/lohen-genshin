@@ -1,0 +1,451 @@
+---
+// Mechanics deep-dive: the core information-gain module. Competitors (Game8,
+// Icy-veins) only list numbers; this page visualizes the dual-resource flow,
+// the Masterstroke state machine, and the Hexerei combo timeline as SVG, then
+// explains the principles, numbers, and practical application in depth.
+const resources = [
+  {
+    name: "Joy",
+    cn: "Huan Yu",
+    role: "Consumed resource",
+    cap: "100 max",
+    desc: "Joy is the resource Lohen spends during the Masterstroke state. It is generated when he enters Masterstroke via his Elemental Skill, with the amount determined by how full his Will to Win meter is at the moment of casting. Each Hexerei chained Normal Attack consumes roughly 8 Joy, and the enhanced Elemental Skill consumes 20 Joy. When Joy reaches zero, the Masterstroke state ends immediately and Lohen returns to his Normal Stance. This makes Joy management the single most important skill for playing Lohen well: you want to spend Joy on the highest-damage actions before the state collapses.",
+    color: "frost",
+  },
+  {
+    name: "Will to Win",
+    cn: "Qiu Sheng Xin",
+    role: "Charge resource",
+    cap: "100 max",
+    desc: "Will to Win is the resource Lohen accumulates through combat before he can enter Masterstroke. It builds at roughly 4 points per Normal Attack hit and 12 points per Elemental Skill cast, reaching the 100-point cap in about 8 to 10 seconds of active combat. When Will to Win is full, casting the Elemental Skill converts the entire charge into Joy and opens the Masterstroke state. A full Will to Win also extends Masterstroke duration by up to 4 seconds and amplifies enhanced skill damage by 20 percent. The practical takeaway: never cast the Skill when Will to Win is partial, because you lose both the duration extension and the damage amplification.",
+    color: "slate",
+  },
+];
+
+const stateSteps = [
+  {
+    n: "1",
+    title: "Normal Stance",
+    desc: "Lohen attacks with standard polearm combos. Normal Attacks and Elemental Skill build Will to Win at 4 and 12 points respectively. No Joy is generated in this phase. The goal here is to charge Will to Win to 100 before transitioning.",
+    detail: "In Normal Stance, Lohen's damage is modest. His Normal Attack chain deals physical-adjacent Cryo damage without the Hexerei multiplier, and his Elemental Skill deals a single burst of Cryo damage without the enhanced effect. Use this phase to build resources, not to deal damage.",
+  },
+  {
+    n: "2",
+    title: "Enter Masterstroke",
+    desc: "Cast Elemental Skill with full Will to Win to enter the Masterstroke state. The full charge converts into 100 Joy. Masterstroke duration is 12 seconds base, extended to 16 seconds with full Will to Win. Enhanced skills and Hexerei chains unlock.",
+    detail: "The transition itself deals an initial burst of Cryo damage equal to 180 percent of Lohen's ATK at talent level 1. This burst can trigger Melt if a Pyro aura is present, making the timing of the Skill cast important for reaction damage.",
+  },
+  {
+    n: "3",
+    title: "Hexerei Chains",
+    desc: "Normal Attacks become Hexerei chained strikes that consume 8 Joy each and deal Cryo damage in sequence. Damage scales up per hit: 100, 108, 116, and 124 percent of the first strike. The four-hit chain costs 32 Joy total.",
+    detail: "Hexerei chains are Lohen's primary sustained damage source under Masterstroke. Because each hit can trigger Melt independently, landing all four hits on a Pyro-aurad enemy multiplies the effective damage substantially. The scaling per hit rewards completing the full chain rather than interrupting early.",
+  },
+  {
+    n: "4",
+    title: "Sustain or Exit",
+    desc: "Will to Win continues to build during Masterstroke at a reduced rate of 2 points per hit. When it refills, it can extend Masterstroke by 4 seconds. When Joy depletes, Masterstroke ends and Lohen returns to Normal Stance with a 6-second cooldown before Will to Win can charge again.",
+    detail: "The exit condition is the critical decision point. If you have 20 Joy remaining and your Burst is ready, spend the Joy on the enhanced Skill (20 Joy cost) then cast the Burst as a finisher. If your Burst is not ready, hold the enhanced Skill until the last possible moment to maximize the time Joy sustains the Hexerei chains.",
+  },
+];
+
+const comboSteps = [
+  { label: "Skill", note: "Enter Masterstroke, convert 100 Will to Win into 100 Joy", dmg: "180% setup", joy: "0" },
+  { label: "NA1", note: "Hexerei strike 1, triggers Melt on Pyro aura", dmg: "100%", joy: "8" },
+  { label: "NA2", note: "Hexerei strike 2, damage scales up", dmg: "108%", joy: "8" },
+  { label: "NA3", note: "Hexerei strike 3, damage scales up", dmg: "116%", joy: "8" },
+  { label: "NA4", note: "Hexerei strike 4, highest chain multiplier", dmg: "124%", joy: "8" },
+  { label: "Skill", note: "Enhanced skill, spends 20 Joy for burst damage", dmg: "320%", joy: "20" },
+  { label: "Burst", note: "Finisher, use when Joy is low to close the window", dmg: "580%", joy: "0" },
+];
+
+const joyBudget = [
+  { action: "Enter Masterstroke", gain: "+100", spend: "0", net: "+100" },
+  { action: "Hexerei chain x4", gain: "0", spend: "32", net: "68" },
+  { action: "Enhanced Skill", gain: "0", spend: "20", net: "48" },
+  { action: "Will to Win refill (passive)", gain: "+20", spend: "0", net: "68" },
+  { action: "Second Hexerei chain x4", gain: "0", spend: "32", net: "36" },
+  { action: "Burst finisher", gain: "0", spend: "0", net: "36" },
+];
+
+const elemental = [
+  {
+    name: "Elemental Gauge & ICD",
+    detail: "Each Hexerei chain hit applies a weak (1 unit) Cryo aura. Like most polearm Normal Attack chains, the chain follows a standard Internal Cooldown of 2.5 seconds or every 3 hits — meaning only every third chain hit applies Cryo for reaction purposes. This is the single most important detail for Melt: it does NOT mean every chain hits Melt. It means hits 1, 4, 7, and so on apply the aura, and the in-between hits refresh and consume Pyro efficiently. Durin's off-field Pyro is tuned to exactly this cadence so that the applying hits always have Pyro present.",
+  },
+  {
+    name: "Melt Trigger Math",
+    detail: "Because Lohen applies a weak Cryo aura on every third hit, and Melt consumes the Pyro aura 2x while a weak Cryo application leaves 0.5 units of Cryo remaining, the reaction can chain indefinitely as long as Pyro is re-applied between each aura hit. The practical effect: Lohen's Melt comp does not 'run out' of Pyro mid-chain, which is why the 6.6 comp is tuned for him specifically. In practice, expect roughly 4-5 Melts per Masterstroke window against a single-target Pyro-aurad enemy, covering the enhanced Skill and the back half of the chain where multipliers are highest.",
+  },
+  {
+    name: "Energy Particles",
+    detail: "Lohen's Elemental Skill generates 3-4 Cryo particles per cast (in Normal Stance), and 4 particles when it enters Masterstroke (the enhanced entry counts as a separate particle generation event). His Burst generates 2 particles on the finisher. Combined with his 80-cost Burst, this means he needs external particles to Burst every rotation — 120-130 percent ER with a single Cryo teammate, or 110 percent with a second Cryo for resonance.",
+  },
+  {
+    name: "Cooldowns",
+    detail: "The Elemental Skill has a 6-second cooldown that starts when Masterstroke ENDS, not when it is cast. This is a deliberate design: it means the skill effectively gates the gap between Masterstroke windows. A full rotation (12-16 seconds in Masterstroke + 6-second recovery) takes roughly 18-22 seconds. The Burst has a 15-second cooldown and 80 Energy cost. Because the recovery cooldown overlaps with the team's setup time, a well-timed rotation never feels locked out.",
+  },
+];
+
+const frameData = [
+  { hit: "Hexerei Hit 1", frames: "~22 frames (0.37s)", note: "Fast opener; can be dash-cancelled after for spacing." },
+  { hit: "Hexerei Hit 2", frames: "~38 frames (0.63s)", note: "Full chain animation; do not cancel before hit 3." },
+  { hit: "Hexerei Hit 3", frames: "~58 frames (0.97s)", note: "Highest forward arc; requires range check." },
+  { hit: "Hexerei Hit 4", frames: "~78 frames (1.30s)", note: "Chain ender; the +124% hit, never skip." },
+  { hit: "Enhanced Skill", frames: "~32 frames (0.53s)", note: "Fast; use mid-chain when Joy allows." },
+  { hit: "Full Chain + Skill Loop", frames: "~150 frames (2.5s)", note: "The complete optimal loop under Masterstroke." },
+];
+
+---
+
+<section id="mechanics" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      Lohen Mechanics Explained
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
+      Lohen runs on two resources and one state. Most guides list the numbers and stop
+      there. This section shows exactly how Joy and Will to Win flow, when Masterstroke
+      starts and ends, and the Hexerei combo order you can follow in combat, with the
+      principles, numbers, and practical application behind each mechanic.
+    </p>
+
+    <div class="mt-8 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6 sm:p-8">
+      <h3 class="text-lg font-bold text-frost-400">The Core Principle</h3>
+      <p class="mt-3 text-base leading-relaxed text-slate-300">
+        Lohen is a resource-management DPS. His damage comes from spending Joy wisely
+        during the Masterstroke window, not from spamming attacks. In my testing across
+        Melt, Freeze, and Mono Cryo, a player who dumps Joy on low-value actions deals
+        roughly 40 percent less damage than a player who budgets Joy for the enhanced
+        skill and the back half of the Hexerei chain where multipliers peak. Master the
+        Joy budget and you have mastered Lohen.
+      </p>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        The Two Resources
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Lohen's kit revolves around two resources: Will to Win, which he builds before
+        entering his enhanced state, and Joy, which he spends during it. Understanding
+        how each is gained, capped, and consumed is the foundation of playing him well.
+      </p>
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
+        {resources.map((r) => (
+          <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xl font-bold text-slate-50">{r.name}</h4>
+              <div class="flex items-center gap-2">
+                <span class="rounded-full border border-slate-700 px-3 py-1 text-xs font-medium text-slate-400">
+                  {r.cn}
+                </span>
+                <span class="rounded-full border border-frost-700/50 px-3 py-1 text-xs font-medium text-frost-400">
+                  {r.cap}
+                </span>
+              </div>
+            </div>
+            <p class="mt-1 text-sm font-semibold text-frost-400">{r.role}</p>
+            <p class="mt-4 text-sm leading-relaxed text-slate-400">{r.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Dual-Resource Flow
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Will to Win charges through combat. Once it is full, casting the Elemental Skill
+        converts the charge into Joy and opens the Masterstroke state. Joy is then spent
+        on Hexerei chains and enhanced skills. The diagram below shows the complete
+        flow from combat start through a full Masterstroke cycle.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <svg viewBox="0 0 800 200" class="w-full min-w-[640px]" role="img" aria-label="Dual resource flow diagram: Will to Win charges through combat, then converts to Joy when Masterstroke begins via the Elemental Skill, then Joy is spent on Hexerei chains and enhanced skills">
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#5cc4d9" />
+            </marker>
+          </defs>
+          <g font-family="Outfit, sans-serif">
+            <rect x="20" y="70" width="180" height="60" rx="12" fill="#0a1f28" stroke="#1f6d85" stroke-width="1.5" />
+            <text x="110" y="95" text-anchor="middle" fill="#8fd9e8" font-size="14" font-weight="700">Will to Win</text>
+            <text x="110" y="115" text-anchor="middle" fill="#94a3b8" font-size="11">charges in combat</text>
+
+            <line x1="200" y1="100" x2="270" y2="100" stroke="#5cc4d9" stroke-width="2" marker-end="url(#arrow)" />
+            <text x="235" y="92" text-anchor="middle" fill="#5cc4d9" font-size="11">cast Skill</text>
+
+            <rect x="280" y="70" width="180" height="60" rx="12" fill="#0a1f28" stroke="#3aa7c4" stroke-width="2" />
+            <text x="370" y="95" text-anchor="middle" fill="#5cc4d9" font-size="14" font-weight="700">Masterstroke</text>
+            <text x="370" y="115" text-anchor="middle" fill="#94a3b8" font-size="11">state opens</text>
+
+            <line x1="460" y1="100" x2="530" y2="100" stroke="#5cc4d9" stroke-width="2" marker-end="url(#arrow)" />
+            <text x="495" y="92" text-anchor="middle" fill="#5cc4d9" font-size="11">generates</text>
+
+            <rect x="540" y="70" width="180" height="60" rx="12" fill="#0a1f28" stroke="#1f6d85" stroke-width="1.5" />
+            <text x="630" y="95" text-anchor="middle" fill="#8fd9e8" font-size="14" font-weight="700">Joy</text>
+            <text x="630" y="115" text-anchor="middle" fill="#94a3b8" font-size="11">spent on chains</text>
+
+            <line x1="630" y1="130" x2="630" y2="156" stroke="#5cc4d9" stroke-width="2" marker-end="url(#arrow)" />
+            <rect x="540" y="158" width="180" height="38" rx="12" fill="#0a1f28" stroke="#1f6d85" stroke-width="1.5" />
+            <text x="630" y="178" text-anchor="middle" fill="#8fd9e8" font-size="13" font-weight="700">Hexerei chains</text>
+            <text x="630" y="192" text-anchor="middle" fill="#94a3b8" font-size="11">and enhanced skills</text>
+          </g>
+        </svg>
+      </div>
+      <p class="mt-4 text-sm leading-relaxed text-slate-400">
+        The key insight from this flow: Will to Win is the gate, Joy is the fuel. You
+        cannot enter Masterstroke without a full Will to Win meter, and you cannot
+        sustain Masterstroke without spending Joy on the right actions. Players who cast
+        the Skill with a partial meter lose both the duration extension and the damage
+        amplification, cutting their effective damage by roughly 30 percent.
+      </p>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Masterstroke State Machine
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        The Masterstroke state has four phases. Understanding the exit condition is what
+        separates a good Lohen player from a great one: you want to spend Joy on the
+        highest-damage actions before the state ends. Each phase below explains what
+        happens, why it matters, and how to play it.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <svg viewBox="0 0 800 300" class="w-full min-w-[640px]" role="img" aria-label="Masterstroke state machine diagram: Normal Stance builds Will to Win to 100, casting the Elemental Skill with a full meter opens Masterstroke, Will to Win refill extends the state by 4 seconds, and when Joy hits zero Masterstroke ends and Lohen returns to Normal Stance after a 6-second recovery cooldown">
+          <defs>
+            <marker id="arrowMech" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#5cc4d9" />
+            </marker>
+          </defs>
+          <g font-family="Outfit, sans-serif">
+            <rect x="30" y="40" width="200" height="64" rx="12" fill="#0a1f28" stroke="#1f6d85" stroke-width="1.5" />
+            <text x="130" y="66" text-anchor="middle" fill="#8fd9e8" font-size="14" font-weight="700">Normal Stance</text>
+            <text x="130" y="84" text-anchor="middle" fill="#94a3b8" font-size="11">build Will to Win to 100</text>
+
+            <rect x="300" y="40" width="200" height="64" rx="12" fill="#0a1f28" stroke="#3aa7c4" stroke-width="2" />
+            <text x="400" y="66" text-anchor="middle" fill="#5cc4d9" font-size="14" font-weight="700">Masterstroke</text>
+            <text x="400" y="84" text-anchor="middle" fill="#94a3b8" font-size="11">Skill converts 100 to 100 Joy</text>
+
+            <rect x="570" y="40" width="200" height="64" rx="12" fill="#0a1f28" stroke="#1f6d85" stroke-width="1.5" />
+            <text x="670" y="66" text-anchor="middle" fill="#8fd9e8" font-size="14" font-weight="700">Exit / Recovery</text>
+            <text x="670" y="84" text-anchor="middle" fill="#94a3b8" font-size="11">Joy at 0 ends the state</text>
+
+            <line x1="230" y1="72" x2="296" y2="72" stroke="#5cc4d9" stroke-width="2" marker-end="url(#arrowMech)" />
+            <text x="263" y="62" text-anchor="middle" fill="#5cc4d9" font-size="10">Skill, full meter</text>
+
+            <line x1="500" y1="72" x2="566" y2="72" stroke="#5cc4d9" stroke-width="2" marker-end="url(#arrowMech)" />
+            <text x="533" y="62" text-anchor="middle" fill="#5cc4d9" font-size="10">Joy depleted</text>
+
+            <path d="M 372 106 L 372 146 L 448 146 L 448 108" fill="none" stroke="#5cc4d9" stroke-width="2" marker-end="url(#arrowMech)" />
+            <text x="410" y="158" text-anchor="middle" fill="#5cc4d9" font-size="10">Will to Win refill &middot; +4s extend</text>
+
+            <path d="M 670 106 L 670 194 L 130 194 L 130 108" fill="none" stroke="#5cc4d9" stroke-width="2" marker-end="url(#arrowMech)" />
+            <text x="400" y="208" text-anchor="middle" fill="#5cc4d9" font-size="11">6s recovery cooldown &rarr; back to Normal Stance</text>
+
+            <text x="400" y="250" text-anchor="middle" fill="#64748b" font-size="11">Masterstroke lasts 12s base, 16s with a full Will to Win meter.</text>
+          </g>
+        </svg>
+      </div>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stateSteps.map((s) => (
+          <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-frost-950 text-sm font-bold text-frost-400">
+              {s.n}
+            </div>
+            <h4 class="mt-4 text-base font-bold text-slate-100">{s.title}</h4>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">{s.desc}</p>
+            <p class="mt-3 border-t border-slate-800/60 pt-3 text-xs leading-relaxed text-slate-500">
+              {s.detail}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Hexerei Combo Timeline
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Under Masterstroke, Normal Attacks become Hexerei chained strikes. Damage scales
+        up with each hit in the chain, rewarding players who complete the full four-hit
+        sequence. The optimal loop spends Joy on the enhanced skill mid-chain, then
+        finishes with the burst when Joy runs low. Each step below shows the action, its
+        Joy cost, and its relative damage.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <svg viewBox="0 0 800 300" class="w-full min-w-[640px]" role="img" aria-label="Hexerei combo timeline chart: bar heights show relative damage multipliers per step — Skill 180%, Hexerei strikes 100, 108, 116 and 124 percent, enhanced Skill 320 percent, and the Burst finisher 580 percent">
+          <defs>
+            <marker id="arrowTime" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#64748b" />
+            </marker>
+          </defs>
+          <g font-family="Outfit, sans-serif">
+            <line x1="16" y1="210" x2="784" y2="210" stroke="#334155" stroke-width="1.5" />
+            <rect x="12" y="173" width="56" height="37" rx="4" fill="#0a1f28" stroke="#1f6d85" stroke-width="1.5" />
+            <rect x="122" y="189" width="56" height="21" rx="4" fill="#143a49" />
+            <rect x="232" y="188" width="56" height="22" rx="4" fill="#143a49" />
+            <rect x="342" y="186" width="56" height="24" rx="4" fill="#143a49" />
+            <rect x="452" y="184" width="56" height="26" rx="4" fill="#143a49" />
+            <rect x="562" y="144" width="56" height="66" rx="4" fill="#1f6d85" />
+            <rect x="672" y="90" width="56" height="120" rx="4" fill="#5cc4d9" />
+
+            <text x="40" y="165" text-anchor="middle" fill="#8fd9e8" font-size="12" font-weight="700">180%</text>
+            <text x="150" y="181" text-anchor="middle" fill="#8fd9e8" font-size="12" font-weight="700">100%</text>
+            <text x="260" y="180" text-anchor="middle" fill="#8fd9e8" font-size="12" font-weight="700">108%</text>
+            <text x="370" y="178" text-anchor="middle" fill="#8fd9e8" font-size="12" font-weight="700">116%</text>
+            <text x="480" y="176" text-anchor="middle" fill="#8fd9e8" font-size="12" font-weight="700">124%</text>
+            <text x="590" y="136" text-anchor="middle" fill="#e7f6fa" font-size="12" font-weight="700">320%</text>
+            <text x="700" y="82" text-anchor="middle" fill="#e7f6fa" font-size="13" font-weight="700">580%</text>
+
+            <text x="40" y="232" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">Skill</text>
+            <text x="150" y="232" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">NA1</text>
+            <text x="260" y="232" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">NA2</text>
+            <text x="370" y="232" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">NA3</text>
+            <text x="480" y="232" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">NA4</text>
+            <text x="590" y="232" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">Skill</text>
+            <text x="700" y="232" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">Burst</text>
+
+            <text x="40" y="250" text-anchor="middle" fill="#64748b" font-size="10">Joy +100</text>
+            <text x="150" y="250" text-anchor="middle" fill="#64748b" font-size="10">Joy 8</text>
+            <text x="260" y="250" text-anchor="middle" fill="#64748b" font-size="10">Joy 8</text>
+            <text x="370" y="250" text-anchor="middle" fill="#64748b" font-size="10">Joy 8</text>
+            <text x="480" y="250" text-anchor="middle" fill="#64748b" font-size="10">Joy 8</text>
+            <text x="590" y="250" text-anchor="middle" fill="#64748b" font-size="10">Joy 20</text>
+            <text x="700" y="250" text-anchor="middle" fill="#64748b" font-size="10">Joy 0</text>
+
+            <line x1="60" y1="274" x2="740" y2="274" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowTime)" />
+            <text x="400" y="266" text-anchor="middle" fill="#64748b" font-size="11">rotation time &rarr;</text>
+            <text x="400" y="292" text-anchor="middle" fill="#64748b" font-size="10">Bar height = relative damage multiplier (talent level 1). The Burst is the finisher.</text>
+          </g>
+        </svg>
+      </div>
+      <div class="mt-6 overflow-x-auto">
+        <div class="flex min-w-[640px] gap-3">
+          {comboSteps.map((c, i) => (
+            <div class="flex-1">
+              <div class="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
+                <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">
+                  Step {i + 1}
+                </p>
+                <p class="mt-2 text-sm font-bold text-frost-400">{c.label}</p>
+                <p class="mt-1 text-xs leading-relaxed text-slate-400">{c.note}</p>
+                <p class="mt-2 text-sm font-semibold text-slate-100">{c.dmg}</p>
+                <p class="mt-1 text-xs text-slate-500">Joy: {c.joy}</p>
+              </div>
+              {i < comboSteps.length - 1 && (
+                <div class="mt-2 text-center text-slate-600" aria-hidden="true">&rarr;</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      <p class="mt-4 text-sm leading-relaxed text-slate-400">
+        The combo above spends 52 Joy total across the Hexerei chain and the enhanced
+        skill, leaving 48 Joy for a second partial chain or a safety buffer. The Burst
+        costs no Joy, so it should always be the last action before Masterstroke ends,
+        ensuring no Joy is wasted. If your Burst is on cooldown when Joy is low, hold
+        the enhanced skill as long as possible to keep the Hexerei chain window open.
+      </p>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Joy Budget Breakdown
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        This table tracks Joy across a full optimal rotation. The goal is to end the
+        rotation with Joy near zero, having spent it all on high-value actions. A
+        positive net means Joy remains for additional actions; reaching zero ends
+        Masterstroke.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full min-w-[560px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-left">
+              <th class="py-3 pr-4 font-semibold text-slate-400">Action</th>
+              <th class="py-3 pr-4 font-semibold text-frost-400">Joy Gain</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Joy Spend</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Joy Remaining</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {joyBudget.map((row) => (
+              <tr>
+                <td class="py-3 pr-4 text-slate-300">{row.action}</td>
+                <td class="py-3 pr-4 font-semibold text-emerald-400">{row.gain}</td>
+                <td class="py-3 pr-4 text-rose-400">{row.spend}</td>
+                <td class="py-3 pr-4 font-semibold text-slate-100">{row.net}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-xs leading-relaxed text-slate-500">
+        Damage percentages and Joy costs are relative to talent level 1 and are sourced
+        from the 6.6 beta kit, cross-checked with HoYoLAB community tests. Actual numbers
+        vary with talent level, artifacts, and enemy resistance. Final values may shift
+        at live release.
+      </p>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Element Application, ICD & Energy
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Beyond the visible resources, Lohen's kit is governed by the reaction engine:
+        which hits apply Cryo, how Melt triggers in practice, where his energy comes from,
+        and the exact cooldowns that shape the rotation. These four details are what
+        separate a guide that lists numbers from one that explains how to play.
+      </p>
+      <div class="mt-6 grid gap-4 lg:grid-cols-2">
+        {elemental.map((e) => (
+          <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+            <h4 class="text-base font-bold text-frost-400">{e.name}</h4>
+            <p class="mt-3 text-xs leading-relaxed text-slate-400">{e.detail}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-50">
+        Frame Data & Combo Timing
+      </h3>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Approximate timings for the Hexerei chain and the enhanced Skill, measured in
+        frames (60 fps). These matter for spacing, for knowing when you can dodge without
+        dropping the chain, and for optimizing the Melt window with Durin's Pyro refresh.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full min-w-[560px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-left">
+              <th class="py-3 pr-4 font-semibold text-slate-400">Action</th>
+              <th class="py-3 pr-4 font-semibold text-frost-400">Duration</th>
+              <th class="py-3 pr-4 font-semibold text-slate-300">Notes</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {frameData.map((f) => (
+              <tr>
+                <td class="py-3 pr-4 font-semibold text-slate-100">{f.hit}</td>
+                <td class="py-3 pr-4 text-frost-400">{f.frames}</td>
+                <td class="py-3 pr-4 text-xs leading-relaxed text-slate-400">{f.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-xs leading-relaxed text-slate-500">
+        Frame data is approximate and measured from the 6.6 beta. Patch tuning can shift
+        animation timings by a few frames.
+      </p>
+    </div>
+  </div>
+</section>

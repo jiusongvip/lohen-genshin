@@ -1,0 +1,317 @@
+---
+// Skills: talent multipliers per level + upgrade priority with reasoning.
+// Fills the gap vs Game8/Icy-veins who list these numbers as core content,
+// and goes deeper by explaining the mechanics and the why behind each priority.
+// Normal Attack: each of the 4 chain hits scales independently. Hexerei chains
+// under Masterstroke use the same 4-hit multiplier curve per hit (100/108/116/124).
+const normalHits = [
+  { hit: "Hit 1", pct: "100%" },
+  { hit: "Hit 2", pct: "108%" },
+  { hit: "Hit 3", pct: "116%" },
+  { hit: "Hit 4", pct: "124%" },
+];
+
+const charged = { pct: "165%", note: "Charged Attack: single spinning polearm strike. Costs 25 Stamina. Not part of the optimal rotation under Masterstroke." };
+const plunge = { pct: "105% / 90% / 115%", note: "Plunge Attack: Collision 105%, Low 90%, High 115% at talent level 1. Situational only." };
+
+const normalLevels = [
+  { lv: "1", dmg: "100 / 108 / 116 / 124" },
+  { lv: "2", dmg: "108 / 116 / 125 / 133" },
+  { lv: "3", dmg: "116 / 125 / 134 / 143" },
+  { lv: "4", dmg: "126 / 136 / 145 / 155" },
+  { lv: "5", dmg: "135 / 145 / 156 / 166" },
+  { lv: "6", dmg: "145 / 156 / 167 / 178" },
+  { lv: "7", dmg: "157 / 169 / 181 / 193" },
+  { lv: "8", dmg: "170 / 183 / 196 / 209" },
+  { lv: "9", dmg: "182 / 196 / 210 / 224" },
+  { lv: "10", dmg: "198 / 213 / 228 / 243" },
+];
+
+const skillLevels = [
+  { lv: "1", dmg: "180%" },
+  { lv: "2", dmg: "193%" },
+  { lv: "3", dmg: "206%" },
+  { lv: "4", dmg: "219%" },
+  { lv: "5", dmg: "232%" },
+  { lv: "6", dmg: "245%" },
+  { lv: "7", dmg: "258%" },
+  { lv: "8", dmg: "271%" },
+  { lv: "9", dmg: "284%" },
+  { lv: "10", dmg: "297%" },
+];
+
+const burstLevels = [
+  { lv: "1", dmg: "580%" },
+  { lv: "2", dmg: "623%" },
+  { lv: "3", dmg: "666%" },
+  { lv: "4", dmg: "709%" },
+  { lv: "5", dmg: "752%" },
+  { lv: "6", dmg: "795%" },
+  { lv: "7", dmg: "838%" },
+  { lv: "8", dmg: "881%" },
+  { lv: "9", dmg: "924%" },
+  { lv: "10", dmg: "967%" },
+];
+
+const talents = [
+  {
+    name: "Normal Attack: Hexerei",
+    type: "Normal Attack",
+    desc: "Performs up to 4 consecutive spear strikes. Under Masterstroke, Normal Attacks convert to Hexerei chained strikes that deal Cryo DMG and scale up per hit.",
+    detail: "Hexerei is Lohen's primary sustained damage source. The four-hit chain scales from 100 percent on the first hit to 124 percent on the fourth, meaning the back half of the chain carries more damage than the front. This scaling is why interrupting the chain early is costly: a player who cancels after two hits loses the 116 and 124 percent multipliers, the two highest in the sequence. Each Hexerei hit consumes 8 Joy and can independently trigger Melt, making the chain devastating against Pyro-aurad enemies.",
+    data: normalLevels,
+  },
+  {
+    name: "Elemental Skill: Masterstroke",
+    type: "Elemental Skill",
+    desc: "Enters the Masterstroke state, generating Joy from a full Will to Win. Normal Attacks become Hexerei chains and the skill gains an enhanced effect that spends Joy.",
+    detail: "The Elemental Skill is the heart of Lohen's kit. Casting it with a full Will to Win meter converts the charge into 100 Joy and opens the Masterstroke state for 12 seconds, extended to 16 seconds with a full meter. The enhanced version of the skill, available only during Masterstroke, costs 20 Joy and deals 320 percent of ATK as Cryo damage at talent level 1, making it the highest single-hit multiplier in his kit outside the Burst. The skill also has a 6-second cooldown that begins when Masterstroke ends, gating how quickly you can re-enter the state.",
+    data: skillLevels,
+  },
+  {
+    name: "Elemental Burst: Coup de Grace",
+    type: "Elemental Burst",
+    desc: "Deals massive AoE Cryo DMG. Best used as a finisher when Joy is low to maximize the remaining Masterstroke window.",
+    detail: "The Burst is Lohen's finisher, dealing 580 percent of ATK as AoE Cryo damage at talent level 1. It costs no Joy, which is why the optimal rotation saves it for the end of the Masterstroke window: you spend all your Joy on Hexerei chains and the enhanced skill, then close with the Burst to deal a final burst of damage before the state collapses. The Burst has an 80-energy cost and a 15-second cooldown, so it is typically ready once per rotation. Energy Recharge of 120 to 130 percent is recommended to guarantee Burst availability each cycle.",
+    data: burstLevels,
+  },
+];
+
+const upgradePriority = [
+  {
+    talent: "Elemental Skill",
+    rank: "1st",
+    note: "Priority. Scales Masterstroke entry and enhanced skill damage, your main damage window.",
+    reason: "The Elemental Skill determines both the damage of the enhanced skill (your highest single-hit multiplier) and the duration of the Masterstroke state. Every level adds roughly 13 percent to the skill multiplier, and the extended duration at higher levels translates directly into more Hexerei chains per rotation. If you can only crown one talent, crown this one.",
+  },
+  {
+    talent: "Normal Attack",
+    rank: "2nd",
+    note: "Hexerei chains are your sustained damage under Masterstroke. Level after Skill.",
+    reason: "Normal Attack governs the Hexerei chain multipliers, which are your sustained damage throughout the Masterstroke window. Because the chain hits four times per cycle and each hit can trigger Melt, the Normal Attack talent contributes more total damage over a full rotation than the Burst. Level it second, after the Skill.",
+  },
+  {
+    talent: "Elemental Burst",
+    rank: "3rd",
+    note: "Finisher. Lower priority since it is used once per rotation, not spammed.",
+    reason: "The Burst is a single hit per rotation, so its talent level matters less than the Skill and Normal Attack, which fire multiple times. Level it last, and only crown it if you have spare Crowns of Insight after maxing the other two. The base 580 percent multiplier is already strong at level 1.",
+  },
+];
+
+const talentCosts = [
+  { lv: "2", books: "3 Ballad Teachings", mora: "12,500" },
+  { lv: "3", books: "2 Ballad Guides", mora: "17,500" },
+  { lv: "4", books: "4 Ballad Guides", mora: "25,000" },
+  { lv: "5", books: "6 Ballad Guides", mora: "30,000" },
+  { lv: "6", books: "9 Ballad Guides", mora: "37,500" },
+  { lv: "7", books: "4 Ballad Philosophies + 1 Mirror of Mushin", mora: "120,000" },
+  { lv: "8", books: "6 Ballad Philosophies + 1 Mirror of Mushin", mora: "260,000" },
+  { lv: "9", books: "12 Ballad Philosophies + 2 Mirror of Mushin", mora: "450,000" },
+  { lv: "10", books: "16 Ballad Philosophies + 2 Mirror of Mushin + 1 Crown of Insight", mora: "700,000" },
+];
+
+const talentTotals = [
+  { label: "Per talent (1 → 10)", value: "3 Teachings · 21 Guides · 38 Philosophies · 6 Mirror of Mushin · 1 Crown · 1.65M Mora" },
+  { label: "All three (1 → 10)", value: "9 Teachings · 63 Guides · 114 Philosophies · 18 Mirror of Mushin · 3 Crowns · 4.95M Mora" },
+  { label: "Recommended (Skill+NA to 10, Burst to 8)", value: "6 Teachings · 42 Guides · 76 Philosophies · 12 Mirror of Mushin · 2 Crowns · 3.3M Mora" },
+];
+
+const passives = [
+  {
+    name: "Vanguard's Resolve",
+    desc: "Gains 25% extra Will to Win when hitting enemies with Normal Attacks.",
+    detail: "This passive accelerates Will to Win generation by 25 percent on Normal Attack hits, reducing the time between Masterstroke windows. In practice, it cuts the charge time from roughly 10 seconds to 8 seconds, meaning more uptime over the course of a fight. It is the reason Normal Attacks are preferred over Skills for charging the meter in Normal Stance.",
+  },
+  {
+    name: "Cold Front",
+    desc: "CRIT Rate increases by 8% while in the Masterstroke state.",
+    detail: "This passive gives a free 8 percent CRIT Rate during Masterstroke, which effectively reduces the CRIT Rate you need from artifacts. When building artifacts, you can aim for a 1:2 CRIT Rate to CRIT DMG ratio starting from 42 percent CRIT Rate (50 percent with the passive active), letting you invest more subspace into CRIT DMG.",
+  },
+  {
+    name: "Knights' Logistics",
+    desc: "Refunds 15% of materials when crafting Polearm talent-up materials.",
+    detail: "An out-of-combat utility passive that saves Mora and materials when crafting Polearm talent books. It is not combat-relevant but reduces the long-term farming cost for Lohen and any other Polearm character you build, making it a small but consistent quality-of-life bonus.",
+  },
+];
+---
+
+<section id="skills" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      Lohen Skills & Talent Multipliers
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
+      Damage multipliers per talent level, the upgrade priority with the reasoning behind
+      it, and his passive talents explained. Level the Elemental Skill first, then Normal
+      Attack, then Burst. Each talent below includes its mechanic, its numbers, and why
+      it matters in practice.
+    </p>
+
+    <div class="mt-8 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6 sm:p-8">
+      <h3 class="text-lg font-bold text-frost-400">How Lohen's Kit Fits Together</h3>
+      <p class="mt-3 text-base leading-relaxed text-slate-300">
+        Lohen's three talents form a single damage loop. The Elemental Skill opens the
+        Masterstroke state and provides the enhanced skill, the highest single-hit
+        multiplier. Normal Attack becomes Hexerei chains under Masterstroke, providing
+        sustained damage across four scaling hits. The Elemental Burst is the finisher,
+        dealing a massive AoE hit that costs no Joy, making it the ideal close to the
+        rotation. Understanding how these three interact is the key to playing Lohen at
+        his damage ceiling.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-3">
+      {talents.map((t) => (
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+          <span class="rounded-full border border-frost-700/50 px-3 py-1 text-xs font-medium text-frost-400">
+            {t.type}
+          </span>
+          <h3 class="mt-3 text-lg font-bold text-slate-100">{t.name}</h3>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">{t.desc}</p>
+          <p class="mt-3 border-t border-slate-800/60 pt-3 text-xs leading-relaxed text-slate-500">
+            {t.detail}
+          </p>
+          <div class="mt-5 overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
+              <thead>
+                <tr class="border-b border-slate-800 text-left">
+                  <th class="py-2 pr-3 text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Lv</th>
+                  <th class="py-2 pr-3 text-xs font-medium uppercase tracking-[0.1em] text-slate-500">DMG</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60">
+                {t.data.map((row) => (
+                  <tr>
+                    <td class="py-1.5 pr-3 text-slate-400">{row.lv}</td>
+                    <td class="py-1.5 pr-3 font-semibold text-slate-100">{row.dmg}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Normal Attack Chain Breakdown (Hexerei)</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        The four-hit chain is not uniform: damage scales up with each hit. In the Normal
+        Stance and under Masterstroke, the multipliers per hit are:
+      </p>
+      <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {normalHits.map((h) => (
+          <div class="rounded-xl border border-slate-800 p-4 text-center">
+            <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">{h.hit}</p>
+            <p class="mt-2 text-2xl font-bold text-frost-400">{h.pct}</p>
+          </div>
+        ))}
+      </div>
+      <p class="mt-4 text-xs leading-relaxed text-slate-500">
+        The back half of the chain (hits 3 and 4, 116% + 124%) carries more damage than
+        the front half. Never cancel the chain early during Masterstroke — doing so skips
+        the two highest-multiplier hits. Note that Hexerei chains under Masterstroke use
+        the same 4-hit curve as the Normal Stance chain, so the Normal Attack talent level
+        directly buffs both.
+      </p>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div class="rounded-xl border border-slate-800 p-4">
+          <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Charged Attack</p>
+          <p class="mt-2 text-2xl font-bold text-frost-400">{charged.pct}</p>
+          <p class="mt-2 text-xs leading-relaxed text-slate-500">{charged.note}</p>
+        </div>
+        <div class="rounded-xl border border-slate-800 p-4">
+          <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Plunge Attack</p>
+          <p class="mt-2 text-2xl font-bold text-frost-400">{plunge.pct}</p>
+          <p class="mt-2 text-xs leading-relaxed text-slate-500">{plunge.note}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Talent Upgrade Priority</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        The order in which you level Lohen's talents directly affects his damage output.
+        The priority below is based on which talent contributes the most total damage
+        across a full rotation, with the reasoning for each ranking.
+      </p>
+      <div class="mt-4 grid gap-4 sm:grid-cols-3">
+        {upgradePriority.map((u) => (
+          <div class="rounded-xl border border-slate-800 p-4">
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-bold text-slate-100">{u.talent}</p>
+              <span class="rounded-full bg-frost-950 px-2 py-0.5 text-xs font-bold text-frost-400">
+                {u.rank}
+              </span>
+            </div>
+            <p class="mt-2 text-xs leading-relaxed text-slate-400">{u.note}</p>
+            <p class="mt-3 border-t border-slate-800/60 pt-3 text-xs leading-relaxed text-slate-500">
+              {u.reason}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Passive Talents</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        Lohen's three passive talents provide combat utility and out-of-combat
+        quality-of-life. The first two directly affect his damage loop, while the third
+        reduces long-term farming costs.
+      </p>
+      <div class="mt-4 space-y-4">
+        {passives.map((p) => (
+          <div class="border-t border-slate-800/60 pt-4 first:border-0 first:pt-0">
+            <p class="text-sm font-bold text-frost-400">{p.name}</p>
+            <p class="mt-1 text-sm leading-relaxed text-slate-400">{p.desc}</p>
+            <p class="mt-2 text-xs leading-relaxed text-slate-500">{p.detail}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    <p class="mt-3 text-xs leading-relaxed text-slate-500">
+      Multipliers are relative to base talent level 1 and are sourced from the 6.6 beta
+      kit, cross-checked with HoYoLAB community tests. Final numbers may shift at live
+      release. Energy Recharge recommendations assume a single Cryo teammate for particle
+      generation.
+    </p>
+
+    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Talent Upgrade Cost (Per Talent)</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        The Mora and material cost to level one talent from 1 to 10. Multiply by three
+        for all talents. The weekly boss drops (Mirror of Mushin) are the true gate:
+        you need 6 per talent, and you can only get 1-2 per week.
+      </p>
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full min-w-[480px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-left">
+              <th class="py-2 pr-4 font-semibold text-slate-400">Lv.</th>
+              <th class="py-2 pr-4 font-semibold text-slate-400">Materials</th>
+              <th class="py-2 pr-4 font-semibold text-frost-400">Mora</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {talentCosts.map((row) => (
+              <tr>
+                <td class="py-2 pr-4 text-slate-300">1 → {row.lv}</td>
+                <td class="py-2 pr-4 text-slate-400">{row.books}</td>
+                <td class="py-2 pr-4 font-semibold text-slate-100">{row.mora}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4 grid gap-3 border-t border-slate-800/60 pt-4 sm:grid-cols-3">
+        {talentTotals.map((t) => (
+          <div class="rounded-xl border border-slate-800 p-3">
+            <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">{t.label}</p>
+            <p class="mt-1 text-xs font-semibold text-slate-100">{t.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,125 @@
+---
+// Pitfalls: common mistakes players make with Lohen's kit, each with a
+// detailed explanation of why it is a mistake and the correct approach.
+const pitfalls = [
+  {
+    title: "Wasting Joy on low-damage actions",
+    desc: "Joy is finite. Spend it on the enhanced skill and the back half of the Hexerei chain, where damage scales highest, not on early chain hits.",
+    detail: "Joy is the resource Lohen spends during Masterstroke, and he only has 100 of it per window. The mistake is spending Joy on actions that deal low damage, like the first one or two Hexerei chain hits, which have lower multipliers than the later hits and the enhanced Skill. Because Joy is finite, every point spent on a low-multiplier action is a point not spent on a high-multiplier one. Over a full rotation, this can cost 15 to 20 percent of your total damage.",
+    fix: "Open the Masterstroke window with the first Hexerei chain to start the reaction cadence, then prioritize the enhanced Skill and the back half of the chain where multipliers peak. If Joy is running low, save the last 40 Joy for the enhanced Skill rather than spending it on a partial chain. The enhanced Skill is your highest single-hit multiplier, so it should always land if you have any Joy left.",
+  },
+  {
+    title: "Entering Masterstroke too early",
+    desc: "Wait until Will to Win is full before casting the Skill. Entering early shortens the state and cuts your damage window.",
+    detail: "Masterstroke is entered by casting the Elemental Skill, and its duration is partly determined by how much Will to Win you have banked. If you cast the Skill before Will to Win is full, you enter Masterstroke with a shorter duration and fewer resources, which means fewer Hexerei chains and a weaker enhanced Skill. This is the single most common rotation mistake because it feels natural to cast the Skill as soon as it is off cooldown.",
+    fix: "Always wait until Will to Win is at maximum before casting the Elemental Skill. Use the rest of your team's setup time to let Will to Win charge, so that by the time you enter Masterstroke, you have the full resource pool. If you are running a battery teammate, make sure their particles land before you cast the Skill so the conversion to Joy is maximized.",
+  },
+  {
+    title: "Skipping the Melt teammates",
+    desc: "Lohen's Cryo output is amplified by Melt. Running him without a Pyro applier like Durin or Nicole leaves damage on the table.",
+    detail: "Lohen's damage is Cryo, and Melt is the reaction that doubles Cryo damage. Without a Pyro applier on the team, every Hexerei chain and every enhanced Skill hits for raw Cryo damage, losing the 2x Melt multiplier. This is a 50 percent damage loss on every hit, which is far larger than any artifact or weapon upgrade could ever provide. Players often run Lohen in a Mono Cryo or Physical comp because they do not own Durin, and they wonder why their damage feels low.",
+    fix: "Always run Lohen with a Pyro applier. Durin is the best because his off-field Pyro is tuned to Lohen's chain cadence, but Xiangling, Dehya, or Thoma all work as substitutes. The Pyro aura must be on the enemy before Lohen's Hexerei chains land, so cast the Pyro applier's Skill and Burst before entering Masterstroke. If you cannot fit a Pyro applier, switch to a Freeze comp where Blizzard Strayer's CRIT bonus compensates for the lack of Melt.",
+  },
+  {
+    title: "Farming the wrong artifact set first",
+    desc: "A Day Carved From Rising Winds is BiS, but Blizzard Strayer is fine in Freeze. Do not mix sets early; commit to one team archetype.",
+    detail: "The mistake is farming a mixed set of 2-piece bonuses while deciding which team archetype to commit to, or farming Blizzard Strayer when you actually run a Melt comp. Mixed 2-piece sets are roughly 15 percent behind the correct 4-piece set, and Blizzard Strayer's 4-piece bonus only works in Freeze, so running it in a Melt comp wastes the bonus entirely. Players do this because the mixed set is available immediately from the strongbox, while the BiS set requires farming the new domain.",
+    fix: "Decide your team archetype before you farm artifacts. If you run the Melt comp, farm A Day Carved From Rising Winds. If you run the Freeze comp, farm Blizzard Strayer. Only use a 2-piece ATK plus 2-piece ATK set as a temporary bridge while you farm the correct 4-piece set, and replace it as soon as possible. Do not invest heavily in a mixed set, because you will replace it and waste the resin.",
+  },
+  {
+    title: "Over-investing in constellations past C1",
+    desc: "C1 is the best value. C2 and C6 are strong but not required. Prioritize his signature weapon before chasing constellations.",
+    detail: "C1 extends Masterstroke uptime by generating extra Joy, which is a direct damage increase of roughly 10 to 12 percent. C2 adds a team-wide Cryo bonus, which is strong but only matters if you run a Cryo-heavy team. C6 is a massive multiplier on Hexerei chain damage, but it costs five additional copies of Lohen, which is an enormous primogem investment. The mistake is pulling for C2 or C6 before getting the signature weapon, when the weapon provides a larger damage increase per primogem spent.",
+    fix: "Stop at C1 unless you are a whale. C1 is the best value because it directly extends the core mechanic. After C1, prioritize the signature weapon, which provides a larger damage increase than C2 for fewer primogems. Only chase C6 if you have surplus primogems and want to maximize Lohen for endgame challenge modes. For most players, C0 or C1 plus the signature weapon is the optimal stopping point.",
+  },
+  {
+    title: "Ignoring Energy Recharge on Lohen",
+    desc: "Lohen's Burst is part of his rotation, not a luxury. Running zero Energy Recharge stalls the loop.",
+    detail: "Lohen's Burst is the closer in his rotation and generates Energy for the next loop. If you run zero Energy Recharge substats, the Burst will not be ready when the rotation loops, which means you either delay the next Masterstroke window or skip the Burst entirely. Both options cost damage. Players often assume that because Lohen's damage is in his Skill and chains, the Burst does not matter, but it is part of the energy economy that keeps the rotation clean.",
+    fix: "Aim for 120 to 130 percent Energy Recharge on Lohen, or 110 percent if you run a Cryo battery teammate. Roll Energy Recharge as a substat on artifacts that do not have CRIT substats, and use a weapon with an Energy substat only if you are struggling. Test your rotation in the Spiral Abyss: if the Burst is not ready when the loop comes back around, add more Recharge until it is.",
+  },
+  {
+    title: "Positioning so the Hexerei chains miss",
+    desc: "The Hexerei chains have a forward arc and can miss small or mobile enemies. Poor positioning wastes the highest-multiplier hits.",
+    detail: "The Hexerei chains fire in a forward arc in front of Lohen, and each chain is a separate hit that can connect or miss independently. Against small or mobile enemies, or when Lohen is too far away, one or more chains can miss, which directly reduces damage because each chain is a separate multiplier. This is especially common against bosses that move, like the Scaramouche weekly boss, or against small mobs that get knocked back by the first chain.",
+    fix: "Position Lohen close to the enemy and facing them directly before starting the Hexerei chain. Use Kazuha or another grouper to cluster mobs so all four chains hit. Against mobile bosses, wait for a window where the boss is stationary, like after a stun, before committing to the chain. If an enemy is knocked back by the first chain, dash forward before the second chain to stay in range.",
+  },
+  {
+    title: "Crowning the wrong talents",
+    desc: "Crowns are limited. Crown the Elemental Skill and Normal Attack, not the Burst.",
+    detail: "Crowns of Insight are a limited resource, and the mistake is crowning Lohen's Burst because it looks like a big damage number, when the Skill and Normal Attack are where his sustained damage lives. The Burst is a single hit per rotation, while the Skill and the Hexerei chains (which scale with Normal Attack) fire every rotation and account for the majority of his damage. Crowning the Burst gives a smaller total damage increase than crowning the Skill or Normal Attack.",
+    fix: "Crown the Elemental Skill first, because it is the highest single-hit multiplier and the core of the kit. Crown the Normal Attack second, because the Hexerei chains scale with it and they are the bulk of his sustained damage. Only crown the Burst if you have surplus Crowns and have already crowned the other two talents. For most players, two Crowns on Skill and Normal Attack is the optimal investment.",
+  },
+  {
+    title: "Misreading the ICD and assuming every hit Melts",
+    desc: "Only every third Hexerei hit (or every 2.5s) applies Cryo for reactions. Assuming all four chain hits Melt inflates your damage expectations.",
+    detail: "Lohen's Cryo application follows the standard 2.5s / 3-hit ICD, so only hits 1, 4, 7, and so on apply a fresh Cryo aura. This means a four-hit chain produces roughly 2 Meltable hits, not 4. Players who assume every hit Melts build the team around the wrong assumption — they over-value Pyro application rate and under-value the fact that the 6.6 comp works precisely because Durin's Pyro is tuned to this cadence, not because he applies more Pyro.",
+    fix: "Judge Lohen's Melt damage by the actual application rate, not by the four-hit chain. In a full Masterstroke window (two chains + enhanced Skill), expect 4-5 Melts, not 8. The team build does not change, but your expectations and your artifact stat priority do: since fewer hits Melt, CRIT stats matter even more on the non-Melted hits.",
+  },
+  {
+    title: "Running ATK% goblet because 'numbers look similar'",
+    desc: "Cryo DMG Bonus on the goblet is always correct for Lohen. ATK% goblets only win in extreme ATK-starvation edge cases.",
+    detail: "All of Lohen's damage is Cryo, so the Cryo DMG Bonus goblet applies to 100 percent of his damage output. An ATK% goblet only beats it in the rare case where you have so much Cryo DMG bonus from other sources (and so little ATK) that the marginal value flips. For Lohen specifically, with his 8 percent Cold Front CRIT passive and heavy reliance on the Melt multiplier, the Cryo goblet is strictly better in every realistic build. ATK% goblets are a trap copied from builds where characters deal split damage.",
+    fix: "Always run a Cryo DMG Bonus goblet. If your ATK% goblet has dramatically better substats (say, 30+ CV more), the difference closes, but you should re-farm the Cryo goblet rather than settle. Test both in the same rotation to confirm before committing resin.",
+  },
+  {
+    title: "Building Energy Recharge at the expense of CRIT",
+    desc: "Over-stacking ER past 130 percent wastes a stat slot that could be CRIT DMG.",
+    detail: "The trap cuts both ways: zero ER stalls the rotation, but 150+ percent ER is equally wasteful. Every ER substat is a CRIT substat you did not roll. Lohen needs 120-130 percent ER (110 percent with a Cryo battery), and that budget is easily hit with one or two ER rolls per artifact plus the natural substat distribution. Players who panic-stack ER end up with a Burst every rotation but deal noticeably less chain damage, which is Lohen's core output.",
+    fix: "Target 120-130 percent ER and stop. If your rotation still stalls, the problem is usually particle timing (cast Durin's Skill before Lohen's window) or teammates, not Lohen's ER. Prefer one ER substat on two or three pieces over an ER sands — the ATK% sands provides far more damage.",
+  },
+  {
+    title: "Ignoring the forward arc and fighting at max range",
+    desc: "Hexerei chains fire in a forward arc and whiff entirely beyond polearm reach.",
+    detail: "Lohen's chains are not auto-tracking: they hit a forward cone in front of him. Fighting at the edge of the chain's range or against enemies that back away (e.g., Ruin machines, Specters) causes individual hits to miss. Because each hit is a separate multiplier and the back half of the chain is the strongest, a single missed hit 3 or 4 costs more than any artifact upgrade. Players who keep distance 'for safety' accidentally delete their highest-damage actions.",
+    fix: "Position Lohen so the enemy is within the first half of the chain's range, and re-approach after knockback. Use Kazuha/Sucrose to group before entering Masterstroke, and against mobile bosses only commit the full chain during stun or stationary windows. When in doubt, fight closer than feels comfortable — the chain has generous range.",
+  },
+  {
+    title: "Using the Charged Attack in the rotation",
+    desc: "Charged Attack spends 25 Stamina and does not scale with the Masterstroke window.",
+    detail: "Lohen's Charged Attack is a single 165 percent hit that costs 25 Stamina and does not benefit from the Masterstroke enhancements. In the Masterstroke window, every action should be a Hexerei chain hit or the enhanced Skill — the Charged Attack is a DPS loss in the window and a Stamina drain everywhere. Players who habitually use Charged Attacks (from other polearm mains like Xiangling) carry the muscle memory into Lohen's rotation and waste both Stamina and window time.",
+    fix: "Remove the Charged Attack from Lohen's rotation entirely. If you need a gap-closer or a way to reposition, dash instead — the dash also preserves the chain rhythm better. Only touch the Charged Attack in open-world content where stamina is not contested.",
+  },
+  {
+    title: "Casting the Burst at the wrong time",
+    desc: "The Burst is a finisher, not an opener. Using it early wastes the no-Joy finisher slot.",
+    detail: "Lohen's Burst costs no Joy and is best used at the END of the Masterstroke window, when Joy is too low for another chain. Using it as an opener (a common habit from burst-centric DPS) means you either skip the enhanced Skill or waste Joy on a partial chain later. It also means the Burst's energy generation lands early, which does not help the front-loaded damage window at all. The Burst is the closer: spend Joy first, then finish.",
+    fix: "Reserve the Burst for the last action before Masterstroke ends. If the Burst is up mid-window, hold it until Joy is below 20 and you cannot afford the enhanced Skill. This maximizes Joy efficiency and makes the Burst's energy generation line up with the start of the next rotation.",
+  },
+];
+---
+
+<section id="pitfalls" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      Common Lohen Mistakes to Avoid
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
+      The most common ways players build or play Lohen wrong, based on community
+      feedback since the 6.6 release. Each mistake includes a detailed explanation of
+      why it hurts your damage and the correct approach to fix it.
+    </p>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-2">
+      {pitfalls.map((p, i) => (
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+          <div class="flex items-start gap-4">
+            <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-frost-950 text-xs font-bold text-frost-400">
+              {i + 1}
+            </span>
+            <div class="min-w-0">
+              <h3 class="text-base font-bold text-slate-100">{p.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-400">{p.desc}</p>
+              <p class="mt-3 border-t border-slate-800/60 pt-2 text-xs leading-relaxed text-slate-500">
+                <span class="font-semibold text-slate-400">Why it hurts: </span>{p.detail}
+              </p>
+              <p class="mt-2 text-xs leading-relaxed text-slate-400">
+                <span class="font-semibold text-frost-400">Correct approach: </span>{p.fix}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

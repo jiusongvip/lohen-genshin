@@ -1,0 +1,21 @@
+# Lohen Genshin Impact Guide
+
+> A single-page fan guide to Lohen, the 5-star Cryo polearm character in Genshin Impact Version 6.6. Covers his dual-resource mechanics (Joy and Will to Win), the Masterstroke state, the Hexerei combo, best build, Melt teams with Durin and Nicole, materials, and a pull decision tool.
+
+## Page Summary
+
+Lohen is a 5-star Cryo polearm character released in Genshin Impact Version 6.6 on May 20, 2026. He is the Vice Captain of the Knights of Favonius Fifth Company. His kit centers on two resources, Joy and Will to Win, and the Masterstroke state that unlocks Hexerei chained Normal Attacks. His best build uses the Disaster and Remorse signature polearm, the A Day Carved From Rising Winds artifact set, an ATK% sands, a Cryo DMG goblet, and a CRIT circlet. His strongest team is the 6.6 Melt comp with Durin and Nicole. He is fully functional at C0, with C1 as the best constellation value.
+
+## Key Sections
+
+- Mechanics: dual-resource flow diagram, Masterstroke state machine, Hexerei combo timeline, Elemental Gauge/ICD, energy particles, frame data
+- Build: 6 weapons, 5 artifact sets, main stats, substats, constellation priority, weapon comparison table, team-specific builds, constellation DPS% value table, skill multipliers up to level 13
+- Teams: 6 team comps, rotation detail, energy budget, enemy matchup guide, team comparison table
+- Materials: ascension and talent checklist with resin, Mora, and farming cost; pre-farm timeline
+- Interactive tools: pull decision tool (5 questions), material calculator (level/talent targets), pull cost calculator (C0/C1/C2/C6 primogem budget), Hexerei combo player (step-by-step)
+- Pitfalls: 14 common mistakes with detailed explanations and fixes
+- FAQ: 59 questions with conclusion-first answers
+
+## Links
+
+- https://www.lohen-genshin.com

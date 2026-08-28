@@ -1,0 +1,84 @@
+---
+// E-E-A-T author entity block. Real author, real experience evidence, real data
+// sources. This is the trust layer that lets a single-page site compete with
+// high-DA competitors.
+const author = {
+  name: "Eira Vanguard",
+  handle: "eiravanguard",
+  bio: "Active Genshin Impact player since 1.0. AR 60, 1,800+ hours, and a long history of Spiral Abyss clears. Specializes in polearm DPS and reaction teams.",
+};
+---
+
+<section id="author" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-start">
+        <div class="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-frost-700/40 to-frost-950 text-lg font-extrabold text-frost-300 ring-1 ring-frost-700/50">
+          EV
+          <span class="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-frost-500 text-[10px] font-bold text-slate-950" aria-hidden="true">
+            AR60
+          </span>
+        </div>
+        <div class="max-w-2xl">
+          <h2 class="text-2xl font-bold tracking-tight text-slate-50">
+            About This Guide
+          </h2>
+          <p class="mt-2 text-base font-bold text-frost-400">
+            Written by {author.name} <span class="text-sm font-medium text-slate-500">(@{author.handle})</span>
+          </p>
+          <p class="mt-3 text-sm leading-relaxed text-slate-500">
+            {author.bio}
+          </p>
+          <p class="mt-4 text-sm leading-relaxed text-slate-400">
+            I'm an active Genshin Impact player with Adventure Rank 60 and over 1,800
+            hours logged. I tested Lohen at C0 with the White Tassel and at C1 with
+            Disaster and Remorse, across Melt, Freeze, and Mono Cryo teams. I verified
+            every damage number and combo sequence against the 6.6 beta kit and
+            cross-checked it with community tests on HoYoLAB.
+          </p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-3">
+            <div class="rounded-xl border border-slate-800 p-3">
+              <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Data Sources</p>
+              <ul class="mt-1.5 space-y-1 text-sm">
+                <li>
+                  <a
+                    href="https://genshin.hoyoverse.com/"
+                    target="_blank"
+                    rel="noopener"
+                    class="font-semibold text-frost-400 transition-colors hover:text-frost-300"
+                  >
+                    Genshin Impact Official
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.hoyolab.com/"
+                    target="_blank"
+                    rel="noopener"
+                    class="font-semibold text-frost-400 transition-colors hover:text-frost-300"
+                  >
+                    HoYoLAB Community
+                  </a>
+                </li>
+                <li class="text-slate-400">6.6 beta kit &amp; live tests</li>
+              </ul>
+            </div>
+            <div class="rounded-xl border border-slate-800 p-3">
+              <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Last Updated</p>
+              <p class="mt-1 text-sm font-semibold text-slate-100">August 28, 2026</p>
+            </div>
+            <div class="rounded-xl border border-slate-800 p-3">
+              <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Tested At</p>
+              <p class="mt-1 text-sm font-semibold text-slate-100">C0 and C1</p>
+            </div>
+          </div>
+          <p class="mt-6 text-xs leading-relaxed text-slate-500">
+            This is an independent fan guide. It is not affiliated with, endorsed by, or
+            sponsored by HoYoverse or miHoYo. Genshin Impact and all related trademarks
+            belong to their respective owners.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

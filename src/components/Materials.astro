@@ -1,0 +1,254 @@
+---
+// Materials checklist with farming routes, source details, priority order,
+// and pre-farm planning. Goes beyond a list to explain where and how to get
+// each material and what to prioritize before the banner goes live.
+const ascension = [
+  {
+    item: "Shivada Jade",
+    type: "Gem",
+    total: "1 + 9 + 9 + 6",
+    source: "Cryo Regisvine, Cryo Hypostasis, and any Cryo boss. Also craftable from lower-tier gems at the alchemy table.",
+    route: "Farm the Cryo Hypostasis in Mondstadt for the most efficient drops. Convert lower-tier gems upward at the alchemy table if you have leftovers from other Cryo characters. Each boss run costs 40 Resin and drops a mix of gem tiers.",
+  },
+  {
+    item: "Frostcore Crystal",
+    type: "Local Specialty",
+    total: "168",
+    source: "Local specialty found in the new 6.6 region, Nodai. Spawns on cold surfaces near ice flows and mountain ridges.",
+    route: "Use the interactive map to mark all 168 nodes. They respawn every 48 hours, so plan two gathering runs before the banner ends. Bring a Cryo character to reveal hidden nodes near ice formations. If you have a friend in another world, visit theirs to double your daily yield.",
+  },
+  {
+    item: "Knight's Insignia",
+    type: "Common Drop",
+    total: "18 + 30 + 36",
+    source: "Drops from Fatui Skirmishers across Teyvat. The three tiers (Recruit's, Sergeant's, Lieutenant's) drop from progressively stronger Fatui.",
+    route: "Farm the Fatui camp in Lingju Pass, Liyue, which spawns multiple Skirmishers in one spot. Higher-tier insignias can be crafted from lower ones at the alchemy table, so farm Recruit's Insignias and convert upward rather than hunting specific tiers.",
+  },
+  {
+    item: "Cryoregal Core",
+    type: "Boss Drop",
+    total: "46",
+    source: "Drops from the new weekly boss in the 6.6 region. This is Lohen's signature boss material and cannot be obtained before release.",
+    route: "This is the gating material. You can only get 1 to 2 per week from the weekly boss, so it takes roughly 4 to 6 weeks to collect all 46. Start farming it the week Lohen releases and never skip a week. Use the Parametric Transformer to convert other weekly boss drops if you have surplus.",
+  },
+];
+
+const talents = [
+  {
+    item: "Ballad Series",
+    type: "Talent Book",
+    total: "3 + 21 + 38",
+    source: "Forsaken Rift domain in Mondstadt, available on Wednesday, Saturday, and Sunday.",
+    route: "This is the main talent book bottleneck. Farm it on all three available days each week. Use Condensed Resin to double your yield per run and cut the Resin cost in half. If you have leftover books from other characters, convert them at the alchemy table using the Dust of Azoth equivalent for talent books.",
+  },
+  {
+    item: "Knight's Insignia",
+    type: "Common Drop",
+    total: "6 + 42 + 31",
+    source: "Same Fatui Skirmishers as the ascension material. Shared with the ascension path, so farm them together.",
+    route: "Since this is shared with ascension, farm enough Fatui in one go to cover both paths. The total across both paths is roughly 84 insignias of mixed tiers. Convert lower tiers upward at the alchemy table to hit the exact tier you need.",
+  },
+  {
+    item: "Mirror of Mushin",
+    type: "Weekly Boss",
+    total: "6",
+    source: "Drops from the new weekly boss introduced in 6.6. This is the talent upgrade material for Lohen's three talents.",
+    route: "You get one drop per weekly boss kill, and you need six total across three talents. This means roughly six weeks of weekly boss kills, assuming you get the right drop each time. Use the Dream Solvent at the alchemy table to convert other weekly boss drops into Mirror of Mushin if you get the wrong one.",
+  },
+  {
+    item: "Crown of Insight",
+    type: "Rare",
+    total: "1",
+    source: "Obtained from major events, the Frostbearing Tree, the Sacred Sakura, and other regional offering systems. Limited supply.",
+    route: "You only need one per crowned talent, and Lohen's best talents to crown are the Elemental Skill and Normal Attack. Do not crown the Burst unless you have surplus Crowns. Check all regional offering systems for unclaimed Crowns before farming events.",
+  },
+];
+
+const cost = [
+  { label: "Total Resin (approx)", value: "3,260" },
+  { label: "Farming Days (approx)", value: "12 days" },
+  { label: "Mora (approx)", value: "6.0M" },
+];
+
+const priority = [
+  {
+    rank: "1st",
+    item: "Frostcore Crystal (Local Specialty)",
+    reason: "Start here because local specialties are time-gated by a 48-hour respawn. You cannot speed this up with Resin, so the only way to get 168 is multiple real-time days. Begin gathering the moment Lohen is announced.",
+  },
+  {
+    rank: "2nd",
+    item: "Knight's Insignia (Common Drop)",
+    reason: "Farm these second because they are shared between ascension and talents, and they have no daily limit. You can farm them in bulk now and convert tiers upward later. Aim for 100 total to cover both paths with a buffer.",
+  },
+  {
+    rank: "3rd",
+    item: "Shivada Jade (Gem)",
+    reason: "Farm these third because Cryo bosses are always available and you likely have leftovers from other Cryo characters. Convert lower-tier gems upward at the alchemy table rather than farming fresh if you have a stockpile.",
+  },
+  {
+    rank: "4th",
+    item: "Ballad Series (Talent Book)",
+    reason: "Farm these on their available days (Wed/Sat/Sun) leading up to release. Use Condensed Resin to halve the Resin cost. This is the main Resin sink before release, so spend your daily Resin here once the local specialty and insignias are done.",
+  },
+  {
+    rank: "5th",
+    item: "Cryoregal Core & Mirror of Mushin (Weekly Boss)",
+    reason: "These cannot be pre-farmed because they come from the new weekly boss. Start the week Lohen releases and never skip a weekly kill. Use Dream Solvent to convert wrong drops into the right material.",
+  },
+];
+
+const preFarm = [
+  {
+    phase: "Before Banner Live",
+    items: "Frostcore Crystal, Knight's Insignia, Shivada Jade, Ballad Books",
+    note: "Everything except the weekly boss drops. Spend your daily Resin on the talent book domain on Wed/Sat/Sun and on Cryo bosses otherwise. Gather the local specialty every 48 hours. By release day, you should have all non-boss materials ready.",
+  },
+  {
+    phase: "Release Week",
+    items: "Cryoregal Core, Mirror of Mushin (Weekly Boss)",
+    note: "Kill the new weekly boss immediately on release. You get one shot per week, so missing the first week sets you back a full week. Use Dream Solvent to convert any wrong drops.",
+  },
+  {
+    phase: "Weeks 2-6",
+    items: "Remaining weekly boss drops, Mora, EXP books",
+    note: "The weekly boss is the long pole. Keep killing it weekly while you spend Mora and EXP books to level Lohen as the materials arrive. Do not hoard, level incrementally as soon as you have enough for the next ascension tier.",
+  },
+];
+---
+
+<section id="materials" class="border-b border-slate-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      Lohen Ascension & Talent Materials
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
+      The full checklist to level Lohen to 90 and crown his key talents, with farming
+      routes, source details, and a priority order so you know exactly what to farm first.
+      Pre-farm the local specialty and common drops before the banner goes live, because
+      the weekly boss drops are the only true gate.
+    </p>
+
+    <div class="mt-8 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6 sm:p-8">
+      <h3 class="text-lg font-bold text-frost-400">Farming Strategy</h3>
+      <p class="mt-3 text-base leading-relaxed text-slate-300">
+        The key insight is that almost everything except the weekly boss drops can be
+        pre-farmed before Lohen's banner goes live. The local specialty is time-gated by a
+        48-hour respawn, so it must be gathered over multiple real days. The common drops
+        and gems have no daily limit, so farm them in bulk. The talent books are available
+        three days a week, so spend your daily Resin on them. The only true bottleneck is
+        the weekly boss, which gives one drop per week and takes roughly six weeks to
+        complete. Plan around that gate.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <h3 class="text-lg font-bold text-slate-100">Ascension Materials</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-400">
+          Materials to take Lohen from level 1 to 90. Each entry includes the source and
+          the most efficient farming route.
+        </p>
+        <div class="mt-4 divide-y divide-slate-800">
+          {ascension.map((m) => (
+            <div class="py-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-semibold text-slate-100">{m.item}</p>
+                  <p class="text-xs text-slate-500">{m.type}</p>
+                </div>
+                <p class="text-sm font-semibold text-frost-400">{m.total}</p>
+              </div>
+              <p class="mt-2 text-xs leading-relaxed text-slate-400">
+                <span class="font-semibold text-slate-300">Source: </span>{m.source}
+              </p>
+              <p class="mt-1.5 text-xs leading-relaxed text-slate-500">
+                <span class="font-semibold text-slate-400">Route: </span>{m.route}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <h3 class="text-lg font-bold text-slate-100">Talent Materials (per talent)</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-400">
+          Materials to level one talent from 1 to 10. Multiply by three for all talents,
+          though you should only crown the Elemental Skill and Normal Attack.
+        </p>
+        <div class="mt-4 divide-y divide-slate-800">
+          {talents.map((m) => (
+            <div class="py-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-semibold text-slate-100">{m.item}</p>
+                  <p class="text-xs text-slate-500">{m.type}</p>
+                </div>
+                <p class="text-sm font-semibold text-frost-400">{m.total}</p>
+              </div>
+              <p class="mt-2 text-xs leading-relaxed text-slate-400">
+                <span class="font-semibold text-slate-300">Source: </span>{m.source}
+              </p>
+              <p class="mt-1.5 text-xs leading-relaxed text-slate-500">
+                <span class="font-semibold text-slate-400">Route: </span>{m.route}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-3 gap-4">
+      {cost.map((c) => (
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 text-center">
+          <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">{c.label}</p>
+          <p class="mt-2 text-xl font-bold text-frost-400">{c.value}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-3 text-xs leading-relaxed text-slate-500">
+      Totals assume Lv. 90 and all three talents at Lv. 10. Resin: 2,180 for ascension
+      plus 1,080 (360 per talent x3) for talents. Mora: 2.4M for ascension plus 3.6M for
+      talents. Resin and day counts are estimates for planning only; use the material
+      calculator below to adjust for your target levels.
+    </p>
+
+    <div class="mt-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Farming Priority Order</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        The order in which to farm materials, based on what is time-gated, what is
+        Resin-gated, and what can be pre-farmed. Follow this order to minimize the time
+        from pulling Lohen to having him fully built.
+      </p>
+      <div class="mt-4 divide-y divide-slate-800">
+        {priority.map((p) => (
+          <div class="py-3">
+            <div class="flex items-center gap-3">
+              <span class="rounded-full bg-frost-950 px-2.5 py-0.5 text-xs font-bold text-frost-400">{p.rank}</span>
+              <p class="text-sm font-bold text-slate-100">{p.item}</p>
+            </div>
+            <p class="mt-1.5 pl-1 text-xs leading-relaxed text-slate-400">{p.reason}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <h3 class="text-lg font-bold text-slate-100">Pre-Farm Timeline</h3>
+      <p class="mt-2 text-sm leading-relaxed text-slate-400">
+        A phased plan for what to farm and when, so that by the time Lohen's banner ends,
+        you have every material except the weekly boss drops, which you collect over the
+        following weeks.
+      </p>
+      <div class="mt-4 grid gap-4 md:grid-cols-3">
+        {preFarm.map((p) => (
+          <div class="rounded-xl border border-slate-800 p-4">
+            <p class="text-sm font-bold text-frost-400">{p.phase}</p>
+            <p class="mt-2 text-xs font-semibold text-slate-200">{p.items}</p>
+            <p class="mt-2 text-xs leading-relaxed text-slate-400">{p.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

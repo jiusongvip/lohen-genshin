@@ -1,0 +1,280 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import Toc from "../components/Toc.astro";
+import Mechanics from "../components/Mechanics.astro";
+import PullDecider from "../components/PullDecider.astro";
+import ComboPlayer from "../components/ComboPlayer.astro";
+import Skills from "../components/Skills.astro";
+import Build from "../components/Build.astro";
+import Teams from "../components/Teams.astro";
+import Materials from "../components/Materials.astro";
+import MaterialCalculator from "../components/MaterialCalculator.astro";
+import PullCostCalculator from "../components/PullCostCalculator.astro";
+import Pitfalls from "../components/Pitfalls.astro";
+import FAQ from "../components/FAQ.astro";
+import Author from "../components/Author.astro";
+
+const title = "Lohen Genshin Impact Guide: Best Build, Mechanics & Teams";
+const description =
+  "Everything about Lohen in Genshin Impact 6.6: is he worth pulling, his Cryo Polearm build, Joy & Will to Win mechanics, and Melt teams with Durin & Nicole.";
+const canonical = "https://www.lohen-genshin.com";
+
+const faqs = [
+  {
+    q: "Who is Lohen in Genshin Impact?",
+    a: "Lohen is a 5-star Cryo polearm character released in Version 6.6 on May 20, 2026. He is the Vice Captain of the Knights of Favonius Fifth Company and fights on the front line using a dual-resource kit built around Joy, Will to Win, and the Masterstroke state. His damage is concentrated in the Hexerei chains, a four-hit Normal Attack sequence that fires during Masterstroke and benefits from Melt reactions.",
+  },
+  {
+    q: "What element and weapon does Lohen use?",
+    a: "Lohen is a Cryo (ice) character who wields a polearm. All of his damage instances are Cryo, which means a Cryo DMG Bonus goblet is always correct and he synergizes with Cryo resonance and Cryo-specific supports like Shenhe.",
+  },
+  {
+    q: "Is Lohen a 5-star character?",
+    a: "Yes, Lohen is a 5-star character. He is a limited banner character, meaning he is only available on his rate-up banner during Version 6.6 and future reruns, not on the standard banner.",
+  },
+  {
+    q: "When is Lohen's release date?",
+    a: "Lohen released in Version 6.6 (Luna VII) on May 20, 2026, alongside Nicole. His banner ran for the first half of the version, with Nicole on the second half. Future reruns depend on the banner schedule.",
+  },
+  {
+    q: "Is Lohen worth pulling?",
+    a: "Lohen is worth pulling if you need a front-line Cryo DPS, especially if you own Durin or Nicole for a Melt team. He is a sidegrade if you already have a built Cryo main DPS like Ganyu or Ayaka. His value comes from the 6.6 Melt comp, which is one of the strongest Cryo teams in the game, so if you have the enablers, he is a clear pull. If you do not own Durin or Nicole, consider whether you want to invest in the full team before pulling.",
+  },
+  {
+    q: "How does Lohen's Joy resource work?",
+    a: "Joy is generated when Lohen enters the Masterstroke state via his Elemental Skill, which converts banked Will to Win into Joy. Joy is then spent on Hexerei chained Normal Attacks and enhanced skills. Each Hexerei chain hit costs Joy, and the enhanced Skill spends all remaining Joy. When Joy runs out, Masterstroke ends. The cap is 100 Joy per window, so the goal is to spend it on the highest-multiplier actions.",
+  },
+  {
+    q: "How does Will to Win work?",
+    a: "Will to Win accumulates through combat as Lohen deals and takes damage. When it is full, casting the Elemental Skill converts the charge into Joy and opens the Masterstroke state. A full Will to Win also extends Masterstroke duration and amplifies enhanced skill damage. The key is to wait until Will to Win is full before casting the Skill, because entering Masterstroke early shortens the window and reduces total damage.",
+  },
+  {
+    q: "What is the Masterstroke state?",
+    a: "Masterstroke is Lohen's enhanced combat state, entered via his Elemental Skill when Will to Win is full. While active, Normal Attacks become Hexerei chains (four rapid Cryo hits), his Skill gains an enhanced version that spends Joy for burst damage, and he gains a CRIT Rate passive. The state lasts until Joy is depleted, so managing Joy spend is the core skill expression.",
+  },
+  {
+    q: "What is the Hexerei combo?",
+    a: "Hexerei is the chained Normal Attack sequence Lohen performs under Masterstroke. The optimal loop is: Skill to enter Masterstroke, four Hexerei Normal Attacks (which trigger Melt if Pyro aura is applied), an enhanced Skill to spend remaining Joy, and the Burst as a finisher. This loop maximizes Joy spend on high-multiplier actions and ensures every chain triggers Melt.",
+  },
+  {
+    q: "What is Lohen's best weapon?",
+    a: "His signature polearm Disaster and Remorse is best-in-slot because it provides CRIT DMG and a Hexerei-specific damage bonus that is active during the entire Masterstroke window. Primordial Jade Winged-Spear is a strong 5-star alternative, roughly 8 to 10 percent behind. The free 3-star White Tassel is the best F2P option, roughly 20 percent behind but requiring zero pulls.",
+  },
+  {
+    q: "What are the best artifacts for Lohen?",
+    a: "A Day Carved From Rising Winds (4pc) is his best-in-slot set because its CRIT bonuses are active for the entire Masterstroke window. Blizzard Strayer (4pc) is strong in Freeze teams because it grants up to 40 percent CRIT Rate against Frozen enemies. Use an ATK% sands, a Cryo DMG goblet, and a CRIT Rate or CRIT DMG circlet, aiming for a 1:2 CRIT ratio.",
+  },
+  {
+    q: "What are the best team comps for Lohen?",
+    a: "The 6.6 Melt comp with Durin and Nicole is his strongest team because Durin's off-field Pyro is tuned to Lohen's chain cadence, triggering Melt on every Hexerei hit. Freeze comps with Kokomi and Kazuha are safer and more consistent, relying on Blizzard Strayer's CRIT bonus. Mono Cryo comps with Ganyu and Shenhe work against non-Cryo enemies where Melt is not possible.",
+  },
+  {
+    q: "How good are Lohen's constellations?",
+    a: "Lohen works at C0. C1 is the best value because it grants 4 extra Joy on Skill cast, extending Masterstroke uptime by roughly 20 percent. C2 adds a 15 percent team-wide Cryo DMG bonus during Masterstroke. C6 is the capstone, giving Hexerei chains a 40 percent multiplier and an additional Cryo blast on the final hit. Stop at C1 unless you are a whale, and prioritize the signature weapon before chasing C2 or higher.",
+  },
+  {
+    q: "Is Lohen good at C0?",
+    a: "Yes. Lohen is fully functional at C0 in all team archetypes. His core mechanic, the Hexerei chains under Masterstroke, is available at base constellation. Constellations, especially C1, add value but are not required for him to deal competitive damage in the Spiral Abyss.",
+  },
+  {
+    q: "Is Lohen F2P friendly?",
+    a: "Yes. At C0 with the free White Tassel and a 2pc ATK artifact set, Lohen is fully functional and can clear all endgame content. His signature weapon and constellations are optional upgrades that increase damage by 15 to 25 percent but are not required. The main F2P consideration is whether you own a Pyro applier like Xiangling, who is free and enables the Melt comp.",
+  },
+  {
+    q: "Who voices Lohen in Genshin Impact?",
+    a: "Lohen is voiced by Nick Wolfhard in English, Lin Jingnan in Chinese, and Amasaki Kohei in Japanese. The voice direction emphasizes his role as a front-line commander, with a confident and direct tone in combat lines.",
+  },
+  {
+    q: "What is Lohen's birthday?",
+    a: "Lohen's birthday is April 3. On his birthday, players receive a mail from Lohen with a gift, typically including a local specialty from his region and a dish he cooks.",
+  },
+  {
+    q: "What is Lohen's role in the Knights of Favonius?",
+    a: "Lohen is the Vice Captain of the Knights of Favonius Fifth Company, a remote unit. Despite leading a ranged unit, he prefers to fight on the front line with his polearm. This is reflected in his kit, which is a melee front-line DPS rather than a ranged support, and in his story quests, where he is shown leading from the front.",
+  },
+  {
+    q: "How does Lohen compare to Ganyu?",
+    a: "Both are Cryo main DPS units. Ganyu is ranged and excels in charged-shot and AoE comps, while Lohen is a front-line melee DPS whose Hexerei chains shine in Melt teams with Durin and Nicole. Lohen has better Melt synergy because his chains hit four times rapidly, consuming Pyro aura efficiently, while Ganyu's charged shots are single-hit. Ganyu is safer at range, Lohen deals more damage in the Melt comp.",
+  },
+  {
+    q: "Does Lohen need his signature weapon?",
+    a: "No. Primordial Jade Winged-Spear and the free White Tassel are viable alternatives. His signature polearm is an upgrade of roughly 8 to 10 percent over Jade Winged-Spear and 20 percent over White Tassel, but it is not required for him to function. Prioritize the signature weapon only if you have surplus primogems after deciding on constellations.",
+  },
+  {
+    q: "What is Lohen's talent priority?",
+    a: "Prioritize the Elemental Skill first, because it is the highest single-hit multiplier and the core of the kit. Level the Normal Attack second, because the Hexerei chains scale with it and account for the bulk of sustained damage. Level the Burst last, because it is a finisher and not the main damage source. Crown the Skill and Normal Attack, and only crown the Burst if you have surplus Crowns.",
+  },
+  {
+    q: "How much Energy Recharge does Lohen need?",
+    a: "Lohen needs 120 to 130 percent Energy Recharge to guarantee his Burst every rotation. If you run a Cryo battery teammate like Rosaria or a second Cryo character for resonance, you can drop to 110 percent. Test your rotation in the Spiral Abyss: if the Burst is not ready when the loop comes back around, add more Recharge until it is. Do not run zero Recharge, because the Burst is part of the energy economy that keeps the rotation clean.",
+  },
+  {
+    q: "What CRIT ratio should I aim for on Lohen?",
+    a: "Aim for a 1:2 CRIT Rate to CRIT DMG ratio. With the Cold Front passive granting 8 percent CRIT Rate during Masterstroke, you can lean slightly toward CRIT DMG. A strong endgame target is 50 percent CRIT Rate (42 percent on artifacts plus 8 percent passive) and 150 percent CRIT DMG. Prioritize CRIT Rate first so the Hexerei chains crit consistently, because each chain is a separate hit that can crit independently.",
+  },
+  {
+    q: "What are Lohen's ascension materials?",
+    a: "Lohen's ascension materials are Shivada Jade (Cryo gems), Frostcore Crystal (a new local specialty from the 6.6 region, 168 total), Knight's Insignia (Fatui common drop), and Cryoregal Core (a new weekly boss drop, 46 total). The local specialty and common drops can be pre-farmed before release, but the weekly boss drop cannot, making it the true bottleneck.",
+  },
+  {
+    q: "Can I pre-farm Lohen's materials before release?",
+    a: "Yes, except for the weekly boss drops. Pre-farm the Frostcore Crystal (local specialty, 48-hour respawn), Knight's Insignia (Fatui drops, no limit), Shivada Jade (Cryo bosses), and Ballad talent books (Wed/Sat/Sun domain). The Cryoregal Core and Mirror of Mushin come from the new weekly boss and can only be obtained after release, so start farming them the week Lohen releases and never skip a weekly kill.",
+  },
+  {
+    q: "Is Lohen good in the Spiral Abyss?",
+    a: "Yes. Lohen is a strong Spiral Abyss pick in the Melt comp, where he can clear single-target and small-mob chambers efficiently. His front-loaded burst window pairs well with Abyss chamber timers. He is weaker in chambers with Cryo-immune or Cryo-resistant enemies, where you should swap to a different DPS. In Freeze comps, he is safer but deals less damage.",
+  },
+  {
+    q: "What is Lohen's best Melt teammate?",
+    a: "Durin is the best Melt teammate because his off-field Pyro application rate is tuned to Lohen's Hexerei chain cadence, triggering Melt on every chain hit. If you do not own Durin, Xiangling is the strongest substitute because her Pyronado applies consistent off-field Pyro, though she has high energy needs. Dehya and Thoma also work but with lower application rates and correspondingly lower damage.",
+  },
+  {
+    q: "Does Lohen work in a Freeze team?",
+    a: "Yes. Lohen works in a Freeze team with Kokomi, Kazuha, and Rosaria. The comp trades raw damage for safety and consistency, relying on Blizzard Strayer's 4-piece bonus for 40 percent CRIT Rate against Frozen enemies. It is roughly 15 to 20 percent behind the Melt comp in damage but is far more forgiving in the Spiral Abyss because Frozen enemies cannot attack.",
+  },
+  {
+    q: "What is Lohen's best F2P team?",
+    a: "The best F2P team is Lohen, Xiangling, Bennett, and Kazuha (or Sucrose as a F2P Kazuha substitute). Xiangling provides off-field Pyro for Melt, Bennett provides an ATK buff and healing, and Kazuha or Sucrose groups enemies and shreds resistance. This team is fully F2P except for Lohen himself and deals competitive damage in the Spiral Abyss.",
+  },
+  {
+    q: "What does Lohen's ascension stat scale with?",
+    a: "Lohen's ascension stat is CRIT Rate, granting 24 percent at max ascension. Combined with the Cold Front passive (8 percent during Masterstroke), he has a built-in 32 percent CRIT Rate from his kit, which is why CRIT DMG is heavily preferred on artifacts and the circlet.",
+  },
+  {
+    q: "What are the exact Hexerei chain multipliers per hit?",
+    a: "The Hexerei chain multipliers per hit are 100 percent, 108 percent, 116 percent, and 124 percent at talent level 1, scaling to 198/213/228/243 percent at talent level 10. The back half of the chain (hits 3-4) carries more damage, so never cancel the chain early.",
+  },
+  {
+    q: "How long does the Masterstroke state last?",
+    a: "Masterstroke lasts 12 seconds base and is extended to 16 seconds when Will to Win is full at the moment of casting the Elemental Skill. Each Joy spent is a second not counted against the timer, so managing Joy spend effectively is what sustains the window, not the timer itself.",
+  },
+  {
+    q: "Does Lohen apply Cryo on every Hexerei hit?",
+    a: "No. Lohen's Cryo application follows the standard 2.5-second / 3-hit ICD, so only every third chain hit applies a fresh Cryo aura. In a four-hit chain, expect roughly 2 Meltable hits. This is why the 6.6 Melt comp with Durin works: his off-field Pyro is tuned to this exact cadence.",
+  },
+  {
+    q: "Is Lohen a Main DPS or a Sub DPS?",
+    a: "Lohen is an on-field Main DPS. His damage is concentrated in the Hexerei chains and enhanced Skill, which only fire while he is active and in Masterstroke. He does not provide off-field support, so build the team around giving him field time during his window.",
+  },
+  {
+    q: "What team does Lohen need for Spiral Abyss Floor 12?",
+    a: "For Floor 12, run the 6.6 Melt comp (Lohen, Durin, Nicole, Kazuha/Bennett) against Pyro-appliable enemies. Against Cryo-immune floors, swap Lohen out entirely or use the Freeze comp with Blizzard Strayer. Lohen's front-loaded burst window pairs well with chamber timers on single-target and small-mob floors.",
+  },
+  {
+    q: "Should I pull Lohen if I already have Ganyu?",
+    a: "Only if you want the Melt comp. Ganyu is ranged and safer, while Lohen deals more front-loaded damage in the 6.6 Melt comp. If you own Durin and Nicole, Lohen adds a team you do not have. If you only have Ganyu and no Pyro enablers, Lohen is a sidegrade rather than an upgrade.",
+  },
+  {
+    q: "Is Lohen better than Ayaka?",
+    a: "In the Melt comp, Lohen's front-loaded burst window deals more single-target damage than Ayaka's sustained Freeze output. In Freeze teams, Ayaka is generally stronger due to her easier rotations and Blizzard Strayer synergy. Choose based on team: Lohen for Melt with Durin/Nicole, Ayaka for classic Freeze.",
+  },
+  {
+    q: "What artifact main stats does Lohen need?",
+    a: "Lohen needs ATK% sands, Cryo DMG Bonus goblet, and CRIT circlet (Rate or DMG depending on your ratio). His ascension and passive CRIT Rate mean you can lean heavily toward CRIT DMG on the circlet. Substats in priority order: CRIT Rate, CRIT DMG, ATK%, Energy Recharge.",
+  },
+  {
+    q: "What is the optimal Lohen rotation?",
+    a: "The optimal rotation is: team buffs setup (Kazuha Burst, Nicole Skill, Durin Skill + Burst), then Lohen Skill to enter Masterstroke, Hexerei chain x4, enhanced Skill, a second Hexerei chain if Joy allows, and the Burst as the finisher. This spends Joy on the highest-multiplier actions and ends with the no-Joy Burst.",
+  },
+  {
+    q: "How many Melts does Lohen trigger per rotation?",
+    a: "Lohen triggers roughly 4 to 5 Melts per Masterstroke window: the enhanced Skill, hits 1 and 4 of the first chain, and hit 1 of the second chain. Because of the 2.5-second ICD, not every chain hit Melts, which is why building the team around the correct application cadence matters more than raw Pyro application.",
+  },
+  {
+    q: "What is Lohen's Energy Recharge requirement?",
+    a: "Lohen needs 120 to 130 percent Energy Recharge to Burst every rotation, dropping to 110 percent with a second Cryo character for resonance and battery. His Skill generates 3-4 Cryo particles, so external particles from teammates are still needed to fuel the 80-cost Burst each cycle.",
+  },
+  {
+    q: "What is the difference between Joy and Will to Win?",
+    a: "Will to Win is the charge resource built before Masterstroke (through combat, 100 cap). Joy is the spend resource during Masterstroke (also 100 cap), generated when the Skill converts a full Will to Win meter. You build Will to Win to enter, then spend Joy to deal damage — they are the gate and the fuel.",
+  },
+  {
+    q: "What happens if I cast Lohen's Skill with a partial Will to Win meter?",
+    a: "Casting the Skill with a partial Will to Win meter enters Masterstroke with less Joy, a shorter duration, and no enhanced-skill damage amp. This cuts effective damage by roughly 30 percent over the rotation. Always wait for a full meter before casting the Skill.",
+  },
+  {
+    q: "Is Lohen viable in the open world?",
+    a: "Yes. His burst window clears world bosses and elite enemies efficiently, and his front-loaded damage is overkill for open-world mobs. The main caveat is that Will to Win needs combat to charge, so in the overworld you enter Masterstroke slightly less often than in Abyss, but his normal attacks are still solid.",
+  },
+  {
+    q: "What weapon should I use if I have no 5-star polearms?",
+    a: "White Tassel is the best F2P option, providing CRIT Rate and a Normal Attack damage bonus that scales the Hexerei chains. Missive Windspear is the best event polearm with higher base ATK. Both are roughly 20-25 percent behind the signature weapon but fully clear all endgame content.",
+  },
+  {
+    q: "Does Lohen need a shield?",
+    a: "Not strictly, but a shielder or healer helps because getting staggered mid-chain wastes the highest-multiplier hits. Bennett's healing and Kazuha's grouping usually suffice. If you face heavy knockback (e.g., Vishap floors), consider Thoma or Zhongli in the flex slot.",
+  },
+  {
+    q: "How does Lohen compare to Rosaria?",
+    a: "Rosaria is a support/sub DPS with a strong CRIT Rate buff and off-field Burst, while Lohen is a dedicated on-field Main DPS. They fill different roles entirely: if you need a main DPS, Lohen; if you need a Cryo support/battery, Rosaria. They also pair well together in Lohen's Freeze comp.",
+  },
+  {
+    q: "What is Lohen's best talent to crown?",
+    a: "Crown the Elemental Skill first (it is the highest single-hit multiplier and core of the kit), then the Normal Attack second (the Hexerei chains scale with it and are the bulk of sustained damage). Only crown the Burst if you have surplus Crowns.",
+  },
+  {
+    q: "Is Lohen better at C0 or C1?",
+    a: "C1 is the best value constellation, granting 4 extra Joy on Skill cast and extending Masterstroke uptime by roughly 20 percent. It is a direct damage increase of roughly 10-12 percent. Most players should stop at C0 or C1 and prioritize the signature weapon before chasing C2 or higher.",
+  },
+  {
+    q: "What does Lohen's C6 do?",
+    a: "C6 (Masterstroke Apex) grants Hexerei chains a 40 percent damage multiplier and makes the final chain hit trigger an additional Cryo blast. It is Lohen's capstone but costs five additional copies, making it a whale-only investment. For most players, C0 or C1 is the optimal stopping point.",
+  },
+  {
+    q: "Does Lohen work with Shenhe?",
+    a: "Yes. Shenhe's Icy Quill buffs each Hexerei chain hit individually, which is extremely effective because the chains hit four times and each can trigger a Quill charge. Lohen + Shenhe is a strong pairing in both Mono Cryo and Freeze comps. She is Lohen's best Cryo support.",
+  },
+  {
+    q: "What is the Cuniculus Chapter about?",
+    a: "The Cuniculus Chapter is Lohen's story quest in Version 6.6. It follows his return to Mondstadt, explores why he left the city, and shows how he learns to trust teammates after years of charging in alone. Thematically it mirrors his gameplay: a front-line fighter who needs the team behind him, which is why his best team is the 6.6 trio.",
+  },
+  {
+    q: "Is Lohen connected to Durin and Nicole in the story?",
+    a: "Yes. Lohen, Durin, and Nicole form the core of the 6.6 storyline, tied to Rhinedottir's associates. Their gameplay synergy mirrors the story: Lohen front-lines while Durin and Nicole enable him. This is why the 6.6 Melt comp is both a gameplay and a narrative team.",
+  },
+  {
+    q: "What is Lohen's signature weapon passive?",
+    a: "Disaster and Remorse provides 608 base ATK and 66.2 percent CRIT DMG at level 90. Its passive grants CRIT Rate and a Hexerei-specific damage bonus when the wielder is in an enhanced state, which is active during the entire Masterstroke window — the strongest possible uptime for the passive.",
+  },
+  {
+    q: "How much does the signature weapon improve Lohen over White Tassel?",
+    a: "Disaster and Remorse is roughly 20 percent stronger than White Tassel and 8-10 percent stronger than Primordial Jade Winged-Spear. It is the largest single damage upgrade available to Lohen, but the F2P White Tassel build is still fully viable in the Spiral Abyss.",
+  },
+  {
+    q: "Should I pull Lohen's weapon or constellations first?",
+    a: "The signature weapon provides a larger damage increase per primogem spent than constellations past C1. The recommended order is: C0, then the signature weapon, then C1, then stop. Only chase C2+ if you are a whale or want to maximize him for challenge modes.",
+  },
+  {
+    q: "Is Lohen good against Cryo enemies?",
+    a: "No. Lohen deals only Cryo damage, so he is completely ineffective against Cryo-immune enemies. Against Cryo-resistant enemies, he works but deals reduced damage. Always check the Abyss floor's enemy composition and swap Lohen out for a non-Cryo DPS when needed.",
+  },
+  {
+    q: "What is the best weapon for a Freeze Lohen?",
+    a: "In a Freeze comp, Disaster and Remorse remains best-in-slot, but Staff of Homa closes the gap to within 3 percent. Blizzard Strayer's CRIT Rate bonus means you can stack CRIT DMG on the circlet and artifacts, making high-CRIT-DMG weapons like Homa and Deathmatch stronger in this archetype than in Melt.",
+  },
+  {
+    q: "Does Lohen need Elemental Mastery?",
+    a: "Yes, but only as a minor stat in Melt comps. Because Lohen triggers Melt (2x), Elemental Mastery from Sucrose's sharing or substats adds meaningful reaction damage. It is not worth a main stat slot, but an Elemental Mastery roll on a piece with good CRIT substats is never wasted in the Melt comp.",
+  },
+];
+---
+
+<Layout title={title} description={description} canonical={canonical} faqs={faqs}>
+  <main>
+    <Hero />
+    <Toc />
+    <Mechanics />
+    <PullDecider />
+    <ComboPlayer />
+    <Skills />
+    <Build />
+    <Teams />
+    <Materials />
+    <MaterialCalculator />
+    <PullCostCalculator />
+    <Pitfalls />
+    <FAQ faqs={faqs} />
+    <Author />
+  </main>
+</Layout>

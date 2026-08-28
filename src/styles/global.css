@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit Variable", "Outfit", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-display: "Outfit Variable", "Outfit", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  /* Lohen Cryo accent: ice cyan-blue, kept below full saturation */
+  --color-frost-300: #8fd9e8;
+  --color-frost-400: #5cc4d9;
+  --color-frost-500: #3aa7c4;
+  --color-frost-600: #2a8aa6;
+  --color-frost-700: #1f6d85;
+  --color-frost-950: #0a1f28;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background-color: var(--color-slate-950);
+  color: var(--color-slate-200);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-frost-500) 40%, transparent);
+  color: var(--color-slate-50);
+}
+
+.prose-guide {
+  color: var(--color-slate-300);
+  line-height: 1.75;
+  max-width: 68ch;
+}
+
+.prose-guide h2 {
+  color: var(--color-slate-50);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.prose-guide p {
+  margin-bottom: 1rem;
+}
+
+.hairline-t {
+  border-top: 1px solid color-mix(in srgb, var(--color-slate-500) 18%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

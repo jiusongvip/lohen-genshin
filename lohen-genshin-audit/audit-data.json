@@ -1,0 +1,289 @@
+{
+  "summary": {
+    "health_score": 75,
+    "business_type": "Content / Fan Wiki & Strategy Guide (single-character niche site)",
+    "top_findings": [
+      "CRITICAL: Fabricated Game+AggregateRating JSON-LD (9.4/10, 78 votes) violates Google review guidelines and risks a manual action",
+      "HIGH: Zero outbound citations/links \u2014 'Data Sources' claims are unverifiable, hurting E-E-A-T vs Fandom/Game8/HoYoverse",
+      "HIGH: 2 of 3 planned mechanism SVG visualizations missing (state machine, combo timeline) \u2014 core information-gain weapon is only 1/3 built",
+      "HIGH: Hero LCP image not optimized (no fetchpriority, no preload, 113 KB)",
+      "HIGH: 404 page emits all rich structured data (VideoGame/HowTo/Game/etc.)",
+      "MEDIUM: Canonical (no-slash) vs sitemap (slash) homepage mismatch",
+      "MEDIUM: IndexNow key file exists but submission is not wired"
+    ],
+    "quick_wins": [
+      "Delete the Game+AggregateRating JSON-LD block (10-min fix, removes penalty risk)",
+      "Add fetchpriority='high' + preload to hero image and preload fonts",
+      "Strip JSON-LD from the 404 template",
+      "Remove the duplicate FAQ question",
+      "Add <link rel='indexnow'> + IndexNow submission at deploy",
+      "Add 3-5 outbound citation links to Data Sources section"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 75,
+      "what_works": [
+        "robots.txt correct and references sitemap",
+        "XML sitemap-index + sitemap-0 well-formed",
+        "404 page has noindex, follow and clear H1",
+        "Canonical tag present on homepage",
+        "Zero third-party scripts (self-hosted assets only)"
+      ],
+      "findings": [
+        {
+          "title": "Canonical vs sitemap homepage URL mismatch",
+          "severity": "Medium",
+          "description": "Canonical is https://www.lohen-genshin.com (no slash) but sitemap lists https://www.lohen-genshin.com/ (with slash, trailingSlash:'always'). Two URL forms for the homepage create indexation ambiguity.",
+          "recommendation": "Pick one form (no-slash per framework spec), keep sitemap and canonical identical, and add a 301 between the two forms."
+        },
+        {
+          "title": "404 page emits full rich structured data",
+          "severity": "High",
+          "description": "404.html includes WebPage, VideoGame, Organization, BreadcrumbList, HowTo, and Game JSON-LD. Error pages should carry no structured data.",
+          "recommendation": "Strip all JSON-LD from the 404 template; keep only noindex meta and the link back to /."
+        },
+        {
+          "title": "IndexNow key file exists but not wired",
+          "severity": "Medium",
+          "description": "4e1f2c3d4a5b6789f0a1.txt exists at root but there is no <link rel='indexnow'> and no submission pipeline to api.indexnow.org. The file alone does nothing.",
+          "recommendation": "Wire IndexNow submission (Cloudflare Pages IndexNow integration or a worker) before/at launch."
+        },
+        {
+          "title": "No security headers verifiable pre-deploy",
+          "severity": "Low",
+          "description": "No live origin to inspect. CSP, HSTS, X-Content-Type-Options, Referrer-Policy cannot be confirmed.",
+          "recommendation": "Add security headers via Cloudflare Pages _headers at deployment; enable HSTS."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 80,
+      "what_works": [
+        "17,347 words of deep, non-padded content (target 5-7k)",
+        "All 6 search intents covered on one page in user-journey order",
+        "16 H2 / 56 H3 hierarchy; 15 data tables; 60 FAQ questions",
+        "60 details blocks all contain real content in initial HTML (SEO-safe)",
+        "Strong E-E-A-T block: AR 60, 1,800+ hrs, tested C0/C1, dated, disclaimer"
+      ],
+      "findings": [
+        {
+          "title": "No outbound citations \u2014 Data Sources unverifiable",
+          "severity": "High",
+          "description": "The About block claims 'Data Sources: HoYoLAB, 6.6 beta' but the page has zero external links. No verifiable provenance for stats; weak vs established wikis.",
+          "recommendation": "Add real outbound links to HoYoLAB official pages, miHoYo 6.6 notices, and community test threads in the Data Sources section."
+        },
+        {
+          "title": "Only 1 of 3 planned mechanism visualizations implemented",
+          "severity": "High",
+          "description": "The dual-resource flow SVG exists, but the Masterstroke state machine and Hexerei combo timeline SVGs are missing \u2014 the core information-gain differentiator is only 1/3 built (llms.txt overclaims them).",
+          "recommendation": "Build the 2 missing SVG visualizations (state machine, combo timeline with per-hit damage distribution)."
+        },
+        {
+          "title": "Duplicate FAQ question",
+          "severity": "Low",
+          "description": "'What is Lohen's role in the Knights of Favonius?' appears twice with near-identical answers (FAQ #17 and #38).",
+          "recommendation": "Remove or rewrite the duplicate."
+        },
+        {
+          "title": "Anonymous author identity",
+          "severity": "Medium",
+          "description": "Author is an unnamed 'active player'; schema author is 'Editorial Team' (Organization). Inconsistent identity, but no /about/ page is planned (single-page site by design).",
+          "recommendation": "Give the author a stable pseudonym inline (Author component) and align schema author with the visible author. Keep the E-E-A-T block on the homepage."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 88,
+      "what_works": [
+        "Title 63 chars, keyword-led: 'Lohen Genshin Impact Guide: Best Build, Mechanics & Teams (6.6)'",
+        "Meta description present and compelling (covers pull/build/mechanics/teams)",
+        "Exactly one H1; 16 H2 with strong keyword coverage",
+        "Full OG + Twitter card set with image",
+        "robots meta index, follow; descriptive alt text on hero",
+        "Internal anchor TOC (UX + internal-linking)"
+      ],
+      "findings": [
+        {
+          "title": "LCP hero image missing fetchpriority/preload",
+          "severity": "Medium",
+          "description": "Hero img has no fetchpriority='high', no preload, no decoding='async'; 113 KB in the LCP slot.",
+          "recommendation": "Add fetchpriority='high', <link rel='preload' as='image'>, and decoding='async' to hero."
+        },
+        {
+          "title": "Single-page architecture (by design)",
+          "severity": "Info",
+          "description": "Single-page strategy confirmed: no subpages. All long-tail coverage handled by 59 FAQ answers and anchor sections on the one page.",
+          "recommendation": "Keep single-page; use community distribution to earn backlinks/brand searches instead of internal link equity."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 70,
+      "what_works": [
+        "7 schema types present (WebPage, VideoGame, Organization, BreadcrumbList, HowTo, Game, FAQPage)",
+        "WebPage has datePublished/dateModified/inLanguage/isPartOf/about",
+        "HowTo is valid with 5 steps and totalTime",
+        "FAQPage valid with 60 conclusion-first Q&A"
+      ],
+      "findings": [
+        {
+          "title": "Fabricated Game + AggregateRating structured data",
+          "severity": "Critical",
+          "description": "Game entity with aggregateRating 9.4/10 and ratingCount 78, plus a review authored by the site's own editorial team. No user voting system exists on the page. This violates Google's review-snippet guidelines (self-serving/fake reviews) and risks a manual action.",
+          "recommendation": "Delete the Game+AggregateRating JSON-LD block immediately. If a rating is wanted, implement a real user voting widget and mark up only live aggregate data."
+        },
+        {
+          "title": "404 page schema pollution",
+          "severity": "High",
+          "description": "404.html emits VideoGame/Organization/BreadcrumbList/HowTo/Game JSON-LD. Error pages must not carry rich entities.",
+          "recommendation": "Strip all JSON-LD from the 404 template."
+        },
+        {
+          "title": "Duplicate FAQ question in FAQPage",
+          "severity": "Low",
+          "description": "Same Knights of Favonius question twice in mainEntity.",
+          "recommendation": "Deduplicate the FAQ array."
+        },
+        {
+          "title": "Author identity inconsistent",
+          "severity": "Low",
+          "description": "Schema author Organization 'Editorial Team' vs visible text 'active player'.",
+          "recommendation": "Align to a single named author entity."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 70,
+      "what_works": [
+        "Zero third-party scripts/fonts/ads \u2014 excellent for INP and privacy",
+        "Only ~9 KB inline JS; 28 KB single CSS",
+        "Hero has width/height (CLS-safe)",
+        "WebP hero image; no external requests"
+      ],
+      "findings": [
+        {
+          "title": "LCP not optimized (hero image)",
+          "severity": "High",
+          "description": "No fetchpriority='high', no preload, no decoding='async'; 113 KB WebP in the LCP slot. Lab estimate 1.5-2.5s mobile.",
+          "recommendation": "Add fetchpriority='high' + preload + decoding='async'; compress hero toward ~70 KB."
+        },
+        {
+          "title": "Fonts not preloaded",
+          "severity": "Medium",
+          "description": "47 KB variable Outfit font has no preload hints; text may swap late.",
+          "recommendation": "Preload the two woff2 files; confirm font-display: swap."
+        },
+        {
+          "title": "Single 280 KB HTML document",
+          "severity": "Medium",
+          "description": "17k words + 7 JSON-LD + 4 tool scripts inlined into one file; heavy parse on low-end mobile.",
+          "recommendation": "Acceptable for now; defer tool scripts if mobile LCP suffers after launch."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 70,
+      "what_works": [
+        "llms.txt present, well-structured (summary, key sections, links)",
+        "60 conclusion-first FAQ answers \u2014 ideal for AI Overviews",
+        "Full content in initial HTML (no JS gating)",
+        "Structured data aids AI comprehension"
+      ],
+      "findings": [
+        {
+          "title": "No external citations or authority signals",
+          "severity": "High",
+          "description": "Zero outbound links; no inbound links or brand searches pre-deploy. AI answer engines weight citations/authority; a DA-0 uncited page is unlikely to be cited.",
+          "recommendation": "Add outbound citations (HoYoLAB/official) and execute the community backlink plan (Reddit/HoYoLAB/Discord) per \u5efa\u7ad9\u6846\u67b6 6.5.6."
+        },
+        {
+          "title": "No brand mention signals yet",
+          "severity": "Medium",
+          "description": "No live brand-search or mentions to signal to AI/search engines.",
+          "recommendation": "Seed brand searches and mentions via community distribution post-launch."
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 65,
+      "what_works": [
+        "Hero alt text descriptive and keyword-relevant",
+        "Width/height set (no CLS)",
+        "WebP format; SVG has role='img' + aria-label",
+        "favicon + apple-touch-icon + OG image present"
+      ],
+      "findings": [
+        {
+          "title": "Only 1 image on a 17k-word guide",
+          "severity": "Medium",
+          "description": "Only the hero <img> and 1 inline SVG exist. The 3-visualization mechanism plan is 1/3 complete.",
+          "recommendation": "Add the 2 missing SVG visualizations; consider screenshots of the combo player."
+        },
+        {
+          "title": "Hero image not LCP-optimized",
+          "severity": "High",
+          "description": "113 KB, no fetchpriority/preload.",
+          "recommendation": "Optimize (fetchpriority + preload + compress)."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Fixes",
+        "timeframe": "Week 1",
+        "items": [
+          "Delete the fabricated Game+AggregateRating JSON-LD block from schema markup",
+          "Strip all JSON-LD from the 404 template",
+          "Align canonical + sitemap homepage URL (single form) and add 301 between forms"
+        ]
+      },
+      {
+        "name": "Phase 2: High-Impact Improvements",
+        "timeframe": "Weeks 2-3",
+        "items": [
+          "Add fetchpriority='high' + preload + decoding='async' to hero image; compress to ~70 KB",
+          "Preload the 2 Outfit font files; confirm font-display: swap",
+          "Build the 2 missing mechanism SVGs (Masterstroke state machine, Hexerei combo timeline)",
+          "Add real outbound citations to the Data Sources section (HoYoLAB, official 6.6 notice, community tests)",
+          "Wire IndexNow submission at Cloudflare deploy"
+        ]
+      },
+      {
+        "name": "Phase 3: Content & Authority",
+        "timeframe": "Month 2",
+        "items": [
+          "Confirm single-page scope: no subpages, no /about/ page (by design)",
+          "Deploy to Cloudflare Pages with www redirect + security headers (HSTS, CSP, X-Content-Type-Options)",
+          "Submit sitemap to GSC and Bing Webmaster; verify IndexNow pings",
+          "Remove duplicate FAQ question",
+          "Community distribution: Reddit r/Genshin_Impact, HoYoLAB, Discord to earn 3-5 backlinks + brand searches"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring & Iteration",
+        "timeframe": "Ongoing",
+        "items": [
+          "Run PageSpeed Insights + CrUX after deploy to replace lab estimates with field data",
+          "Track GSC impressions/clicks/CTR for 'lohen genshin' and long-tail variants",
+          "Check AI visibility (ask ChatGPT/Perplexity 'Who is Lohen in Genshin Impact?' and verify citation)",
+          "Update content with 6.6 live-test data on launch day to catch the freshness window",
+          "Monthly freshness updates + version-following (per \u5efa\u7ad9\u6846\u67b6 6.5.7)"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
