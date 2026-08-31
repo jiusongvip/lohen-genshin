@@ -1,0 +1,128 @@
+---
+// Lore section: Lohen's background, the Cuniculus Chapter, and the 6.6 trio, plus a
+// relationship map and a recurring character line. All content is in the initial HTML.
+const stages = [
+  {
+    era: "Background",
+    title: "The Vice Captain Who Fights From the Front",
+    body: [
+      "Lohen is the Vice Captain of the Knights of Favonius Fifth Company, a remote scouting unit based far from Mondstadt's city walls. Despite commanding a unit of ranged marksmen, he carries a polearm and fights from the front — a contradiction that defines both his personality and his kit.",
+      "His aggressive, win-at-all-costs combat style is captured in a recurring line, \"I'll close the distance myself.\" It is why his kit is built around the dual resources of Joy and Will to Win: he literally wills himself to win as the fight goes on, then spends that will as raw offense.",
+    ],
+    relations: ["Vice Captain, Fifth Company", "Favonius Fifth Company", "Knights of Favonius"],
+  },
+  {
+    era: "Version 6.6",
+    title: "The Cuniculus Chapter",
+    body: [
+      "His story quest, the Cuniculus Chapter, follows his return to Mondstadt during the 6.6 \"Luna VII\" events. It explores why he left the city and his rivalry-turned-alliance with the alchemist Rhinedottir's old associates.",
+      "Thematically, the quest mirrors his gameplay: Lohen learns that even a front-line fighter needs the team behind him — which is why his best team is the 6.6 trio of Lohen, Durin, and Nicole, not a solo carry.",
+    ],
+    relations: ["Cuniculus Chapter", "Luna VII events", "Rhinedottir's old associates"],
+  },
+  {
+    era: "The 6.6 Trio",
+    title: "Durin, Nicole, and the Melt Comp",
+    body: [
+      "Lohen, Durin, and Nicole form the core of the 6.6 storyline, tied to Rhinedottir's associates. Their gameplay synergy mirrors the story: Lohen front-lines while Durin and Nicole enable him.",
+      "Durin's off-field Pyro is tuned to Lohen's Hexerei chain cadence, triggering Melt on every chain hit. Nicole amplifies the damage window. This is why the 6.6 Melt comp is both a gameplay and a narrative team.",
+    ],
+    relations: ["Durin (Melt enabler)", "Nicole (amplifier)", "Rhinedottir's associates"],
+  },
+];
+
+const relationships = [
+  { name: "Durin", note: "The Melt enabler. His off-field Pyro is tuned to Lohen's chain cadence, making the 6.6 Melt comp Lohen's strongest team." },
+  { name: "Nicole", note: "Provides Pyro resonance and a damage amplification buff that scales Lohen's Hexerei chains." },
+  { name: "Rhinedottir's associates", note: "The 6.6 storyline ties Lohen, Durin, and Nicole to the alchemist's old circle." },
+  { name: "Knights of Favonius", note: "Lohen commands the Fifth Company, a remote scouting unit, as its Vice Captain." },
+  { name: "Ganyu", note: "The closest main-DPS comparison — ranged and safer, while Lohen deals more front-loaded Melt damage." },
+  { name: "Ayaka", note: "Another Cryo main DPS benchmark: stronger in classic Freeze, weaker in the Melt comp." },
+];
+
+const voicelines = [
+  {
+    speaker: "Lohen, in combat",
+    text: "\"I'll close the distance myself.\"",
+  },
+  {
+    speaker: "Lohen, on the Fifth Company",
+    text: "A unit of marksmen — and I'm the one carrying a polearm into the fray. The men stopped questioning it long ago.",
+  },
+  {
+    speaker: "Lohen, on his team",
+    text: "I used to think charging in alone was strength. It took the Cuniculus Chapter to teach me otherwise.",
+  },
+];
+---
+
+<section id="lore" class="reveal border-b border-stone-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-stone-50 sm:text-4xl">
+      Lohen's Story: The Aggressive Vanguard
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-stone-400">
+      Who Lohen is, why the Cuniculus Chapter matters, and how the 6.6 trio became his signature
+      team. Understanding the story behind the kit explains why he plays the way he does.
+    </p>
+
+    <img
+      src="/portraits/lohen-wide.webp"
+      alt="Lohen key art — the Aggressive Vanguard of the Knights of Favonius"
+      width="2048"
+      height="1024"
+      loading="lazy"
+      decoding="async"
+      class="mt-8 w-full rounded-2xl border border-stone-800"
+    />
+
+    <ol class="relative mt-12 space-y-12 border-l border-stone-800 pl-8">
+      {stages.map((s) => (
+        <li class="relative">
+          <span
+            class="absolute -left-[2.35rem] top-1 h-3 w-3 rounded-full bg-frost-500 ring-4 ring-stone-950"
+            aria-hidden="true"
+          ></span>
+          <p class="text-xs font-semibold uppercase tracking-wide text-frost-400">{s.era}</p>
+          <h3 class="mt-2 text-xl font-bold tracking-tight text-stone-100">{s.title}</h3>
+          <div class="mt-3 max-w-3xl space-y-3">
+            {s.body.map((p) => (
+              <p class="text-sm leading-relaxed text-stone-400">{p}</p>
+            ))}
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {s.relations.map((r) => (
+              <span class="rounded-full border border-stone-700 px-3 py-1 text-xs text-stone-400">
+                {r}
+              </span>
+            ))}
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="mt-14 rounded-2xl border border-stone-800 bg-stone-900/40 p-6">
+      <h3 class="text-base font-semibold text-stone-100">Key relationships</h3>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        {relationships.map((r) => (
+          <div>
+            <p class="text-sm font-medium text-stone-200">{r.name}</p>
+            <p class="mt-1 text-sm leading-relaxed text-stone-500">{r.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-8 rounded-2xl border border-stone-800 bg-stone-900/40 p-6">
+      <h3 class="text-base font-semibold text-stone-100">In their words</h3>
+      <div class="mt-4 space-y-5">
+        {voicelines.map((v) => (
+          <div class="border-l-2 border-gold-500/50 pl-5">
+            <p class="text-xs font-semibold uppercase tracking-wide text-frost-600">{v.speaker}</p>
+            <p class="font-accent mt-1 text-xl font-medium italic leading-relaxed text-stone-300">{v.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

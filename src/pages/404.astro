@@ -1,26 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const title = "Page Not Found - Lohen Genshin Guide";
-const description = "The page you are looking for does not exist.";
-const canonical = "https://www.lohen-genshin.com/404";
-const noindex = true;
+const title = "Page Not Found — Lohen Genshin Guide";
+const description = "This page does not exist. Return to the Lohen Genshin Guide home page.";
+const canonical = "https://www.lohen-genshin.com/404/";
 ---
 
-<Layout title={title} description={description} canonical={canonical} noindex={noindex}>
-  <main class="mx-auto flex min-h-[60dvh] max-w-6xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6">
-    <p class="text-sm font-medium uppercase tracking-[0.12em] text-frost-400">404</p>
-    <h1 class="mt-4 text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl">
-      Page not found
-    </h1>
-    <p class="mt-4 max-w-md text-base leading-relaxed text-slate-400">
-      The page you are looking for does not exist. Head back to the Lohen guide home.
+<Layout title={title} description={description} canonical={canonical} noindex>
+  <main class="mx-auto flex min-h-[70dvh] max-w-3xl flex-col items-center justify-center px-4 pb-24 pt-32 text-center sm:px-6">
+    <p class="font-mono text-7xl font-bold text-frost-500">404</p>
+    <h1 class="mt-6 text-3xl sm:text-4xl">This page fell to the frost</h1>
+    <p class="mt-4 max-w-md text-base leading-relaxed text-stone-400">
+      Whatever you were looking for isn't here — or it never existed. The one thing that does
+      exist is the complete Lohen guide.
     </p>
-    <a
-      href="/"
-      class="mt-8 inline-flex items-center rounded-full bg-frost-500 px-6 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-frost-400"
-    >
-      Back to guide
-    </a>
+    <a href="/" class="btn-ink mt-8">Back to the guide</a>
   </main>
 </Layout>

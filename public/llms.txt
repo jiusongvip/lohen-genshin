@@ -1,6 +1,6 @@
 # Lohen Genshin Impact Guide
 
-> A single-page fan guide to Lohen, the 5-star Cryo polearm character in Genshin Impact Version 6.6. Covers his dual-resource mechanics (Joy and Will to Win), the Masterstroke state, the Hexerei combo, best build, Melt teams with Durin and Nicole, materials, and a pull decision tool.
+> A single-page fan guide to Lohen, the 5-star Cryo polearm character in Genshin Impact Version 6.6. Covers his dual-resource mechanics (Joy and Will to Win), the Masterstroke state, the Hexerei combo, best build, Melt teams with Durin and Nicole, lore, materials, and a pull decision tool.
 
 ## Page Summary
 
@@ -8,13 +8,16 @@ Lohen is a 5-star Cryo polearm character released in Genshin Impact Version 6.6 
 
 ## Key Sections
 
-- Mechanics: dual-resource flow diagram, Masterstroke state machine, Hexerei combo timeline, Elemental Gauge/ICD, energy particles, frame data
-- Build: 6 weapons, 5 artifact sets, main stats, substats, constellation priority, weapon comparison table, team-specific builds, constellation DPS% value table, skill multipliers up to level 13
-- Teams: 6 team comps, rotation detail, energy budget, enemy matchup guide, team comparison table
-- Materials: ascension and talent checklist with resin, Mora, and farming cost; pre-farm timeline
-- Interactive tools: pull decision tool (5 questions), material calculator (level/talent targets), pull cost calculator (C0/C1/C2/C6 primogem budget), Hexerei combo player (step-by-step)
-- Pitfalls: 14 common mistakes with detailed explanations and fixes
+- At a Glance: five answers covering who Lohen is, pull value, best weapon, best teams, and key constellation
+- Should You Pull?: interactive 5-question roster-based pull decision tool
+- Primogem Budget Calculator: interactive pity-based calculator (C0/C1/C2/C6)
+- Build: signature, 5-star and F2P weapons; artifact sets; main/sub stats; goal stats; Energy Recharge requirements; 6 team comps; skills; passives; constellation priority and investment guide
+- Compare: Lohen vs Rosaria vs Ganyu, plus team archetype ratings (single-target/AoE/comfort/F2P)
+- How to Play: pros, cons, and Melt/Freeze rotations
+- Lore: Lohen's background, the Cuniculus Chapter, the 6.6 trio, relationships, and character lines
+- Materials: ascension and talent checklist, ascension by level, farming routes and costs, common mistakes
 - FAQ: 59 questions with conclusion-first answers
+- Trust & Sources: editorial standards, author (Eira Vanguard, AR 60), data sources, and update cadence
 
 ## Links
 

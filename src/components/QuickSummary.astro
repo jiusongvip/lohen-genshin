@@ -1,0 +1,67 @@
+---
+// "At a glance" summary block: five dense answers that satisfy the dominant search intents
+// in the first scroll, and are structured for featured-snippet / AI Overview citation.
+const summary = [
+  {
+    q: "Who is Lohen?",
+    a: "A 5-star Cryo polearm character — the Vice Captain of the Knights of Favonius Fifth Company, released in Version 6.6.",
+    icon: "/elements/elem-cryo.webp",
+    alt: "Cryo element icon",
+  },
+  {
+    q: "Is he worth pulling?",
+    a: "Yes if you need a front-line Cryo DPS, especially for the 6.6 Melt comp with Durin and Nicole; a sidegrade if you already run Ganyu or Ayaka.",
+    icon: "/elements/elem-pyro.webp",
+    alt: "Pyro element icon",
+  },
+  {
+    q: "Best weapon",
+    a: "Disaster and Remorse (signature), then Primordial Jade Winged-Spear or Staff of Homa; White Tassel for F2P.",
+    icon: "/weapons/weapon-disaster.webp",
+    alt: "Disaster and Remorse weapon icon",
+  },
+  {
+    q: "Best teams",
+    a: "Melt (Durin + Nicole), Freeze (Kokomi + Kazuha), and Mono Cryo (Ganyu + Shenhe).",
+    icon: "/chars/char-durin.webp",
+    alt: "Durin portrait",
+  },
+  {
+    q: "Key constellation",
+    a: "C1 — extra Joy on Skill cast extends Masterstroke uptime by roughly 20%.",
+    icon: "/talents/lohen-const1.webp",
+    alt: "Lohen C1 constellation icon",
+  },
+];
+---
+
+<section id="summary" class="reveal border-b border-stone-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-stone-50 sm:text-4xl">
+      Lohen at a Glance
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-stone-400">
+      Five answers that cover most of why people search for Lohen. Everything below goes deeper.
+    </p>
+
+    <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {summary.map((s) => (
+        <div class="flex gap-4 rounded-xl border border-stone-800 bg-stone-900/30 p-5">
+          <img
+            src={s.icon}
+            alt={s.alt}
+            width="256"
+            height="256"
+            loading="lazy"
+            decoding="async"
+            class="h-12 w-12 shrink-0 self-start rounded-xl border border-stone-700/50 bg-white/60"
+          />
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-semibold text-frost-600">{s.q}</p>
+            <p class="mt-2 text-sm leading-relaxed text-stone-300">{s.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

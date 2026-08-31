@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const title = "About the Lohen Genshin Guide";
+const description =
+  "Why this guide exists, who maintains it, and how Lohen build, mechanics and materials data is verified and sourced.";
+const canonical = "https://www.lohen-genshin.com/about/";
+---
+
+<Layout title={title} description={description} canonical={canonical}>
+  <main class="mx-auto max-w-3xl px-4 pb-24 pt-32 sm:px-6">
+    <p class="overline">About</p>
+    <h1 class="mt-4 text-4xl sm:text-5xl">The guide behind the guide</h1>
+    <div class="mt-8 space-y-5 text-base leading-relaxed text-stone-300">
+      <p>
+        Lohen Genshin Guide is a fan-made, single-page reference for one character in Genshin
+        Impact: Lohen, the Vice Captain of the Knights of Favonius Fifth Company and a 5-star Cryo
+        polearm DPS. It exists because the pages that rank for "Lohen" are sprawling wiki entries,
+        paywalled build guides, or top-up shops using leaked info to sell Primogems. We built the
+        opposite.
+      </p>
+      <p>
+        Everything lives on one page so a player who searches for Lohen gets the full picture at
+        once — who he is, whether to pull, how to build him, his story, and every material he needs
+        — without ten tabs or a login wall.
+      </p>
+      <h2 class="mt-10 text-2xl">How the data is verified</h2>
+      <p>
+        Build recommendations follow official skill descriptions from HoYoverse and the 6.6 beta
+        kit, cross-checked with community testing on HoYoLAB. Damage multipliers, constellation
+        uplift, and energy requirements are cross-checked against live in-game tests at C0 and C1
+        and re-reviewed as new versions land.
+      </p>
+      <h2 class="mt-10 text-2xl">Editorial standards</h2>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>No affiliate top-up links, no ad walls, no paywalled sections.</li>
+        <li>Sources are linked inline where a figure comes from a specific test.</li>
+        <li>Speculative content is labeled as community testing, never stated as fact.</li>
+        <li>Update dates are shown on every page so readers can judge freshness.</li>
+      </ul>
+      <p class="mt-8 text-sm text-stone-500">
+        This site is not affiliated with or endorsed by HoYoverse or miHoYo. All game assets and
+        trademarks belong to their respective owners.
+      </p>
+    </div>
+  </main>
+</Layout>

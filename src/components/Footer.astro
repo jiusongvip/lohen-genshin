@@ -1,0 +1,84 @@
+---
+const columns = [
+  {
+    title: "Guide",
+    links: [
+      { href: "#build", label: "Best Build" },
+      { href: "#compare", label: "vs Rosaria & Ganyu" },
+      { href: "#howto", label: "Pros, Cons & Rotation" },
+      { href: "#lore", label: "Lore & Background" },
+      { href: "#materials", label: "Ascension Materials" },
+      { href: "#faq", label: "FAQ" },
+    ],
+  },
+  {
+    title: "Site",
+    links: [
+      { href: "/about/", label: "About" },
+      { href: "/contact/", label: "Contact" },
+      { href: "/privacy/", label: "Privacy" },
+    ],
+  },
+  {
+    title: "Sources",
+    links: [
+      { href: "https://genshin.hoyoverse.com/", label: "Genshin Impact Official" },
+      { href: "https://www.hoyolab.com/", label: "HoYoLAB Community" },
+      { href: "https://www.reddit.com/r/Genshin_Impact/", label: "r/Genshin_Impact" },
+      { href: "https://genshin-impact.fandom.com/wiki/Lohen", label: "Genshin Wiki (Fandom)" },
+    ],
+  },
+];
+---
+
+<footer class="border-t border-stone-800/80 py-14">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
+      <div class="max-w-sm">
+        <div class="flex items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2C8 6 5 9 5 14a7 7 0 0 0 14 0c0-5-3-8-7-12z" fill="#3aa7c4" />
+            <path d="M12 13a2.5 2.5 0 0 0 2.5 2.5A2.5 2.5 0 0 0 12 18a2.5 2.5 0 0 0-2.5-2.5A2.5 2.5 0 0 0 12 13z" fill="#100e0b" />
+          </svg>
+          <span class="font-display text-lg font-bold text-stone-100">Lohen Genshin Guide</span>
+        </div>
+        <p class="mt-4 text-sm leading-relaxed text-stone-400">
+          The Aggressive Vanguard of the Knights of Favonius — one complete, ad-free reference
+          for his mechanics, build, lore, and materials. Updated for every version.
+        </p>
+      </div>
+
+      {columns.map((col) => (
+        <div>
+          <p class="overline text-xs">{col.title}</p>
+          <ul class="mt-4 space-y-2.5">
+            {col.links.map((l) => {
+              const external = l.href.startsWith("http");
+              return (
+                <li>
+                  <a
+                    href={l.href}
+                    class="text-sm text-stone-400 transition-colors hover:text-frost-600"
+                    {...(external ? { target: "_blank", rel: "noopener" } : {})}
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12 flex flex-col gap-4 border-t border-stone-800/70 pt-6 text-sm text-stone-500 sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        &copy; 2026 Lohen Genshin Guide. Fan-made reference. Not affiliated with or endorsed by
+        HoYoverse. Game assets and trademarks belong to their respective owners.
+      </p>
+      <p class="text-xs leading-relaxed text-stone-600">
+        This site uses no cookies and collects no personal data.
+      </p>
+    </div>
+  </div>
+</footer>

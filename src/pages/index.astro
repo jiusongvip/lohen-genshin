@@ -1,17 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PageTOC from "../components/PageTOC.astro";
 import Hero from "../components/Hero.astro";
-import Toc from "../components/Toc.astro";
-import Mechanics from "../components/Mechanics.astro";
+import QuickSummary from "../components/QuickSummary.astro";
 import PullDecider from "../components/PullDecider.astro";
-import ComboPlayer from "../components/ComboPlayer.astro";
-import Skills from "../components/Skills.astro";
+import PrimogemCalculator from "../components/PrimogemCalculator.astro";
 import Build from "../components/Build.astro";
-import Teams from "../components/Teams.astro";
+import Compare from "../components/Compare.astro";
+import ProsCons from "../components/ProsCons.astro";
+import Lore from "../components/Lore.astro";
 import Materials from "../components/Materials.astro";
-import MaterialCalculator from "../components/MaterialCalculator.astro";
-import PullCostCalculator from "../components/PullCostCalculator.astro";
-import Pitfalls from "../components/Pitfalls.astro";
 import FAQ from "../components/FAQ.astro";
 import Author from "../components/Author.astro";
 
@@ -263,18 +261,20 @@ const faqs = [
 <Layout title={title} description={description} canonical={canonical} faqs={faqs}>
   <main>
     <Hero />
-    <Toc />
-    <Mechanics />
-    <PullDecider />
-    <ComboPlayer />
-    <Skills />
-    <Build />
-    <Teams />
-    <Materials />
-    <MaterialCalculator />
-    <PullCostCalculator />
-    <Pitfalls />
-    <FAQ faqs={faqs} />
-    <Author />
+    <div class="mx-auto max-w-7xl">
+      <PageTOC />
+      <div class="xl:pr-72">
+        <QuickSummary />
+        <PullDecider />
+        <PrimogemCalculator />
+        <Build />
+        <Compare />
+        <ProsCons />
+        <Lore />
+        <Materials />
+        <FAQ faqs={faqs} />
+        <Author />
+      </div>
+    </div>
   </main>
 </Layout>

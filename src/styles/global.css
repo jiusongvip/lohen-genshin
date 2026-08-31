@@ -1,67 +1,420 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Outfit Variable", "Outfit", system-ui, -apple-system, "Segoe UI",
-    sans-serif;
-  --font-display: "Outfit Variable", "Outfit", system-ui, -apple-system,
+  --font-sans: "Sora Variable", "Sora", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
+  --font-display: "Cinzel", "Sora Variable", ui-serif, Georgia, serif;
+  --font-accent: "Cormorant Garamond", "Cinzel", Georgia, serif;
 
-  /* Lohen Cryo accent: ice cyan-blue, kept below full saturation */
-  --color-frost-300: #8fd9e8;
-  --color-frost-400: #5cc4d9;
-  --color-frost-500: #3aa7c4;
-  --color-frost-600: #2a8aa6;
-  --color-frost-700: #1f6d85;
-  --color-frost-950: #0a1f28;
+  /* Typographic scale — enlarged for readability. */
+  --text-xs: 0.84375rem;
+  --text-xs--line-height: 1.3rem;
+  --text-sm: 0.96875rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1.09375rem;
+  --text-base--line-height: 1.7rem;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.85rem;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.95rem;
+
+  /* Warm paper neutral scale — light base for comfortable reading.
+     Class semantics preserved from the dark source theme:
+     stone-950 = page background (lightest), stone-100 = primary text (darkest). */
+  --color-stone-50: #1d1b17;
+  --color-stone-100: #2a2722;
+  --color-stone-200: #3a362f;
+  --color-stone-300: #4d483f;
+  --color-stone-400: #6f695d;
+  --color-stone-500: #8d8678;
+  --color-stone-600: #a89f8f;
+  --color-stone-700: #d3cdc0;
+  --color-stone-800: #e3ded4;
+  --color-stone-900: #f4f1ea;
+  --color-stone-950: #fbfaf6;
+
+  /* Frost ice accent — muted cyan-blue for the Cryo character. */
+  --color-frost-300: #7cc9dd;
+  --color-frost-400: #43b0cc;
+  --color-frost-500: #2a93b3;
+  --color-frost-600: #1f7694;
+  --color-frost-700: #1b5c74;
+  --color-frost-950: #d9eff5;
+
+  /* Warm gold accent — secondary highlight for signature / best-value moments. */
+  --color-gold-300: #eccf94;
+  --color-gold-400: #dcb36a;
+  --color-gold-500: #c7984a;
+  --color-gold-600: #a3742f;
+  --color-gold-950: #f6ecd8;
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+@layer base {
+  html {
+    font-size: 18px;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-stone-950 font-sans text-stone-200 antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight text-stone-50;
+  }
+  h4 {
+    font-family: var(--font-display);
+    @apply font-semibold;
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-frost-500) 35%, transparent);
+    color: var(--color-stone-50);
+  }
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible {
+    outline: 1px solid var(--color-frost-600);
+    outline-offset: 3px;
+  }
 }
 
-body {
-  background-color: var(--color-slate-950);
-  color: var(--color-slate-200);
+/* ---------------------------------------------------------------------------
+   Section chrome
+--------------------------------------------------------------------------- */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Small-caps overline above display headings */
+.overline {
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-stone-400);
+}
+.overline-frost {
+  color: var(--color-frost-500);
 }
 
-::selection {
-  background-color: color-mix(in srgb, var(--color-frost-500) 40%, transparent);
-  color: var(--color-slate-50);
+/* Hairline rule */
+.hairline {
+  height: 1px;
+  background: var(--color-stone-800);
 }
 
-.prose-guide {
-  color: var(--color-slate-300);
-  line-height: 1.75;
-  max-width: 68ch;
+/* Buttons — ink fill / hairline outline, uppercase, generous tap targets */
+.btn-ink,
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1.05rem 2.3rem;
+  min-height: 3.25rem;
+  line-height: 1;
+  border-radius: 0.5rem;
+}
+.btn-ink {
+  background: var(--color-frost-500);
+  color: var(--color-stone-50);
+  border: 1px solid var(--color-frost-500);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.btn-ink:hover {
+  background: var(--color-frost-400);
+  border-color: var(--color-frost-400);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--color-stone-200);
+  border: 1px solid var(--color-stone-500);
+  transition: all 0.3s ease;
+}
+.btn-outline:hover {
+  border-color: var(--color-frost-600);
+  color: var(--color-frost-700);
+}
+.btn-outline-dark {
+  border-color: rgba(29, 27, 23, 0.5);
+  color: #1d1b17;
+}
+.btn-outline-dark:hover {
+  border-color: #1d1b17;
+  background: #1d1b17;
+  color: #fbfaf6;
 }
 
-.prose-guide h2 {
-  color: var(--color-slate-50);
+/* Watch links — play icon + label, comfortable touch target */
+.watch-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-stone-200);
+  padding: 0.6rem 0.4rem;
+  min-height: 2.75rem;
+  transition: color 0.25s ease;
+}
+.watch-link:hover {
+  color: var(--color-frost-600);
+}
+.watch-link .watch-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  border-radius: 9999px;
+  border: 1px solid var(--color-stone-500);
+  color: var(--color-stone-400);
+  transition: all 0.25s ease;
+}
+.watch-link:hover .watch-icon {
+  background: var(--color-frost-500);
+  border-color: var(--color-frost-500);
+  color: var(--color-stone-50);
+}
+
+/* ---------------------------------------------------------------------------
+   Fixed nav
+--------------------------------------------------------------------------- */
+#main-nav.nav-solid {
+  background: rgba(251, 250, 246, 0.86);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-stone-800);
+}
+#main-nav.nav-solid .nav-logo,
+#main-nav.nav-solid .nav-mobile-btn {
+  color: var(--color-stone-100);
+}
+#main-nav.nav-solid .nav-link {
+  color: var(--color-stone-400);
+}
+#main-nav.nav-solid .nav-link:hover {
+  color: var(--color-frost-600);
+}
+#main-nav .nav-link {
+  color: rgba(29, 27, 23, 0.78);
+  transition: color 0.25s ease;
+}
+#main-nav .nav-link:hover {
+  color: var(--color-frost-600);
+}
+
+/* ---------------------------------------------------------------------------
+   Hero stage — light frost night
+--------------------------------------------------------------------------- */
+.hero-stage {
+  position: relative;
+  min-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 78% 18%, rgba(58, 167, 196, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 45% at 15% 85%, rgba(143, 194, 232, 0.14) 0%, transparent 60%),
+    var(--color-stone-950);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 7.5rem 1.5rem 4rem;
+}
+.hero-content .overline {
+  color: rgba(29, 27, 23, 0.55);
+}
+.hero-title {
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  color: #1d1b17;
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  margin-top: 1.3rem;
+}
+.hero-sub {
+  color: rgba(29, 27, 23, 0.78);
+  max-width: 36rem;
+  margin-top: 1.5rem;
+  font-weight: 300;
+}
+.hero-meta {
+  margin-top: 2.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 1.1rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(29, 27, 23, 0.6);
+}
+.hero-scroll {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: 1px;
+  height: 3.2rem;
+  background: rgba(29, 27, 23, 0.25);
+  overflow: hidden;
+}
+.hero-scroll::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 40%;
+  background: #1d1b17;
+  animation: scrollCue 2s ease-in-out infinite;
+}
+@keyframes scrollCue {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(260%);
+  }
 }
 
-.prose-guide p {
-  margin-bottom: 1rem;
+/* Split-letter reveal */
+.split-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.4em);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.split-char.in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.hairline-t {
-  border-top: 1px solid color-mix(in srgb, var(--color-slate-500) 18%, transparent);
+/* ---------------------------------------------------------------------------
+   Scroll reveal
+--------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------------------
+   Cards — quiet glass on the light theme
+--------------------------------------------------------------------------- */
+.card {
+  background: var(--color-stone-900);
+  border: 1px solid var(--color-stone-800);
+}
+.card-img img {
+  transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.card-img:hover img {
+  transform: scale(1.045);
+}
+.dest-card img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.dest-card:hover img {
+  transform: scale(1.06);
+}
+
+/* ---------------------------------------------------------------------------
+   Page TOC (desktop, fixed right)
+--------------------------------------------------------------------------- */
+.page-toc {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+}
+.page-toc a {
+  color: var(--color-stone-300);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.page-toc a:hover {
+  color: var(--color-frost-600);
+}
+.page-toc a.is-active {
+  color: var(--color-frost-600);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   FAQ accordion (details-based)
+--------------------------------------------------------------------------- */
+.faq-item button {
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+.faq-item .faq-answer {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+}
+.faq-item.open .faq-answer {
+  max-height: 600px;
+}
+.faq-item.open > button > svg {
+  transform: rotate(180deg);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  .hero-scroll::after {
+    animation: none;
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .split-char {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .dest-card img,
+  .card-img img {
+    transition: none;
   }
 }

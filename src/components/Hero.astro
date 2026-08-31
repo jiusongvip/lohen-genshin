@@ -1,10 +1,7 @@
 ---
-// Hero: character dossier. Cryo-element ambiance via CSS gradients (no fake
-// screenshot, no copyrighted official splash art). Replace the marked slot with a
-// licensed visual later.
 const facts = [
-  { k: "Element", v: "Cryo" },
-  { k: "Weapon", v: "Polearm" },
+  { k: "Element", v: "Cryo", icon: "/elements/elem-cryo.webp", alt: "Cryo element icon" },
+  { k: "Weapon", v: "Polearm", icon: "/talents/icon-polearm.webp", alt: "Polearm weapon type icon" },
   { k: "Rarity", v: "5-Star" },
   { k: "Constellation", v: "Cuniculus" },
   { k: "Title", v: "Vice Captain, Favonius Fifth Company" },
@@ -12,277 +9,228 @@ const facts = [
   { k: "Affiliation", v: "Knights of Favonius" },
   { k: "Release", v: "6.6, May 20, 2026" },
   { k: "Birthday", v: "April 3" },
-  { k: "Story Quest", v: "Cuniculus Chapter (狡兔之章)" },
+  { k: "Story Quest", v: "Cuniculus Chapter" },
 ];
 const voiceActors = "EN Nick Wolfhard · CN Lin Jingnan · JP Amasaki Kohei";
 const role = "On-field Main DPS";
 const tierList = "Tier: S (Melt comp) · A (Freeze/Mono Cryo)";
-const strengths = [
-  { t: "Front-loaded burst window", d: "All damage lands in a short Masterstroke window, ideal for Abyss chamber timers." },
-  { t: "Elite Melt synergy", d: "Four rapid Hexerei chain hits consume Pyro aura efficiently, the best Melt trigger cadence among polearm DPS." },
-  { t: "Fully functional at C0", d: "Core kit is complete at base constellation; constellations are power, not necessity." },
-  { t: "F2P weapon-friendly", d: "The 3-star White Tassel is genuinely competitive, closing most of the gap to his signature weapon." },
-  { t: "Self-contained resources", d: "Will to Win generates without field time pressure, letting the rest of the team set up first." },
-];
-const weaknesses = [
-  { t: "Short, interruptible window", d: "Miss Masterstroke timing or get staggered mid-chain and you lose a large share of the rotation." },
-  { t: "Melt-reliant ceiling", d: "Without a Pyro applier, damage drops roughly 50% on every hit; the ceiling requires Durin or Xiangling." },
-  { t: "Energy-hungry rotation", d: "The 80-cost Burst needs 120-130% ER to guarantee each cycle, eating a stat slot." },
-  { t: "Melee positioning", d: "Hexerei chains have a forward arc and can whiff on mobile or small enemies without grouping." },
-  { t: "Roster-gated value", d: "As a sidegrade to Ganyu/Ayaka, his perceived value drops sharply if you already own a Cryo DPS." },
-];
+const portrait = "/portraits/hero.webp";
+const portraitW = 750;
+const portraitH = 1800;
 ---
 
-<section id="top" class="relative overflow-hidden border-b border-slate-800/70">
-  <div
-    class="pointer-events-none absolute inset-0"
-    aria-hidden="true"
-  >
+<section id="top" class="hero-stage">
+  <div class="hero-bg" aria-hidden="true">
     <div
-      class="absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full opacity-25 blur-3xl"
+      class="absolute -right-40 -top-40 h-[30rem] w-[30rem] rounded-full opacity-40 blur-3xl"
       style="background: radial-gradient(circle, #3aa7c4 0%, transparent 70%)"
     ></div>
     <div
-      class="absolute -left-40 bottom-0 h-[24rem] w-[24rem] rounded-full opacity-10 blur-3xl"
-      style="background: radial-gradient(circle, #5cc4d9 0%, transparent 70%)"
+      class="absolute -bottom-32 -left-32 h-[26rem] w-[26rem] rounded-full opacity-30 blur-3xl"
+      style="background: radial-gradient(circle, #8fc2e8 0%, transparent 70%)"
     ></div>
   </div>
+  <canvas class="hero-particles" id="hero-particles" aria-hidden="true"></canvas>
 
-  <div class="relative mx-auto grid max-w-6xl gap-12 px-4 pb-12 pt-14 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:items-center md:pb-14 md:pt-16">
-    <div>
-      <h1
-        class="mt-4 text-5xl font-extrabold leading-none tracking-tighter text-slate-50 sm:text-6xl lg:text-7xl"
-      >
-        Lohen{" "}
-        <span class="mt-4 block text-xl font-bold leading-tight tracking-tight text-frost-400 sm:text-2xl lg:text-3xl">
-          Genshin Impact Character Guide
-        </span>
-      </h1>
-      <p class="mt-3 text-lg font-medium text-slate-200">
-        The Aggressive Vanguard
-      </p>
-      <p class="mt-5 max-w-[36rem] text-base leading-relaxed text-slate-400">
-        Lohen is a 5-star Cryo polearm user who fights on the front line with a
-        dual-resource kit: he builds Joy and Will to Win, then enters the Masterstroke
-        state to unleash Hexerei chained attacks that deal substantial Cryo damage.
-      </p>
-      <div class="mt-6 inline-flex items-center gap-2 rounded-full border border-frost-700/40 bg-frost-950/30 px-4 py-2 text-sm text-slate-200">
-        <span class="font-semibold text-frost-400">Pull verdict:</span>
-        Worth pulling if you need a front-line Cryo DPS, especially in Melt teams with Durin and Nicole.
-      </div>
-      <div class="mt-3 flex items-center gap-2 text-sm text-slate-400">
-        <span class="font-semibold text-frost-400">S-Tier</span>
-        in the 6.6 Melt comp, A-Tier in Freeze/Mono Cryo
-      </div>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a
-          href="#mechanics"
-          class="inline-flex items-center rounded-full bg-frost-500 px-6 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-frost-400"
-        >
-          Mechanics Explained
-        </a>
-        <a
-          href="#pull"
-          class="inline-flex items-center rounded-full border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-frost-500 hover:text-frost-400"
-        >
-          Should you pull?
-        </a>
-      </div>
-      <p class="mt-8 max-w-[34rem] text-sm leading-relaxed text-slate-500">
-        One page. Every answer. No ten tabs, no login wall, no top-up ads.
-      </p>
-    </div>
-
-    <div class="mx-auto w-full max-w-sm">
-      <img
-        src="/hero-visual.webp"
-        alt="Stylized artwork of Lohen, a young knight with a polearm surrounded by cyan Cryo frost on a deep navy background"
-        width="768"
-        height="1152"
-        fetchpriority="high"
-        decoding="async"
-        class="w-full rounded-2xl border border-slate-800"
-      />
-    </div>
-  </div>
-
-  <div class="relative mx-auto max-w-6xl px-4 pb-6 sm:px-6">
-    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8">
-      <dl class="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-5">
-        {facts.map((f) => (
-          <div>
-            <dt class="text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-              {f.k}
-            </dt>
-            <dd class="mt-1 text-sm font-semibold text-slate-100">{f.v}</dd>
-          </div>
-        ))}
-      </dl>
-      <div class="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1 border-t border-slate-800/70 pt-5">
-        <span class="text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-          Voice Actors
-        </span>
-        <span class="text-sm font-semibold text-slate-100">{voiceActors}</span>
-      </div>
-      <div class="mt-4 border-t border-slate-800/70 pt-4">
-        <p class="text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-          Role & Tier
+  <div class="hero-content">
+    <div class="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+      <div class="text-center lg:text-left">
+        <p class="overline">Genshin Impact · Version 6.6 · Updated August 2026</p>
+        <h1 id="hero-title" class="hero-title text-6xl sm:text-7xl lg:text-8xl">
+          <span id="hero-name" class="block">Lohen</span>
+          <span class="mt-3 block font-sans text-base font-semibold uppercase tracking-[0.18em] text-frost-600 sm:text-lg">
+            Genshin Impact Character Guide
+          </span>
+        </h1>
+        <p class="hero-sub text-base leading-relaxed md:text-lg">
+          <span class="font-accent text-2xl font-semibold italic text-frost-700 md:text-3xl">
+            The Aggressive Vanguard.
+          </span>
+          <span class="mt-2 block">
+            A 5-star Cryo polearm user who builds Joy and Will to Win, then enters the
+            Masterstroke state to unleash Hexerei chains. One page. Every answer. No ten tabs, no
+            login wall, no top-up ads.
+          </span>
         </p>
-        <p class="mt-2 text-sm font-semibold text-slate-100">{role}</p>
-        <p class="mt-1 text-xs font-medium text-frost-400">{tierList}</p>
-      </div>
-      <div class="mt-4 border-t border-slate-800/70 pt-4">
-        <p class="text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-          Max Stats (Lv. 90)
-        </p>
-        <div class="mt-3 grid grid-cols-5 gap-3 text-center">
-          <div>
-            <p class="text-xs text-slate-500">HP</p>
-            <p class="mt-1 text-sm font-semibold text-slate-100">13,108</p>
-          </div>
-          <div>
-            <p class="text-xs text-slate-500">ATK</p>
-            <p class="mt-1 text-sm font-semibold text-slate-100">352</p>
-          </div>
-          <div>
-            <p class="text-xs text-slate-500">DEF</p>
-            <p class="mt-1 text-sm font-semibold text-slate-100">799</p>
-          </div>
-          <div>
-            <p class="text-xs text-slate-500">CRIT Rate</p>
-            <p class="mt-1 text-sm font-semibold text-slate-100">5.0%</p>
-          </div>
-          <div>
-            <p class="text-xs text-slate-500">CRIT DMG</p>
-            <p class="mt-1 text-sm font-semibold text-slate-100">50.0%</p>
-          </div>
+
+        <div class="mt-9 flex flex-wrap justify-center gap-3 lg:justify-start">
+          <a href="#build" class="btn-ink">Best Build</a>
+          <a href="#pull" class="btn-outline btn-outline-dark">Should you pull?</a>
         </div>
-      </div>
-      <div class="mt-4 border-t border-slate-800/70 pt-4">
-        <p class="text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-          Stats Per Ascension Phase
+
+        <p class="hero-meta">
+          <span>By Eira Vanguard</span>
+          <span aria-hidden="true">·</span>
+          <span>Adventure Rank 60</span>
+          <span aria-hidden="true">·</span>
+          <span>59-question FAQ</span>
         </p>
-        <div class="mt-3 overflow-x-auto">
-          <table class="w-full min-w-[480px] border-collapse text-xs">
-            <thead>
-              <tr class="border-b border-slate-800 text-left">
-                <th class="py-2 pr-3 font-medium text-slate-500">Lv.</th>
-                <th class="py-2 pr-3 font-medium text-slate-500">HP</th>
-                <th class="py-2 pr-3 font-medium text-slate-500">ATK</th>
-                <th class="py-2 pr-3 font-medium text-slate-500">DEF</th>
-                <th class="py-2 pr-3 font-medium text-slate-500">Ascension Bonus</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800/60">
-              <tr><td class="py-1.5 pr-3 text-slate-400">1</td><td class="py-1.5 pr-3 text-slate-300">1,003</td><td class="py-1.5 pr-3 text-slate-300">27</td><td class="py-1.5 pr-3 text-slate-300">61</td><td class="py-1.5 pr-3 text-slate-400">—</td></tr>
-              <tr><td class="py-1.5 pr-3 text-slate-400">20</td><td class="py-1.5 pr-3 text-slate-300">2,602</td><td class="py-1.5 pr-3 text-slate-300">70</td><td class="py-1.5 pr-3 text-slate-300">159</td><td class="py-1.5 pr-3 text-slate-400">—</td></tr>
-              <tr><td class="py-1.5 pr-3 text-slate-400">40</td><td class="py-1.5 pr-3 text-slate-300">4,871</td><td class="py-1.5 pr-3 text-slate-300">131</td><td class="py-1.5 pr-3 text-slate-300">297</td><td class="py-1.5 pr-3 text-slate-400">CRIT Rate +8%</td></tr>
-              <tr><td class="py-1.5 pr-3 text-slate-400">50</td><td class="py-1.5 pr-3 text-slate-300">6,158</td><td class="py-1.5 pr-3 text-slate-300">166</td><td class="py-1.5 pr-3 text-slate-300">375</td><td class="py-1.5 pr-3 text-slate-400">CRIT Rate +8%</td></tr>
-              <tr><td class="py-1.5 pr-3 text-slate-400">60</td><td class="py-1.5 pr-3 text-slate-300">7,445</td><td class="py-1.5 pr-3 text-slate-300">200</td><td class="py-1.5 pr-3 text-slate-300">454</td><td class="py-1.5 pr-3 text-slate-400">CRIT Rate +16%</td></tr>
-              <tr><td class="py-1.5 pr-3 text-slate-400">70</td><td class="py-1.5 pr-3 text-slate-300">8,732</td><td class="py-1.5 pr-3 text-slate-300">235</td><td class="py-1.5 pr-3 text-slate-300">532</td><td class="py-1.5 pr-3 text-slate-400">CRIT Rate +16%</td></tr>
-              <tr><td class="py-1.5 pr-3 text-slate-400">80</td><td class="py-1.5 pr-3 text-slate-300">10,019</td><td class="py-1.5 pr-3 text-slate-300">269</td><td class="py-1.5 pr-3 text-slate-300">611</td><td class="py-1.5 pr-3 text-slate-400">CRIT Rate +24%</td></tr>
-              <tr><td class="py-1.5 pr-3 text-slate-400">90</td><td class="py-1.5 pr-3 text-slate-300">13,108</td><td class="py-1.5 pr-3 text-slate-300">352</td><td class="py-1.5 pr-3 text-slate-300">799</td><td class="py-1.5 pr-3 text-slate-400">CRIT Rate +24%</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="mt-2 text-xs text-slate-500">Ascension bonus: CRIT Rate. At max ascension, Lohen gains 24% CRIT Rate from his stat growth, which stacks with the Cold Front passive (8% during Masterstroke) for a built-in 32% CRIT Rate.</p>
+      </div>
+
+      <div class="mx-auto hidden w-full max-w-sm sm:block lg:max-w-md">
+        <img
+          src={portrait}
+          alt="Lohen character portrait — the Vice Captain of the Knights of Favonius Fifth Company, wielding his polearm with Cryo frost"
+          width={portraitW}
+          height={portraitH}
+          fetchpriority="high"
+          decoding="async"
+          class="w-full rounded-2xl border border-stone-700/60 shadow-[0_30px_80px_-24px_rgba(29,27,23,0.45)]"
+        />
       </div>
     </div>
   </div>
 
-  <div class="relative mx-auto max-w-6xl px-4 pb-14 sm:px-6">
-    <div class="grid gap-6 pb-8 md:grid-cols-2">
-      <div class="rounded-2xl border border-emerald-900/40 bg-emerald-950/20 p-6">
-        <h2 class="text-sm font-bold uppercase tracking-[0.12em] text-emerald-400">
-          Strengths
-        </h2>
-        <div class="mt-4 space-y-4">
-          {strengths.map((s) => (
-            <div class="flex gap-3">
-              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" aria-hidden="true"></span>
-              <div>
-                <p class="text-sm font-semibold text-slate-100">{s.t}</p>
-                <p class="mt-0.5 text-xs leading-relaxed text-slate-400">{s.d}</p>
-              </div>
-            </div>
-          ))}
+  <div class="hero-scroll" aria-hidden="true"></div>
+</section>
+
+<section
+  id="dossier"
+  aria-label="Lohen character dossier"
+  class="relative z-10 mx-auto -mt-12 max-w-6xl px-4 sm:px-6"
+>
+  <div class="rounded-2xl border border-stone-800 bg-white/80 p-6 shadow-[0_18px_60px_-24px_rgba(29,27,23,0.25)] backdrop-blur-md sm:p-8">
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-5">
+      {facts.map((f) => (
+        <div>
+          <dt class="overline text-xs">{f.k}</dt>
+          <dd class="mt-1 flex items-center gap-2 text-sm font-semibold text-stone-100">
+            {f.icon && (
+              <img
+                src={f.icon}
+                alt={f.alt}
+                width="256"
+                height="256"
+                loading="lazy"
+                decoding="async"
+                class="h-5 w-5 shrink-0 rounded border border-stone-700/50 bg-white/60"
+              />
+            )}
+            {f.v}
+          </dd>
         </div>
-      </div>
-      <div class="rounded-2xl border border-rose-900/40 bg-rose-950/20 p-6">
-        <h2 class="text-sm font-bold uppercase tracking-[0.12em] text-rose-400">
-          Weaknesses
-        </h2>
-        <div class="mt-4 space-y-4">
-          {weaknesses.map((w) => (
-            <div class="flex gap-3">
-              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400" aria-hidden="true"></span>
-              <div>
-                <p class="text-sm font-semibold text-slate-100">{w.t}</p>
-                <p class="mt-0.5 text-xs leading-relaxed text-slate-400">{w.d}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+      ))}
+    </dl>
+    <div class="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1 border-t border-stone-800/70 pt-5">
+      <span class="overline text-xs">Voice Actors</span>
+      <span class="text-sm font-semibold text-stone-100">{voiceActors}</span>
+    </div>
+    <div class="mt-6 border-t border-stone-800/70 pt-5">
+      <div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
+        <p class="overline text-xs">Role &amp; Tier</p>
+        <p class="text-sm font-semibold text-stone-100">{role}</p>
+        <p class="text-sm font-semibold">
+          <span class="text-gold-600">Tier: S</span>
+          <span class="text-stone-400"> (Melt comp)</span>
+          <span class="text-frost-600"> · A</span>
+          <span class="text-stone-400"> (Freeze/Mono Cryo)</span>
+        </p>
       </div>
     </div>
-    <div class="grid grid-cols-2 gap-3 border-t border-slate-800/70 pt-6 sm:grid-cols-4">
-      <div class="flex items-center gap-2 text-sm text-slate-400">
-        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-frost-500" aria-hidden="true"></span>
-        Independent fan guide
-      </div>
-      <div class="flex items-center gap-2 text-sm text-slate-400">
-        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-frost-500" aria-hidden="true"></span>
-        No paywalls or ads
-      </div>
-      <div class="flex items-center gap-2 text-sm text-slate-400">
-        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-frost-500" aria-hidden="true"></span>
-        Official data + community tests
-      </div>
-      <div class="flex items-center gap-2 text-sm text-slate-400">
-        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-frost-500" aria-hidden="true"></span>
-        Updated every version
-      </div>
-    </div>
-    <div class="mt-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 sm:p-8">
-      <h2 class="text-xl font-bold tracking-tight text-slate-50 sm:text-2xl">
-        Who Is Lohen? Lore & Background
-      </h2>
-      <p class="mt-4 text-sm leading-relaxed text-slate-400">
-        Lohen is the Vice Captain of the Knights of Favonius Fifth Company, a remote
-        scouting unit based far from Mondstadt's city walls. Despite commanding a unit of
-        ranged marksmen, he carries a polearm and fights from the front — a contradiction
-        that defines both his personality and his kit. His aggressive, win-at-all-costs
-        combat style ("I'll close the distance myself" is a recurring line) is why his
-        kit is built around the dual resources <strong class="text-slate-200">Joy</strong> and
-        <strong class="text-slate-200">Will to Win</strong>: he literally "wills himself to win"
-        as the fight goes on, then spends that will as raw offense.
-      </p>
-      <p class="mt-3 text-sm leading-relaxed text-slate-400">
-        His story quest, the Cuniculus Chapter, follows his return to Mondstadt during the
-        6.6 "Luna VII" events. It explores why he left the city, his rivalry-turned-
-        alliance with the alchemist Rhinedottir's old associates, and how he learned to
-        trust teammates after years of charging in alone. Thematically, the quest mirrors
-        his gameplay: Lohen learns that even a front-line fighter needs the team behind
-        him — which is why his best team is the 6.6 trio of <strong class="text-slate-200">Lohen +
-        Durin + Nicole</strong>, not a solo carry.
-      </p>
-      <div class="mt-5 grid gap-4 sm:grid-cols-3">
-        <div class="rounded-xl border border-slate-800 p-4">
-          <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Signature Weapon</p>
-          <p class="mt-1 text-sm font-semibold text-slate-100">Disaster and Remorse (灾与悔)</p>
-          <p class="mt-1 text-xs text-slate-500">5-star polearm, his best-in-slot.</p>
+    <div class="mt-6 border-t border-stone-800/70 pt-5">
+      <p class="overline text-xs">Max Stats (Lv. 90)</p>
+      <div class="mt-3 grid grid-cols-5 gap-3 text-center">
+        <div>
+          <p class="text-xs text-stone-500">HP</p>
+          <p class="mt-1 text-sm font-semibold text-stone-100">13,108</p>
         </div>
-        <div class="rounded-xl border border-slate-800 p-4">
-          <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Character Theme</p>
-          <p class="mt-1 text-sm font-semibold text-slate-100">"The Aggressive Vanguard"</p>
-          <p class="mt-1 text-xs text-slate-500">Ranged unit, melee fighter — the core character hook.</p>
+        <div>
+          <p class="text-xs text-stone-500">ATK</p>
+          <p class="mt-1 text-sm font-semibold text-stone-100">352</p>
         </div>
-        <div class="rounded-xl border border-slate-800 p-4">
-          <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">Key Story Links</p>
-          <p class="mt-1 text-sm font-semibold text-slate-100">Durin · Nicole · Rhinedottir</p>
-          <p class="mt-1 text-xs text-slate-500">6.6 storyline and his signature team.</p>
+        <div>
+          <p class="text-xs text-stone-500">DEF</p>
+          <p class="mt-1 text-sm font-semibold text-stone-100">799</p>
+        </div>
+        <div>
+          <p class="text-xs text-stone-500">CRIT Rate</p>
+          <p class="mt-1 text-sm font-semibold text-stone-100">5.0%</p>
+        </div>
+        <div>
+          <p class="text-xs text-stone-500">CRIT DMG</p>
+          <p class="mt-1 text-sm font-semibold text-stone-100">50.0%</p>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var nameEl = document.getElementById("hero-name");
+    if (nameEl && !reduce) {
+      var text = nameEl.textContent || "";
+      nameEl.textContent = "";
+      var frag = document.createDocumentFragment();
+      text.split("").forEach(function (ch) {
+        var s = document.createElement("span");
+        s.className = "split-char";
+        s.textContent = ch === " " ? "\u00a0" : ch;
+        frag.appendChild(s);
+      });
+      nameEl.appendChild(frag);
+      var spans = nameEl.querySelectorAll(".split-char");
+      spans.forEach(function (s, i) {
+        s.style.transitionDelay = (0.35 + i * 0.045).toFixed(3) + "s";
+      });
+      requestAnimationFrame(function () {
+        setTimeout(function () {
+          spans.forEach(function (s) { s.classList.add("in"); });
+        }, 80);
+      });
+    }
+
+    var canvas = document.getElementById("hero-particles");
+    if (canvas && !reduce) {
+      var ctx = canvas.getContext("2d");
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w, h, particles = [];
+      var colors = ["rgba(42,147,179,", "rgba(67,176,204,", "rgba(124,201,221,", "rgba(143,194,232,"];
+
+      function resize() {
+        var rect = canvas.parentElement.getBoundingClientRect();
+        w = rect.width; h = rect.height;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        canvas.style.width = w + "px"; canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function spawn(p) {
+        p.x = Math.random() * w;
+        p.y = h + 6;
+        p.r = 0.6 + Math.random() * 2;
+        p.vy = -(0.1 + Math.random() * 0.32);
+        p.vx = (Math.random() - 0.5) * 0.14;
+        p.a = 0.08 + Math.random() * 0.2;
+        p.c = colors[Math.floor(Math.random() * colors.length)];
+        p.tw = Math.random() * Math.PI * 2;
+      }
+      function init() {
+        resize();
+        var count = Math.min(46, Math.floor(w / 30));
+        particles = [];
+        for (var i = 0; i < count; i++) { var p = {}; spawn(p); p.y = Math.random() * h; particles.push(p); }
+      }
+      function frame() {
+        ctx.clearRect(0, 0, w, h);
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          p.x += p.vx; p.y += p.vy; p.tw += 0.008;
+          p.a = 0.08 + Math.random() * 0.16;
+          if (p.y < -12) spawn(p);
+          if (p.x < -12) p.x = w + 12; if (p.x > w + 12) p.x = -12;
+          ctx.beginPath();
+          ctx.fillStyle = p.c + (p.a * (0.5 + 0.5 * Math.sin(p.tw))).toFixed(3) + ")";
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        requestAnimationFrame(frame);
+      }
+      init();
+      requestAnimationFrame(frame);
+      var onResize;
+      window.addEventListener("resize", function () { clearTimeout(onResize); onResize = setTimeout(init, 200); }, { passive: true });
+    }
+  })();
+</script>

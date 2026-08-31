@@ -1,7 +1,6 @@
 ---
-// Pull decision tool. Renders a static default verdict in the initial HTML so
-// crawlers can read it; the inline script upgrades it into an interactive decider.
-// Each question includes an explanation of why it matters for the pull decision.
+// Pull decision tool. Renders a static default verdict in the initial HTML so crawlers
+// can read it; the inline script upgrades it into an interactive decider.
 const questions = [
   {
     id: "cryodps",
@@ -24,7 +23,7 @@ const questions = [
   {
     id: "sig",
     text: "Do you have his signature weapon Disaster and Remorse?",
-    why: "The signature weapon is an 8 to 10 percent upgrade over the next best 5-star alternative and a 20 percent upgrade over the F2P White Tassel. It is not required, but if you have it or plan to pull for it, Lohen's damage ceiling is higher. If you do not have it, Lohen still works fine with White Tassel or Jade Winged-Spear.",
+    why: "The signature weapon is an 8 to 10 percent upgrade over the next best 5-star alternative and a 20 percent upgrade over the F2P White Tassel. It is not required, but if you have it or plan to pull for it, Lohen's damage ceiling is higher.",
     options: [
       { value: "yes", label: "Yes" },
       { value: "no", label: "No" },
@@ -33,7 +32,7 @@ const questions = [
   {
     id: "consts",
     text: "Do you plan to reach C1 or higher?",
-    why: "C1 is Lohen's best value constellation, extending Masterstroke uptime by roughly 20 percent. If you plan to stop at C0, he is still functional but deals less damage. If you plan to go to C1 or higher, his damage increases meaningfully, which affects whether he is worth the primogem investment for your roster.",
+    why: "C1 is Lohen's best value constellation, extending Masterstroke uptime by roughly 20 percent. If you plan to stop at C0, he is still functional but deals less damage. If you plan to go to C1 or higher, his damage increases meaningfully.",
     options: [
       { value: "yes", label: "Yes" },
       { value: "no", label: "No" },
@@ -42,7 +41,7 @@ const questions = [
   {
     id: "abyss",
     text: "Do you play the Spiral Abyss regularly?",
-    why: "Lohen's value is highest in endgame content like the Spiral Abyss, where his front-loaded burst window pairs well with chamber timers. If you only play open-world and events, any DPS works and Lohen is less of a priority. If you push Abyss stars, a strong Cryo DPS is a real asset.",
+    why: "Lohen's value is highest in endgame content like the Spiral Abyss, where his front-loaded burst window pairs well with chamber timers. If you only play open-world and events, any DPS works and Lohen is less of a priority.",
     options: [
       { value: "yes", label: "Yes" },
       { value: "no", label: "No" },
@@ -51,40 +50,27 @@ const questions = [
 ];
 ---
 
-<section id="pull" class="border-b border-slate-800/70 py-16 sm:py-20">
+<section id="pull" class="reveal border-b border-stone-800/70 py-16 sm:py-20">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
-    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+    <h2 class="text-3xl font-bold tracking-tight text-stone-50 sm:text-4xl">
       Should You Pull for Lohen?
     </h2>
-    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
-      Answer five quick questions to get a verdict for your roster. Lohen is a front-line
-      Cryo DPS whose Masterstroke state and Hexerei chains shine in Melt teams alongside
-      Durin and Nicole. Each question explains why it matters for the decision.
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-stone-400">
+      Answer five quick questions to get a verdict for your roster. Lohen is a front-line Cryo DPS
+      whose Masterstroke state and Hexerei chains shine in Melt teams alongside Durin and Nicole.
+      Each question explains why it matters for the decision.
     </p>
-
-    <div class="mt-8 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6 sm:p-8">
-      <h3 class="text-lg font-bold text-frost-400">How This Decider Works</h3>
-      <p class="mt-3 text-base leading-relaxed text-slate-300">
-        The verdict is based on two core factors: whether Lohen fills a real gap in your
-        roster, and whether you have the teammates to enable his Melt comp. A front-line
-        Cryo DPS without a Pyro applier loses roughly half his damage, so the Melt
-        teammate question is weighted heavily. The signature weapon and constellation
-        questions adjust the verdict for investment level, and the Abyss question
-        accounts for whether you need endgame performance. Answer honestly for the most
-        useful verdict.
-      </p>
-    </div>
 
     <div class="mt-10 grid gap-6 md:grid-cols-2">
       <div class="space-y-6">
         {questions.map((q) => (
-          <fieldset class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
-            <legend class="px-1 text-sm font-semibold text-slate-100">{q.text}</legend>
-            <p class="mt-2 text-xs leading-relaxed text-slate-500">{q.why}</p>
+          <fieldset class="rounded-2xl border border-stone-800 bg-stone-900/40 p-5">
+            <legend class="px-1 text-sm font-semibold text-stone-100">{q.text}</legend>
+            <p class="mt-2 text-xs leading-relaxed text-stone-500">{q.why}</p>
             <div class="mt-3 flex gap-3">
               {q.options.map((o) => (
                 <label
-                  class="flex cursor-pointer items-center gap-2 rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-300 transition-colors has-[:checked]:border-frost-500 has-[:checked]:bg-frost-950 has-[:checked]:text-frost-300"
+                  class="flex cursor-pointer items-center gap-2.5 rounded-full border border-stone-700 px-5 py-3 text-base text-stone-300 transition-colors has-[:checked]:border-frost-500 has-[:checked]:bg-frost-950 has-[:checked]:text-frost-700"
                 >
                   <input
                     type="radio"
@@ -102,18 +88,27 @@ const questions = [
 
       <div
         id="pull-verdict"
-        class="flex flex-col justify-center rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-8"
+        class="flex flex-col justify-center rounded-2xl border border-stone-800 bg-gradient-to-br from-stone-900 to-stone-950 p-8"
       >
-        <p id="pull-verdict-label" class="text-2xl font-extrabold tracking-tight text-slate-100">
+        <img
+          src="/portraits/lohen-card.webp"
+          alt=""
+          width="1500"
+          height="1500"
+          loading="lazy"
+          decoding="async"
+          class="mx-auto h-20 w-20 rounded-2xl border border-stone-700/50 bg-white/60 object-cover"
+          aria-hidden="true"
+        />
+        <p id="pull-verdict-label" class="mt-5 text-center text-2xl font-extrabold tracking-tight text-stone-100">
           It depends on your roster
         </p>
-        <p id="pull-verdict-reason" class="mt-4 text-base leading-relaxed text-slate-400">
-          Answer the five questions to see whether Lohen's front-line Cryo DPS and Melt
-          synergy fit your roster.
+        <p id="pull-verdict-reason" class="mt-4 text-center text-base leading-relaxed text-stone-400">
+          Answer the five questions to see whether Lohen's front-line Cryo DPS and Melt synergy
+          fit your roster.
         </p>
-        <p id="pull-verdict-detail" class="mt-3 text-sm leading-relaxed text-slate-500">
-          The verdict weighs your need for a Cryo DPS, your Melt teammates, and your
-          investment level.
+        <p id="pull-verdict-detail" class="mt-3 text-center text-sm leading-relaxed text-stone-500">
+          The verdict weighs your need for a Cryo DPS, your Melt teammates, and your investment level.
         </p>
       </div>
     </div>
@@ -132,14 +127,14 @@ const questions = [
     pullIfAbyss: {
       label: "Pull if you play the Abyss",
       reason:
-        "You need a front-line Cryo DPS and have the Melt teammates, but you are not investing in his signature weapon or constellations and only play casually. Lohen's value is highest in endgame content, so he is a strong pick if you push the Spiral Abyss.",
+        "You need a front-line Cryo DPS and have the Melt teammates, but you are not investing in his signature weapon or constellations and only play casually. Lohen's value is highest in endgame content.",
       detail:
-        "If you push Abyss stars, pull. If you only play open-world and events, you can wait for a rerun. He is strong but not essential outside endgame content.",
+        "If you push Abyss stars, pull. If you only play open-world and events, you can wait for a rerun.",
     },
     skip: {
       label: "You can skip Lohen",
       reason:
-        "You do not need a Cryo main DPS. His value drops when he is a sidegrade rather than a roster gap-filler, so save your Primogems for a character that fills a real need.",
+        "You do not need a Cryo main DPS. His value drops when he is a sidegrade rather than a roster gap-filler, so save your Primogems.",
       detail:
         "You already have a built Cryo DPS, so Lohen would sit on the bench. Skip this banner and save for a character that fills a gap in your roster instead.",
     },
@@ -180,14 +175,8 @@ const questions = [
 
     if (cryodps === null || melt === null || sig === null || consts === null || abyss === null) return "depends";
 
-    // 1. 完全不需要冰主C → 跳过（无论投资多少）
     if (cryodps === "no") return "skip";
-
-    // 2. 需要冰主C 但没有 Pyro 配队 → 除非愿意组队否则等复刻
     if (melt === "no") return "skipNoMelt";
-
-    // 3. 需要 + 有配队（核心推荐区）
-    //    有专武 / 计划命座 / 重度深渊 → 直接抽；只有配队但休闲且不投资 → 可等复刻
     if (sig === "yes" || consts === "yes" || abyss === "yes") return "pull";
     return "pullIfAbyss";
   }

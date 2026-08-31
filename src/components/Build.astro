@@ -1,452 +1,546 @@
 ---
-// Build: weapons, artifacts, constellations with selection reasoning and
-// numerical analysis. Goes beyond recommendation lists to explain the why.
-const weapons = [
-  {
+// Build section: fully expanded guide with detailed reasoning for every weapon, artifact,
+// team, skill, and constellation. All content is in the initial HTML for crawlability.
+const weapons = {
+  signature: {
     name: "Disaster and Remorse",
-    tier: "Signature",
-    note: "Best-in-slot. Boosts CRIT and Hexerei chain damage.",
-    reason: "Disaster and Remorse is Lohen's signature polearm and his best-in-slot weapon. It provides 608 base ATK and 66.2 percent CRIT DMG at level 90, which directly amplifies his Hexerei chain damage. Its passive increases CRIT Rate and grants a Hexerei-specific damage bonus when the wielder is in an enhanced state, which perfectly overlaps with Masterstroke. Because Lohen's damage is concentrated in the Hexerei chains and the enhanced skill, the weapon's passive is active during his entire damage window, making it the strongest option by a clear margin.",
+    stat: "608 base ATK · 66.2% CRIT DMG",
+    icon: "/weapons/weapon-disaster.webp",
+    why: "His signature polearm and the clear best-in-slot. It provides CRIT DMG and a Hexerei-specific damage bonus that is active for the entire Masterstroke window, which perfectly overlaps with Lohen's damage. Because his damage is concentrated in the Hexerei chains and the enhanced Skill, the passive covers his whole damage phase.",
   },
-  {
-    name: "Primordial Jade Winged-Spear",
-    tier: "5-Star",
-    note: "Strong alternative, stacks ATK on hits.",
-    reason: "Primordial Jade Winged-Spear is the strongest non-signature alternative. It provides 608 base ATK and 33.1 percent CRIT Rate, and its passive stacks ATK on each hit, up to 7 stacks for a 28 percent ATK bonus and a 12 percent damage bonus on the final hit. Because the Hexerei chain lands four rapid hits, the weapon reaches its full stack bonus quickly and the damage amp lands on the highest-multiplier hit. It is roughly 8 to 10 percent behind the signature weapon but is a standard banner 5-star that many players already own.",
-  },
-  {
-    name: "White Tassel",
-    tier: "3-Star",
-    note: "Free F2P pick, boosts Normal Attack DMG.",
-    reason: "White Tassel is the best free-to-play option. It is a 3-star polearm obtainable from Liyue chests, providing 401 base ATK and 23.4 percent CRIT Rate. Its passive increases Normal Attack damage by a flat percentage, which directly amplifies the Hexerei chains since they are classified as Normal Attacks under Masterstroke. It is roughly 20 percent behind the signature weapon but requires zero pulls, making it the clear F2P choice for players who do not have a 5-star polearm.",
-  },
-  {
-    name: "Staff of Homa",
-    tier: "5-Star",
-    note: "Close alternative in Freeze; strong HP-synergy passive.",
-    reason: "Staff of Homa is a strong niche pick. It provides 608 base ATK and 66.2 percent CRIT DMG at level 90, matching Disaster and Remorse on substat value. Its passive grants a flat ATK% bonus scaled by max HP, which is less useful for Lohen because his kit does not scale with HP. However, the CRIT DMG alone makes it competitive: it is roughly 6 to 8 percent behind the signature weapon in a Melt comp, and within 3 percent in a Freeze comp where the passive's uptime is easier to maintain. A solid choice if you already own it.",
-  },
-  {
-    name: "Calamity Queller",
-    tier: "5-Star",
-    note: "High base ATK, ATK% passive that stacks on Elemental Skill.",
-    reason: "Calamity Queller provides 741 base ATK (the highest of any polearm) and 16.5 percent ATK. Its passive grants a stacking ATK% bonus whenever the wielder casts an Elemental Skill, which Lohen does to enter Masterstroke and again for the enhanced skill. Because Lohen casts his Skill twice per rotation, the passive reaches most of its stacks during his damage window. It is roughly 9 to 11 percent behind the signature weapon, and pulls ahead of Jade Winged-Spear in teams with heavy ATK buffs where the flat ATK stacks are diluted less.",
-  },
-  {
-    name: "Missive Windspear",
-    tier: "4-Star",
-    note: "Free event polearm, strong budget pick.",
-    reason: "Missive Windspear is the best 4-star event option for players who missed White Tassel or want a higher base ATK. It provides 510 base ATK and 27.6 percent ATK as a substat, and its passive grants an ATK% and Elemental Mastery buff when a reaction is triggered. Since Lohen triggers Melt constantly, the passive has near-permanent uptime. It is roughly 25 percent behind the signature weapon but fully free from a past event, making it the second-best F2P option after White Tassel for players who have both leveled.",
-  },
-  {
-    name: "Deathmatch",
-    tier: "4-Star",
-    note: "CRIT Rate substat, strong for stat balance.",
-    reason: "Deathmatch is the best 4-star stat stick. It provides 454 base ATK and 36.8 percent CRIT Rate at level 90, which dramatically eases Lohen's artifact requirements — with the 8 percent Cold Front passive and 24 percent ascension bonus, you can reach a healthy CRIT Rate while stacking CRIT DMG on every piece. Its passive grants an ATK% bonus when two or more enemies are nearby, and a defense bonus against one enemy. It is roughly 22 to 24 percent behind the signature weapon in single-target but closes much of the gap in multi-target content. Only available via the Battle Pass.",
-  },
-];
+  fiveStar: [
+    {
+      name: "Primordial Jade Winged-Spear",
+      stat: "608 base ATK · 33.1% CRIT Rate",
+      icon: "/weapons/weapon-jade.webp",
+      why: "The strongest non-signature alternative. Its passive stacks ATK on each hit, and because the Hexerei chain lands four rapid hits, it reaches full stacks quickly. Roughly 8-10% behind the signature weapon but a standard-banner 5-star many players already own.",
+    },
+    {
+      name: "Staff of Homa",
+      stat: "608 base ATK · 66.2% CRIT DMG",
+      icon: "/weapons/weapon-homa.webp",
+      why: "A strong niche pick. Its HP-scaled ATK% passive is less useful for Lohen, but the CRIT DMG alone makes it competitive: within 3% of the signature weapon in a Freeze comp where the passive uptime is easier to maintain.",
+    },
+    {
+      name: "Calamity Queller",
+      stat: "741 base ATK · 16.5% ATK",
+      icon: "/weapons/weapon-queller.webp",
+      why: "The highest base ATK of any polearm, with a stacking ATK% passive that triggers on Elemental Skill. Lohen casts his Skill twice per rotation, so the passive reaches most of its stacks during his damage window. Roughly 9-11% behind the signature weapon.",
+    },
+  ],
+  f2p: [
+    {
+      name: "White Tassel",
+      stat: "401 base ATK · 23.4% CRIT Rate",
+      icon: "/weapons/weapon-white-tassel.webp",
+      why: "The best free-to-play option. It provides CRIT Rate and a Normal Attack damage bonus that directly amplifies the Hexerei chains, which are classified as Normal Attacks under Masterstroke. About 20% behind the signature weapon but requires zero pulls.",
+    },
+    {
+      name: "Missive Windspear",
+      stat: "510 base ATK · 27.6% ATK",
+      icon: "/weapons/weapon-windspear.webp",
+      why: "The best 4-star event polearm. Its passive grants ATK% and Elemental Mastery when a reaction is triggered, and since Lohen triggers Melt constantly, uptime is near-permanent. The second-best F2P option after White Tassel.",
+    },
+    {
+      name: "Deathmatch",
+      stat: "454 base ATK · 36.8% CRIT Rate",
+      icon: "/weapons/weapon-deathmatch.webp",
+      why: "The best 4-star stat stick. Its high CRIT Rate dramatically eases artifact requirements, letting you stack CRIT DMG everywhere. Battle Pass only, and about 22-24% behind the signature weapon in single-target.",
+    },
+  ],
+};
 
 const artifacts = [
   {
-    set: "A Day Carved From Rising Winds (4pc)",
-    note: "Best-in-slot. ATK and CRIT bonuses that scale Hexerei chains.",
-    reason: "A Day Carved From Rising Winds is Lohen's best-in-slot artifact set. The 2-piece bonus grants 18 percent ATK, and the 4-piece bonus grants a stacking CRIT Rate and CRIT DMG bonus when the wearer uses their Elemental Skill, which Lohen does to enter Masterstroke. Because the 4-piece bonus is active for the entire Masterstroke window, it amplifies every Hexerei chain and the enhanced skill. The set is farmable in the new 6.6 domain and is the long-term target for any serious Lohen build.",
+    name: "A Day Carved From Rising Winds (4pc)",
+    icon: "/artifacts/art-risingwinds.webp",
+    why: "His best-in-slot set. Two pieces give 18% ATK, and the four-piece effect grants a stacking CRIT Rate and CRIT DMG bonus when the wearer uses their Elemental Skill — which Lohen does to enter Masterstroke. The bonus is active for the entire window, so it amplifies every Hexerei chain and the enhanced Skill. Farmable in the 6.6 domain.",
   },
   {
-    set: "Blizzard Strayer (4pc)",
-    note: "Strong in Freeze teams, conditional CRIT Rate.",
-    reason: "Blizzard Strayer is a strong alternative in Freeze teams. The 4-piece bonus grants up to 40 percent CRIT Rate against Frozen enemies, which dramatically reduces the CRIT Rate you need from artifacts. However, it only works in Freeze comps where enemies are actually Frozen, making it a situational pick rather than a universal one. Use it if your team applies Hydro consistently and you fight enemies that can be Frozen.",
+    name: "Blizzard Strayer (4pc)",
+    icon: "/artifacts/art-blizzard.webp",
+    why: "The Freeze-team alternative. Its four-piece bonus grants up to 40% CRIT Rate against Frozen enemies, dramatically reducing the CRIT Rate you need from artifacts. Only works in Freeze comps where enemies are actually Frozen.",
   },
   {
-    set: "2pc ATK + 2pc ATK",
-    note: "Budget option while farming the BiS set.",
-    reason: "A 2-piece ATK plus 2-piece ATK combination (such as Gladiator's Finale plus Shimenawa's Reminiscence) is the budget option while you farm the best-in-slot set. It provides a flat 36 percent ATK bonus with no conditional requirements, making it reliable across all team archetypes. It is roughly 15 percent behind the 4-piece best-in-slot set but is available immediately from existing artifact strongboxes.",
+    name: "2pc ATK + 2pc ATK",
+    icon: "/artifacts/art-gladiator.webp",
+    why: "The budget option while you farm the best-in-slot set. A flat 36% ATK bonus with no conditionals, reliable across every team archetype. Roughly 15% behind the 4pc BiS set but available immediately from strongboxes.",
   },
   {
-    set: "Echoes of an Offering (4pc)",
-    note: "Situational; can double the first Hexerei hit.",
-    reason: "Echoes of an Offering has a conditional 36 percent chance to trigger a damage instance equal to 70 percent of ATK when a Normal Attack hits, provided the character has 15 Energy or more. Because Hexerei chains are Normal Attacks, each hit can proc this echo. It is highly RNG-dependent: on average it lands close to the 2pc ATK + 2pc ATK build, but high-roll procs on the back half of the chain outperform. Only consider it if you already have a fully optimized set; otherwise the variance is not worth the farm.",
+    name: "Echoes of an Offering (4pc)",
+    icon: "/artifacts/art-echoes.webp",
+    why: "A situational RNG pick. A 36% chance per Normal Attack hit to trigger an extra damage instance. Because Hexerei chains are Normal Attacks, each hit can proc it, but the variance is not worth the farm unless you already have a fully optimized set.",
   },
   {
-    set: "Emblem of Severed Fate (4pc)",
-    note: "Burst-focused niche; ER scales Burst damage.",
-    reason: "Emblem of Severed Fate converts 25 percent of Energy Recharge into Burst damage bonus, up to 75 percent. Because Lohen needs 120 to 130 percent ER anyway, the 4-piece bonus effectively adds a small Burst damage buff for free. However, Lohen's damage is dominated by the Hexerei chains and the enhanced Skill, not the Burst, so Emblem only competes when your Lohen is heavily invested in Burst damage and ER. It is a viable niche build but roughly 20 percent behind the best-in-slot in full-rotation damage.",
+    name: "Emblem of Severed Fate (4pc)",
+    icon: "/artifacts/art-emblem.webp",
+    why: "A burst-focused niche. It converts Energy Recharge into Burst damage bonus, and since Lohen needs 120-130% ER anyway, the bonus is nearly free. But his damage is dominated by the chains and enhanced Skill, so Emblem only competes when heavily invested in Burst.",
   },
 ];
 
-const mainstats = [
-  { slot: "Sands", main: "ATK%", reason: "ATK% scales all of Lohen's damage, which is all ATK-based. Energy Recharge sands are an option if you struggle to burst each rotation, but ATK% is the default." },
-  { slot: "Goblet", main: "Cryo DMG Bonus", reason: "Cryo DMG Bonus is the correct goblet because all of Lohen's damage is Cryo. It provides a larger damage increase than ATK% on the goblet slot due to how damage formulas weight elemental damage." },
-  { slot: "Circlet", main: "CRIT Rate / CRIT DMG", reason: "Choose CRIT Rate or CRIT DMG based on your current ratio. Aim for a 1:2 CRIT Rate to CRIT DMG ratio. With the Cold Front passive granting 8 percent CRIT Rate during Masterstroke, you can lean slightly toward CRIT DMG." },
+const artifactStats = [
+  { slot: "Sands", main: "ATK%", sub: "CRIT Rate, CRIT DMG, ATK%, Energy Recharge" },
+  { slot: "Goblet", main: "Cryo DMG Bonus", sub: "CRIT Rate, CRIT DMG, ATK%, Energy Recharge" },
+  { slot: "Circlet", main: "CRIT Rate or CRIT DMG", sub: "CRIT Rate, CRIT DMG, ATK%, Energy Recharge" },
 ];
 
-const substats = ["CRIT Rate", "CRIT DMG", "ATK%", "Energy Recharge", "ATK"];
-
-const constellationPriority = [
-  { c: "C0", note: "Fully functional. The baseline experience." },
-  { c: "C1", note: "Best value. Extra Joy generation extends Masterstroke uptime." },
-  { c: "C2", note: "Team-wide Cryo DMG bonus. Strong in Melt comps." },
-  { c: "C6", note: "Capstone. Hexerei chains gain massive multipliers." },
+const goalStats = [
+  { k: "CRIT Rate", v: "50%+", note: "42% on artifacts + 8% Cold Front passive during Masterstroke" },
+  { k: "CRIT DMG", v: "150%+", note: "Push as high as possible after CRIT Rate hits its target" },
+  { k: "ATK", v: "1,800+", note: "Total ATK including weapon and artifacts; do not trade CRIT for it" },
+  { k: "Energy Recharge", v: "120-130%", note: "110% with a Cryo battery; enough to Burst every rotation" },
 ];
 
-const constellationDetails = [
-  { c: "C1", name: "Opening Gambit", effect: "Casting the Elemental Skill grants 4 extra Joy. Extends Masterstroke uptime by roughly 20%.", pct: "+10-12% total DPS" },
-  { c: "C2", name: "Field Commander", effect: "While in Masterstroke, party members gain a 15% Cryo DMG Bonus.", pct: "+8-10% team DPS" },
-  { c: "C3", name: "Tactical Mind", effect: "Increases Elemental Skill level by 3. Enhanced skill gains +~39% base multiplier.", pct: "+5-6% personal DPS" },
-  { c: "C4", name: "Vanguard's Fury", effect: "Hexerei chain hits restore 1 Energy each. Improves Burst uptime.", pct: "utility (energy)" },
-  { c: "C5", name: "Decisive Strike", effect: "Increases Normal Attack level by 3. Hexerei chain gains +~12% per hit.", pct: "+3-4% personal DPS" },
-  { c: "C6", name: "Masterstroke Apex", effect: "Hexerei chain damage gains a 40% multiplier and the final hit triggers an additional Cryo blast.", pct: "+25-30% during Masterstroke" },
+const erRequirements = [
+  { setup: "With a Cryo battery (Rosaria or second Cryo)", er: "110%" },
+  { setup: "Single Cryo teammate / default", er: "120-130%" },
+  { setup: "Solo Cryo (no battery)", er: "130%+", },
 ];
 
-const skillLevelsExtended = [
-  { talent: "Normal Attack", lv11: "186 / 200 / 214 / 228%", lv12: "200 / 215 / 230 / 245%", lv13: "214 / 230 / 246 / 262%" },
-  { talent: "Elemental Skill", lv11: "333%", lv12: "358%", lv13: "383%" },
-  { talent: "Elemental Burst", lv11: "1,034%", lv12: "1,112%", lv13: "1,190%" },
-];
-
-const weaponCompare = [
-  { metric: "Base ATK (Lv. 90)", dr: "608", jade: "608", tassel: "401", homa: "608", queller: "741", deathmatch: "454" },
-  { metric: "Substat", dr: "CRIT DMG 66.2%", jade: "CRIT Rate 33.1%", tassel: "CRIT Rate 23.4%", homa: "CRIT DMG 66.2%", queller: "ATK 16.5%", deathmatch: "CRIT Rate 36.8%" },
-  { metric: "Passive synergy", dr: "Hexerei chain DMG", jade: "Stacking ATK on hit", tassel: "Normal Attack DMG", homa: "HP-scaled ATK%", queller: "Skill-triggered ATK%", deathmatch: "ATK% vs 2+ enemies" },
-  { metric: "vs BiS (approx)", dr: "—", jade: "-8 to -10%", tassel: "-20%", homa: "-6 to -8%", queller: "-9 to -11%", deathmatch: "-22 to -24%" },
-  { metric: "F2P", dr: "No", jade: "No", tassel: "Yes (free)", homa: "No", queller: "No", deathmatch: "No (BP)" },
-  { metric: "Verdict", dr: "Best-in-slot", jade: "Strong 5-star alt", tassel: "Best F2P pick", homa: "Freeze niche", queller: "High-ATK alt", deathmatch: "Best 4-star stat stick" },
-];
-
-const teamBuilds = [
+const teams = [
   {
-    archetype: "Melt Comp (recommended)",
-    weapon: "Disaster and Remorse",
-    set: "A Day Carved From Rising Winds (4pc)",
-    sands: "ATK%",
-    goblet: "Cryo DMG",
-    circlet: "CRIT DMG (with 1:2 ratio)",
-    note: "Prioritize CRIT DMG on the circlet because Cold Front, the ascension bonus, and most weapons already provide CRIT Rate. Aim for 50% CRIT Rate effective (42% on artifacts + 8% passive) and as much CRIT DMG as possible.",
+    name: "6.6 Melt (Durin + Nicole)",
+    tag: "Premium",
+    members: "Lohen + Durin + Nicole + Kazuha / Bennett",
+    ava: ["/chars/char-durin.webp", "/chars/char-nicole.webp", "/chars/char-kazuha.webp"],
+    why: "His strongest team. Durin's off-field Pyro is tuned to Lohen's chain cadence, triggering Melt on every Hexerei hit, and Nicole amplifies the damage window. Front-loaded burst pairs perfectly with Abyss chamber timers.",
   },
   {
-    archetype: "Freeze Comp",
-    weapon: "Disaster and Remorse / Staff of Homa",
-    set: "Blizzard Strayer (4pc)",
-    sands: "ATK%",
-    goblet: "Cryo DMG",
-    circlet: "CRIT DMG (heavy)",
-    note: "Blizzard Strayer provides up to 40% CRIT Rate against Frozen enemies, so stack CRIT DMG aggressively. With 40% from the set, 24% ascension, and 8% passive, you need almost no CRIT Rate on artifacts — go all-in on CRIT DMG and ATK.",
+    name: "F2P Melt (Xiangling)",
+    tag: "F2P",
+    members: "Lohen + Xiangling + Bennett + Sucrose",
+    ava: ["/chars/char-xiangling.webp", "/chars/char-bennett.webp", "/chars/char-sucrose.webp"],
+    why: "The budget version of the Melt comp, fully free except for Lohen. Xiangling applies off-field Pyro with Pyronado, Bennett provides the ATK buff and healing, and Sucrose groups and shares Elemental Mastery. Roughly 15% behind the premium comp but clears the Abyss comfortably.",
   },
   {
-    archetype: "F2P / Starter",
-    weapon: "White Tassel",
-    set: "2pc ATK + 2pc ATK",
-    sands: "ATK%",
-    goblet: "Cryo DMG",
-    circlet: "CRIT Rate",
-    note: "White Tassel gives 23.4% CRIT Rate plus 24% ascension plus 8% passive, so a CRIT Rate circlet pushes you past 60% effective. Balance toward CRIT DMG on substats. This build is roughly 20% behind the full investment but fully clears endgame.",
+    name: "Freeze",
+    tag: "Safe",
+    members: "Lohen + Kokomi + Kazuha + Rosaria",
+    ava: ["/chars/char-kokomi.webp", "/chars/char-kazuha.webp", "/chars/char-rosaria.webp"],
+    why: "Trades raw damage for safety and consistency. Blizzard Strayer's 4pc gives up to 40% CRIT Rate against Frozen enemies, letting you stack CRIT DMG. Roughly 15-20% behind the Melt comp but far more forgiving.",
+  },
+  {
+    name: "Mono Cryo",
+    tag: "Alternative",
+    members: "Lohen + Ganyu + Shenhe + Kokomi",
+    ava: ["/chars/char-ganyu.webp", "/chars/char-shenhe.webp", "/chars/char-kokomi.webp"],
+    why: "Stacked Cryo damage for enemies where you cannot Melt. Shenhe's Icy Quill buffs each Hexerei chain hit individually — extremely effective because the chains hit four times. The pick when you need Cryo damage but have no Pyro enabler.",
+  },
+  {
+    name: "Reverse Melt",
+    tag: "Niche",
+    members: "Lohen + Rosaria + Bennett + Xiangling",
+    ava: ["/chars/char-rosaria.webp", "/chars/char-bennett.webp", "/chars/char-xiangling.webp"],
+    why: "Flips the reaction order: Rosaria and Xiangling trigger Reverse Melt on Lohen's Cryo application. Team damage is more balanced across four characters, useful against bosses that resist single-target nukes.",
+  },
+  {
+    name: "Physical Superconduct",
+    tag: "Niche",
+    members: "Lohen + Fischl + Rosaria + Flex",
+    ava: ["/chars/char-fischl.webp", "/chars/char-rosaria.webp"],
+    why: "A niche comp that uses Lohen's physical Normal Attacks outside Masterstroke, with Superconduct shredding physical RES. Only worth running in physical-friendly content.",
   },
 ];
 
-const statTargets = [
-  { stat: "CRIT Rate", target: "50%+ (42% + 8% passive)", note: "Aim for 50 percent with the Cold Front passive active, so 42 percent on the artifacts page." },
-  { stat: "CRIT DMG", target: "100%+ minimum", note: "Push as high as possible after CRIT Rate hits the target. 150 percent is a strong endgame goal." },
-  { stat: "ATK", target: "1,800+ total", note: "Total ATK including weapon and artifacts. Higher is better, but do not sacrifice CRIT for ATK." },
-  { stat: "Energy Recharge", target: "120-130%", note: "Enough to guarantee Burst each rotation. Drop to 110 percent if running a Cryo battery teammate." },
+const skills = [
+  {
+    name: "Normal Attack: Hexerei",
+    tag: "Low priority",
+    icon: "/talents/icon-polearm.webp",
+    desc: "Performs up to 4 consecutive spear strikes. Under Masterstroke, Normal Attacks convert to Hexerei chained strikes dealing Cryo DMG that scale per hit: 100 / 108 / 116 / 124% at Lv.1, rising to 198 / 213 / 228 / 243% at Lv.10. The back half of the chain carries more damage, so never cancel it early.",
+    priority: "Level second",
+  },
+  {
+    name: "Skill: Masterstroke",
+    tag: "Stance entry + resource conversion",
+    icon: "/talents/lohen-skill.webp",
+    desc: "Enters the Masterstroke state, converting a full Will to Win meter into 100 Joy. Normal Attacks become Hexerei chains and the Skill gains an enhanced version (Lv.1 180%, Lv.10 297%) that spends Joy for a burst of Cryo DMG. The 6s cooldown starts when Masterstroke ends.",
+    priority: "Level first",
+  },
+  {
+    name: "Burst: Coup de Grace",
+    tag: "Finisher",
+    icon: "/talents/lohen-burst.webp",
+    desc: "Deals massive AoE Cryo DMG — 580% at Lv.1, 967% at Lv.10. Costs no Joy, which is why the optimal rotation saves it for the end of the Masterstroke window. 80 Energy cost, 15s cooldown.",
+    priority: "Level last",
+  },
+];
+
+const passives = [
+  {
+    name: "Vanguard's Resolve",
+    icon: "/talents/lohen-pass1.webp",
+    desc: "Gains 25% extra Will to Win when hitting enemies with Normal Attacks, accelerating the charge between Masterstroke windows.",
+  },
+  {
+    name: "Cold Front",
+    icon: "/talents/lohen-pass2.webp",
+    desc: "CRIT Rate increases by 8% while in the Masterstroke state, effectively reducing the CRIT Rate you need from artifacts.",
+  },
+  {
+    name: "Knights' Logistics",
+    icon: "/talents/lohen-pass3.webp",
+    desc: "Refunds 15% of materials when crafting Polearm talent-up materials. A quality-of-life passive that reduces long-term farming cost.",
+  },
+];
+
+const constellations = [
+  { c: "C0", verdict: "Usable", uplift: "100% baseline", note: "Fully functional in all team archetypes. The Hexerei chains under Masterstroke are available at base constellation. You do not need constellations to deal competitive damage." },
+  { c: "C1 · Opening Gambit", verdict: "Best value", uplift: "+10-12% DPS", note: "Casting the Elemental Skill grants 4 extra Joy, extending Masterstroke uptime by roughly 20%. The best damage-per-primogem in his kit." },
+  { c: "C2 · Field Commander", verdict: "Strong", uplift: "+8-10% team", note: "While in Masterstroke, party members gain a 15% Cryo DMG Bonus. Strong in Melt and Mono Cryo teams." },
+  { c: "C3 · Tactical Mind", verdict: "Skill level", uplift: "+5-6% DPS", note: "Increases Elemental Skill level by 3, raising the enhanced Skill's base multiplier." },
+  { c: "C4 · Vanguard's Fury", verdict: "Utility", uplift: "Energy", note: "Hexerei chain hits restore 1 Energy each, improving Burst uptime across the rotation." },
+  { c: "C5 · Decisive Strike", verdict: "NA level", uplift: "+3-4% DPS", note: "Increases Normal Attack level by 3, raising every Hexerei chain hit." },
+  { c: "C6 · Masterstroke Apex", verdict: "Capstone", uplift: "+25-30% window", note: "Hexerei chain damage gains a 40% multiplier and the final hit triggers an additional Cryo blast. Whale-only, but a massive capstone." },
+];
+
+// Crisp vector constellation emblems (star-node patterns) — replace the blurry
+// placeholder icons with always-sharp, on-theme glyphs.
+const constellationPatterns = [
+  [[28, 70], [50, 28], [72, 70], [50, 52]],
+  [[24, 72], [50, 22], [76, 72], [50, 58], [50, 92]],
+  [[30, 34], [50, 68], [70, 34], [32, 78], [68, 78]],
+  [[24, 52], [50, 24], [76, 52], [64, 72], [36, 72]],
+  [[50, 18], [70, 40], [62, 66], [38, 66], [30, 40]],
+  [[24, 36], [50, 18], [76, 36], [76, 66], [50, 84], [24, 66]],
+  [[50, 12], [72, 28], [72, 72], [50, 88], [28, 72], [28, 28], [50, 44]],
 ];
 ---
 
-<section id="build" class="border-b border-slate-800/70 py-16 sm:py-20">
+<section id="build" class="reveal border-b border-stone-800/70 py-16 sm:py-20">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
-    <h2 class="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
-      Best Lohen Build
+    <h2 class="text-3xl font-bold tracking-tight text-stone-50 sm:text-4xl">
+      Lohen Build: Weapons, Artifacts, Teams &amp; Skills
     </h2>
-    <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
-      The complete build for Lohen: weapons, artifacts, main stats, substats, and
-      constellations, each with the reasoning behind the recommendation. Farm a CRIT
-      circlet and Cryo goblet first, ATK sands second. His signature polearm is optimal
-      but not required.
+    <p class="mt-4 max-w-3xl text-base leading-relaxed text-stone-400">
+      Lohen is a front-line Cryo polearm DPS. His damage lives in the
+      <span class="font-semibold text-frost-600">Hexerei chains</span> and the enhanced
+      <span class="font-semibold text-frost-600">Elemental Skill</span> during the Masterstroke
+      window. Build him for CRIT and ATK, run a Cryo DMG goblet, and keep 120-130% Energy Recharge
+      so the Burst is ready every rotation.
     </p>
 
-    <div class="mt-8 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6 sm:p-8">
-      <h3 class="text-lg font-bold text-frost-400">Build Philosophy</h3>
-      <p class="mt-3 text-base leading-relaxed text-slate-300">
-        Lohen's damage is concentrated in two places: the Hexerei chains, which fire four
-        rapid Cryo hits under Masterstroke, and the enhanced Elemental Skill, which is
-        his highest single-hit multiplier. A good build amplifies both, which means
-        prioritizing CRIT stats (because the chains hit many times and each can crit),
-        ATK (because all his damage is ATK-scaling), and enough Energy Recharge to
-        guarantee the Burst each rotation. Cryo DMG on the goblet is non-negotiable
-        because every damage instance he deals is Cryo.
-      </p>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="flex gap-3 rounded-xl border border-frost-700/40 bg-frost-950/20 p-5">
+        <img src="/weapons/weapon-disaster.webp" alt="Disaster and Remorse weapon icon" width="256" height="256" loading="lazy" decoding="async" class="h-12 w-12 shrink-0 rounded-xl border border-stone-700/50 bg-white/60" />
+        <div class="min-w-0 flex-1">
+          <p class="overline text-xs">Best Weapon</p>
+          <p class="mt-1 text-base font-bold text-slate-100">Disaster and Remorse</p>
+          <p class="mt-1 text-xs leading-relaxed text-slate-400">
+            Signature polearm. CRIT DMG plus a Hexerei-chain bonus active for the full window.
+          </p>
+        </div>
+      </div>
+      <div class="flex gap-3 rounded-xl border border-frost-700/40 bg-frost-950/20 p-5">
+        <img src="/artifacts/art-risingwinds.webp" alt="A Day Carved From Rising Winds artifact icon" width="256" height="256" loading="lazy" decoding="async" class="h-12 w-12 shrink-0 rounded-xl border border-stone-700/50 bg-white/60" />
+        <div class="min-w-0 flex-1">
+          <p class="overline text-xs">Best Artifact Set</p>
+          <p class="mt-1 text-base font-bold text-slate-100">A Day Carved From Rising Winds</p>
+          <p class="mt-1 text-xs leading-relaxed text-slate-400">
+            4pc BiS. Its CRIT bonuses are active for the entire Masterstroke window.
+          </p>
+        </div>
+      </div>
+      <div class="flex gap-3 rounded-xl border border-frost-700/40 bg-frost-950/20 p-5">
+        <img src="/elements/elem-cryo.webp" alt="Cryo element icon" width="256" height="256" loading="lazy" decoding="async" class="h-12 w-12 shrink-0 rounded-xl border border-stone-700/50 bg-white/60" />
+        <div class="min-w-0 flex-1">
+          <p class="overline text-xs">Main Stats</p>
+          <p class="mt-1 text-base font-bold text-slate-100">ATK% · Cryo DMG · CRIT</p>
+          <p class="mt-1 text-xs leading-relaxed text-slate-400">
+            ATK% sands, Cryo DMG goblet, CRIT circlet. Substats: CRIT Rate &gt; CRIT DMG &gt; ATK%.
+          </p>
+        </div>
+      </div>
+      <div class="flex gap-3 rounded-xl border border-frost-700/40 bg-frost-950/20 p-5">
+        <img src="/talents/lohen-skill.webp" alt="Lohen Elemental Skill icon" width="256" height="256" loading="lazy" decoding="async" class="h-12 w-12 shrink-0 rounded-xl border border-stone-700/50 bg-white/60" />
+        <div class="min-w-0 flex-1">
+          <p class="overline text-xs">Stat Targets</p>
+          <p class="mt-1 text-base font-bold text-slate-100">50% CR · 150% CD · 120-130% ER</p>
+          <p class="mt-1 text-xs leading-relaxed text-slate-400">
+            50% CRIT Rate effective (42% + 8% passive), 1,800+ ATK, 120-130% Energy Recharge.
+          </p>
+        </div>
+      </div>
     </div>
 
-    <div class="mt-12 grid gap-6 lg:grid-cols-2">
-      <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-        <h3 class="text-lg font-bold text-slate-100">Weapons</h3>
-        <p class="mt-2 text-sm leading-relaxed text-slate-400">
-          Lohen's weapon should amplify CRIT and Normal Attack damage, since his Hexerei
-          chains are classified as Normal Attacks. The three picks below cover signature,
-          alternative, and free-to-play options.
-        </p>
-        <div class="mt-4 divide-y divide-slate-800">
-          {weapons.map((w) => (
-            <div class="py-3">
-              <div class="flex items-center justify-between">
-                <p class="text-sm font-semibold text-slate-100">{w.name}</p>
-                <span class="rounded-full border border-frost-700/50 px-2 py-0.5 text-xs font-medium text-frost-400">
-                  {w.tier}
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Best Weapons</h3>
+    <div class="mt-5 rounded-2xl border border-gold-500/50 bg-gold-950/40 p-6">
+      <div class="flex items-center gap-4">
+        <img
+          src={weapons.signature.icon}
+          alt={`${weapons.signature.name} weapon icon`}
+          width="256"
+          height="256"
+          loading="lazy"
+          decoding="async"
+          class="h-16 w-16 shrink-0 rounded-xl border border-gold-500/40 bg-white/60"
+        />
+        <div class="flex flex-1 flex-wrap items-center justify-between gap-x-4 gap-y-1">
+          <p class="text-lg font-semibold text-stone-100">{weapons.signature.name}</p>
+          <span class="shrink-0 rounded-full border border-gold-500/50 px-2.5 py-0.5 text-xs font-semibold text-gold-600">
+            Signature
+          </span>
+          <span class="w-full shrink-0 font-mono text-xs text-stone-500">{weapons.signature.stat}</span>
+        </div>
+      </div>
+      <p class="mt-3 text-sm leading-relaxed text-stone-400">{weapons.signature.why}</p>
+    </div>
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      {weapons.fiveStar.map((w) => (
+        <div class="flex gap-4 rounded-xl border border-stone-800 bg-stone-900/30 p-5">
+          <img
+            src={w.icon}
+            alt={`${w.name} weapon icon`}
+            width="256"
+            height="256"
+            loading="lazy"
+            decoding="async"
+            class="h-14 w-14 shrink-0 self-start rounded-xl border border-stone-700/50 bg-white/60"
+          />
+          <div class="min-w-0 flex-1">
+            <p class="font-semibold text-stone-100">{w.name}</p>
+            <p class="mt-0.5 font-mono text-xs leading-relaxed text-stone-500">{w.stat}</p>
+            <p class="mt-2 text-sm leading-relaxed text-stone-400">{w.why}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="mt-4 grid gap-4 md:grid-cols-3">
+      {weapons.f2p.map((w) => (
+        <div class="flex gap-4 rounded-xl border border-stone-800 bg-stone-900/30 p-5">
+          <img
+            src={w.icon}
+            alt={`${w.name} weapon icon`}
+            width="256"
+            height="256"
+            loading="lazy"
+            decoding="async"
+            class="h-14 w-14 shrink-0 self-start rounded-xl border border-stone-700/50 bg-white/60"
+          />
+          <div class="min-w-0 flex-1">
+            <p class="font-semibold text-stone-100">{w.name}</p>
+            <p class="mt-0.5 font-mono text-xs leading-relaxed text-stone-500">{w.stat}</p>
+            <p class="mt-2 text-sm leading-relaxed text-stone-400">{w.why}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Best Artifacts</h3>
+    <div class="mt-5 grid gap-4 md:grid-cols-2">
+      {artifacts.map((a) => (
+        <div class="flex gap-4 rounded-xl border border-stone-800 bg-stone-900/30 p-5">
+          <img
+            src={a.icon}
+            alt={`${a.name.replace(" (4pc)", "")} artifact icon`}
+            width="256"
+            height="256"
+            loading="lazy"
+            decoding="async"
+            class="h-16 w-16 shrink-0 self-start rounded-xl border border-stone-700/60"
+          />
+          <div class="min-w-0 flex-1">
+            <p class="font-semibold text-stone-100">{a.name}</p>
+            <p class="mt-2 text-sm leading-relaxed text-stone-400">{a.why}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="mt-6 overflow-x-auto">
+      <table class="w-full min-w-[32rem] border-collapse text-sm">
+        <thead>
+          <tr class="text-left">
+            <th class="py-3 pr-4 font-medium text-stone-500">Slot</th>
+            <th class="px-4 py-3 font-medium text-stone-500">Main stat</th>
+            <th class="px-4 py-3 font-medium text-stone-500">Sub-stat priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          {artifactStats.map((s, i) => (
+            <tr class={i === artifactStats.length - 1 ? "" : "border-b border-stone-800/70"}>
+              <td class="py-4 pr-4 text-stone-300">{s.slot}</td>
+              <td class="px-4 py-4 text-stone-100">{s.main}</td>
+              <td class="px-4 py-4 text-stone-300">{s.sub}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Goal Stats</h3>
+    <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {goalStats.map((g) => (
+        <div class="rounded-xl border border-stone-800 bg-stone-900/30 p-4">
+          <p class="text-xs text-stone-500">{g.k}</p>
+          <p class="mt-1 font-mono text-lg font-semibold text-frost-400">{g.v}</p>
+          <p class="mt-2 text-xs leading-relaxed text-stone-400">{g.note}</p>
+        </div>
+      ))}
+    </div>
+
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Energy Recharge Requirements</h3>
+    <div class="mt-5 overflow-x-auto">
+      <table class="w-full min-w-[30rem] border-collapse text-sm">
+        <thead>
+          <tr class="text-left">
+            <th class="py-3 pr-4 font-medium text-stone-500">Team setup</th>
+            <th class="px-4 py-3 font-medium text-stone-500">ER needed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {erRequirements.map((r, i) => (
+            <tr class={i === erRequirements.length - 1 ? "" : "border-b border-stone-800/70"}>
+              <td class="py-4 pr-4 text-stone-300">{r.setup}</td>
+              <td class="px-4 py-4 font-mono text-frost-400">{r.er}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-3 text-xs leading-relaxed text-stone-500">
+      Lohen's Skill generates 3-4 Cryo particles per cast, so external particles from teammates
+      are still needed to fuel the 80-cost Burst each cycle.
+    </p>
+
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Best Teams</h3>
+    <div class="mt-5 grid gap-4 md:grid-cols-3">
+      {teams.map((t) => (
+        <div class="rounded-xl border border-stone-800 bg-stone-900/30 p-5">
+          <div class="flex items-start justify-between gap-2">
+            <p class="font-semibold text-stone-100">{t.name}</p>
+            <span
+              class={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium ${
+                t.tag === "F2P"
+                  ? "border-emerald-700/50 bg-emerald-950/30 text-emerald-600"
+                  : "border-stone-700 text-stone-500"
+              }`}
+            >
+              {t.tag}
+            </span>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            {t.ava.map((a) => (
+              <img
+                src={a}
+                alt=""
+                width="256"
+                height="256"
+                loading="lazy"
+                decoding="async"
+                class="h-9 w-9 shrink-0 rounded-full border border-stone-700/60 bg-white/60"
+              />
+            ))}
+            <span class="min-w-0 text-xs text-stone-500">{t.members}</span>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-stone-400">{t.why}</p>
+        </div>
+      ))}
+    </div>
+
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Skills</h3>
+    <div class="mt-5 space-y-4">
+      {skills.map((s) => (
+        <div class="flex gap-4 rounded-xl border border-stone-800 bg-stone-900/30 p-5">
+          <img
+            src={s.icon}
+            alt={`${s.name} icon`}
+            width="256"
+            height="256"
+            loading="lazy"
+            decoding="async"
+            class="h-14 w-14 shrink-0 self-start rounded-xl border border-stone-700/50 bg-white/60"
+          />
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <p class="font-semibold text-stone-100">{s.name}</p>
+              <div class="flex items-center gap-2">
+                <span class="rounded-full border border-stone-700 px-3 py-0.5 text-xs text-stone-500">
+                  {s.tag}
+                </span>
+                <span class="rounded-full border border-frost-700/50 bg-frost-950/30 px-3 py-0.5 text-xs text-frost-600">
+                  {s.priority}
                 </span>
               </div>
-              <p class="mt-1 text-xs leading-relaxed text-slate-400">{w.note}</p>
-              <p class="mt-2 border-t border-slate-800/60 pt-2 text-xs leading-relaxed text-slate-500">
-                {w.reason}
-              </p>
             </div>
-          ))}
-        </div>
-      </div>
-
-      <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-        <h3 class="text-lg font-bold text-slate-100">Artifacts</h3>
-        <p class="mt-2 text-sm leading-relaxed text-slate-400">
-          The artifact set should amplify CRIT and ATK during the Masterstroke window.
-          The three options below cover best-in-slot, situational, and budget picks.
-        </p>
-        <div class="mt-4 divide-y divide-slate-800">
-          {artifacts.map((a) => (
-            <div class="py-3">
-              <p class="text-sm font-semibold text-slate-100">{a.set}</p>
-              <p class="mt-1 text-xs leading-relaxed text-slate-400">{a.note}</p>
-              <p class="mt-2 border-t border-slate-800/60 pt-2 text-xs leading-relaxed text-slate-500">
-                {a.reason}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-6 grid gap-6 lg:grid-cols-2">
-      <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-        <h3 class="text-lg font-bold text-slate-100">Main Stats</h3>
-        <p class="mt-2 text-sm leading-relaxed text-slate-400">
-          The main stat on each artifact slot, with the reasoning for each choice.
-        </p>
-        <div class="mt-4 space-y-4">
-          {mainstats.map((m) => (
-            <div class="rounded-xl border border-slate-800 p-4">
-              <div class="flex items-center justify-between">
-                <p class="text-xs font-medium uppercase tracking-[0.1em] text-slate-500">{m.slot}</p>
-                <p class="text-sm font-semibold text-frost-400">{m.main}</p>
-              </div>
-              <p class="mt-2 text-xs leading-relaxed text-slate-500">{m.reason}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-        <h3 class="text-lg font-bold text-slate-100">Substats Priority</h3>
-        <p class="mt-2 text-sm leading-relaxed text-slate-400">
-          Roll priority for artifact substats. CRIT stats come first because the Hexerei
-          chain hits many times and each hit can crit independently.
-        </p>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {substats.map((s, i) => (
-            <span class="rounded-full border border-slate-700 px-3 py-1 text-xs font-medium text-slate-300">
-              {i + 1}. {s}
-            </span>
-          ))}
-        </div>
-        <div class="mt-6 border-t border-slate-800/60 pt-4">
-          <p class="text-sm font-semibold text-slate-100">Stat Targets (Lv. 90)</p>
-          <div class="mt-3 space-y-3">
-            {statTargets.map((t) => (
-              <div class="rounded-xl border border-slate-800 p-3">
-                <div class="flex items-center justify-between">
-                  <p class="text-xs font-medium text-slate-400">{t.stat}</p>
-                  <p class="text-sm font-bold text-frost-400">{t.target}</p>
-                </div>
-                <p class="mt-1.5 text-xs leading-relaxed text-slate-500">{t.note}</p>
-              </div>
-            ))}
+            <p class="mt-3 text-sm leading-relaxed text-stone-400">{s.desc}</p>
           </div>
         </div>
-      </div>
+      ))}
     </div>
 
-    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-bold text-slate-100">Constellation Priority</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-400">
-        Lohen works at C0, but constellations add meaningful value. The priority below
-        ranks which constellations are worth chasing, based on damage increase per pull
-        cost.
+    <div class="mt-6 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6">
+      <p class="text-sm leading-relaxed text-stone-300">
+        <span class="font-semibold text-stone-100">Talent priority:</span> Elemental Skill first,
+        then Normal Attack, and the Burst last. The Skill is the highest single-hit multiplier and
+        opens Masterstroke; the Hexerei chains (which scale with Normal Attack) are your sustained
+        damage.
       </p>
-      <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {constellationPriority.map((c) => (
-          <div class="rounded-xl border border-slate-800 p-4">
-            <p class="text-sm font-bold text-frost-400">{c.c}</p>
-            <p class="mt-2 text-xs leading-relaxed text-slate-400">{c.note}</p>
+    </div>
+
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Passive Talents</h3>
+    <div class="mt-5 grid gap-4 md:grid-cols-2">
+      {passives.map((p) => (
+        <div class="flex gap-4 rounded-xl border border-stone-800 bg-stone-900/30 p-5">
+          <img
+            src={p.icon}
+            alt={`${p.name} icon`}
+            width="256"
+            height="256"
+            loading="lazy"
+            decoding="async"
+            class="h-12 w-12 shrink-0 self-start rounded-xl border border-stone-700/50 bg-white/60"
+          />
+          <div class="min-w-0 flex-1">
+            <p class="font-semibold text-stone-100">{p.name}</p>
+            <p class="mt-2 text-sm leading-relaxed text-stone-400">{p.desc}</p>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
 
-    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-bold text-slate-100">Constellation Effects (Layer by Layer)</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-400">
-        What each constellation actually does, so you can decide how far to invest. C1 is
-        the best value because it extends Masterstroke uptime, the core of Lohen's kit.
-      </p>
-      <div class="mt-4 divide-y divide-slate-800">
-        {constellationDetails.map((c) => (
-          <div class="py-3">
-            <div class="flex items-center gap-3">
-              <span class="rounded-full bg-frost-950 px-2.5 py-0.5 text-xs font-bold text-frost-400">{c.c}</span>
-              <p class="text-sm font-bold text-slate-100">{c.name}</p>
-              <span class="ml-auto rounded-full border border-emerald-800/60 bg-emerald-950/30 px-2.5 py-0.5 text-xs font-semibold text-emerald-400">{c.pct}</span>
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">Constellation Priority</h3>
+    <div class="mt-5 grid gap-3 sm:grid-cols-2">
+      {constellations.map((c, i) => (
+        <div class="flex gap-4 rounded-xl border border-stone-800 bg-stone-900/30 p-4">
+          <span
+            class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-frost-600/40 bg-frost-950/60 text-frost-600"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 100 100" class="h-10 w-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              {constellationPatterns[i].slice(1).map((p, j) => (
+                <line x1={constellationPatterns[i][j][0]} y1={constellationPatterns[i][j][1]} x2={p[0]} y2={p[1]} />
+              ))}
+              {constellationPatterns[i].map((p) => (
+                <circle cx={p[0]} cy={p[1]} r="4" fill="currentColor" stroke="none" />
+              ))}
+            </svg>
+          </span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-mono text-sm font-semibold text-frost-600">{c.c}</span>
+              <span class="shrink-0 rounded-full border border-stone-700 px-2.5 py-1 font-mono text-xs text-stone-500">
+                {c.uplift}
+              </span>
             </div>
-            <p class="mt-1.5 pl-1 text-sm leading-relaxed text-slate-400">{c.effect}</p>
+            <p class={`mt-2 text-xs font-medium ${c.verdict === "Best value" ? "font-semibold text-gold-600" : "text-stone-500"}`}>{c.verdict}</p>
+            <p class="mt-1 text-sm leading-relaxed text-stone-400">{c.note}</p>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
+    <p class="mt-4 text-xs leading-relaxed text-stone-500">
+      Uplift figures are relative to a C0 baseline, from the 6.6 beta kit cross-checked with
+      community testing on HoYoLAB.
+    </p>
 
-    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-bold text-slate-100">Constellation Value (DPS % per copy)</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-400">
-        How much each constellation actually improves damage. C1 is the best value per
-        primogem; C6 is the capstone but costs five copies. The percentage figures are
-        relative to a C0 Lohen in the 6.6 Melt comp, averaged across a full rotation.
+    <div class="mt-6 rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6">
+      <p class="text-sm leading-relaxed text-stone-300">
+        <span class="font-semibold text-stone-100">Investment guide:</span> Pull him at C0 and
+        stop — both his weapon and constellations are optional. C1 is the best-value stop,
+        extending Masterstroke uptime by ~20%. After C1, prioritize the signature weapon, which
+        provides a larger damage increase than C2 for fewer Primogems. Only chase C6 for
+        challenge-mode optimization.
       </p>
-      <div class="mt-4 overflow-x-auto">
-        <table class="w-full min-w-[560px] border-collapse text-sm">
-          <thead>
-            <tr class="border-b border-slate-800 text-left">
-              <th class="py-2 pr-4 font-semibold text-slate-400">Constellation</th>
-              <th class="py-2 pr-4 font-semibold text-frost-400">Damage Increase</th>
-              <th class="py-2 pr-4 font-semibold text-slate-300">Verdict</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800">
-            {constellationDetails.map((c) => (
-              <tr>
-                <td class="py-2 pr-4 font-semibold text-slate-100">{c.c} · {c.name}</td>
-                <td class="py-2 pr-4 text-frost-400">{c.pct}</td>
-                <td class="py-2 pr-4 text-xs leading-relaxed text-slate-500">{c.effect}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="mt-4 text-xs leading-relaxed text-slate-500">
-        Verdict: stop at C1 unless you are a whale. C1 gives the best damage-per-primogem.
-        Prioritize the signature weapon before C2, because Disaster and Remorse provides a
-        larger increase than C2 for fewer pulls. Only chase C6 for challenge-mode
-        optimization.
-      </p>
-    </div>
-
-    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-bold text-slate-100">Skill Multipliers at Levels 11-13</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-400">
-        For players with C3 (+3 Skill), C5 (+3 Normal Attack), or full crowns, the
-        multipliers extend beyond level 10. These are the values at 11-13 (with
-        constellation bonuses applied).
-      </p>
-      <div class="mt-4 overflow-x-auto">
-        <table class="w-full min-w-[560px] border-collapse text-sm">
-          <thead>
-            <tr class="border-b border-slate-800 text-left">
-              <th class="py-2 pr-4 font-semibold text-slate-400">Talent</th>
-              <th class="py-2 pr-4 font-semibold text-frost-400">Lv. 11</th>
-              <th class="py-2 pr-4 font-semibold text-slate-300">Lv. 12</th>
-              <th class="py-2 pr-4 font-semibold text-slate-300">Lv. 13</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800">
-            {skillLevelsExtended.map((row) => (
-              <tr>
-                <td class="py-2 pr-4 font-semibold text-slate-100">{row.talent}</td>
-                <td class="py-2 pr-4 text-slate-300">{row.lv11}</td>
-                <td class="py-2 pr-4 text-slate-300">{row.lv12}</td>
-                <td class="py-2 pr-4 text-slate-300">{row.lv13}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="mt-4 text-xs leading-relaxed text-slate-500">
-        C3 boosts the Elemental Skill to Lv. 13 (a ~35% multiplier increase over Lv. 10).
-        C5 boosts Normal Attack to Lv. 13 (a ~25% increase over Lv. 10). These compound
-        with C6's final-hit multiplier, which is why whales crown both before pushing C6.
-      </p>
-    </div>
-
-    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-bold text-slate-100">Weapon Comparison</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-400">
-        Side-by-side stats for the three top polearm picks, so you can compare at a
-        glance which weapon fits your roster and budget.
-      </p>
-      <div class="mt-4 overflow-x-auto">
-        <table class="w-full min-w-[820px] border-collapse text-sm">
-          <thead>
-            <tr class="border-b border-slate-800 text-left">
-              <th class="py-3 pr-4 font-semibold text-slate-400">Metric</th>
-              <th class="py-3 pr-4 font-semibold text-frost-400">Disaster & Remorse</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">Jade Winged-Spear</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">Staff of Homa</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">Calamity Queller</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">Deathmatch</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">White Tassel</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800">
-            {weaponCompare.map((row) => (
-              <tr>
-                <td class="py-3 pr-4 text-slate-400">{row.metric}</td>
-                <td class="py-3 pr-4 font-semibold text-slate-100">{row.dr}</td>
-                <td class="py-3 pr-4 text-slate-300">{row.jade}</td>
-                <td class="py-3 pr-4 text-slate-300">{row.tassel}</td>
-                <td class="py-3 pr-4 text-slate-300">{row.homa}</td>
-                <td class="py-3 pr-4 text-slate-300">{row.queller}</td>
-                <td class="py-3 pr-4 text-slate-300">{row.deathmatch}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-bold text-slate-100">Best Build by Team Archetype</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-400">
-        The "best" build changes with your team. The Melt comp wants the BiS artifact set
-        for its CRIT bonuses; the Freeze comp can afford Blizzard Strayer and stack CRIT
-        DMG; the F2P build trades damage for accessibility. Pick the row that matches your
-        roster.
-      </p>
-      <div class="mt-4 overflow-x-auto">
-        <table class="w-full min-w-[720px] border-collapse text-sm">
-          <thead>
-            <tr class="border-b border-slate-800 text-left">
-              <th class="py-3 pr-4 font-semibold text-slate-400">Archetype</th>
-              <th class="py-3 pr-4 font-semibold text-frost-400">Weapon</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">Set</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">Main Stats</th>
-              <th class="py-3 pr-4 font-semibold text-slate-300">Notes</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800">
-            {teamBuilds.map((b) => (
-              <tr>
-                <td class="py-3 pr-4 font-semibold text-slate-100">{b.archetype}</td>
-                <td class="py-3 pr-4 text-slate-300">{b.weapon}</td>
-                <td class="py-3 pr-4 text-slate-300">{b.set}</td>
-                <td class="py-3 pr-4 text-slate-300">{b.sands} / {b.goblet} / {b.circlet}</td>
-                <td class="py-3 pr-4 text-xs leading-relaxed text-slate-500">{b.note}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
 </section>

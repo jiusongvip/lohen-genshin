@@ -1,0 +1,146 @@
+---
+// Pros & Cons plus how to play (rotation). All content in the initial HTML.
+const pros = [
+  {
+    t: "Front-loaded burst window",
+    b: "All damage lands in a short Masterstroke window, ideal for Abyss chamber timers.",
+  },
+  {
+    t: "Elite Melt synergy",
+    b: "Four rapid Hexerei chain hits consume Pyro aura efficiently — the best Melt trigger cadence among polearm DPS.",
+  },
+  {
+    t: "Fully functional at C0",
+    b: "The core kit is complete at base constellation; constellations are power, not necessity.",
+  },
+  {
+    t: "F2P weapon-friendly",
+    b: "The 3-star White Tassel is genuinely competitive, closing most of the gap to his signature weapon.",
+  },
+  {
+    t: "Self-contained resources",
+    b: "Will to Win generates without field-time pressure, letting the rest of the team set up first.",
+  },
+];
+
+const cons = [
+  {
+    t: "Short, interruptible window",
+    b: "Miss Masterstroke timing or get staggered mid-chain and you lose a large share of the rotation.",
+  },
+  {
+    t: "Melt-reliant ceiling",
+    b: "Without a Pyro applier, damage drops roughly 50% on every hit; the ceiling requires Durin or Xiangling.",
+  },
+  {
+    t: "Energy-hungry rotation",
+    b: "The 80-cost Burst needs 120-130% ER to guarantee each cycle, eating a stat slot.",
+  },
+  {
+    t: "Melee positioning",
+    b: "Hexerei chains have a forward arc and can whiff on mobile or small enemies without grouping.",
+  },
+  {
+    t: "Roster-gated value",
+    b: "As a sidegrade to Ganyu/Ayaka, his perceived value drops sharply if you already own a Cryo DPS.",
+  },
+];
+
+const rotations = [
+  {
+    name: "Melt Comp rotation",
+    steps: [
+      "Set up buffs and auras: Kazuha Burst (VV shred + grouping), Nicole Skill (amplification), Durin Skill + Burst (off-field Pyro).",
+      "Swap to Lohen and cast his Elemental Skill to enter Masterstroke, converting full Will to Win into 100 Joy.",
+      "Fire the Hexerei chain x4 — each hit consumes the Pyro aura and triggers Melt.",
+      "Cast the enhanced Skill to spend remaining Joy on his highest single-hit multiplier.",
+      "If Joy allows, start a second Hexerei chain; then close with the Burst as the finisher when Joy runs low.",
+    ],
+  },
+  {
+    name: "Freeze Comp rotation",
+    steps: [
+      "Kokomi applies Hydro off-field while Kazuha groups enemies and shreds Cryo resistance with Viridescent Venerer.",
+      "Rosaria provides CRIT Rate and a second Cryo body for resonance.",
+      "Enter Masterstroke and run the Hexerei chains — enemies are Frozen, so Blizzard Strayer grants up to 40% CRIT Rate.",
+      "Spend Joy on the enhanced Skill, then finish with the Burst. Enemies cannot attack while Frozen, so the window is forgiving.",
+    ],
+  },
+];
+---
+
+<section id="howto" class="reveal border-b border-stone-800/70 py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-3xl font-bold tracking-tight text-stone-50 sm:text-4xl">
+      Lohen Pros, Cons &amp; How to Play
+    </h2>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-stone-400">
+      A quick read on where Lohen excels, where he falls short, and how to run him in a rotation.
+    </p>
+
+    <img
+      src="/portraits/lohen-card.webp"
+      alt="Lohen in-game character card art"
+      width="1500"
+      height="1500"
+      loading="lazy"
+      decoding="async"
+      class="mt-8 w-full rounded-2xl border border-stone-800 sm:max-w-xl"
+    />
+
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      <div class="rounded-2xl border border-frost-700/40 bg-frost-950/20 p-6">
+        <h3 class="text-base font-semibold text-frost-400">Pros</h3>
+        <ul class="mt-4 space-y-4">
+          {pros.map((p) => (
+            <li>
+              <p class="font-medium text-stone-100">{p.t}</p>
+              <p class="mt-1 text-sm leading-relaxed text-stone-400">{p.b}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-stone-800 bg-stone-900/40 p-6">
+        <h3 class="text-base font-semibold text-stone-400">Cons</h3>
+        <ul class="mt-4 space-y-4">
+          {cons.map((c) => (
+            <li>
+              <p class="font-medium text-stone-100">{c.t}</p>
+              <p class="mt-1 text-sm leading-relaxed text-stone-400">{c.b}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="mt-14 text-xl font-bold tracking-tight text-stone-50">How to Play (Rotation)</h3>
+    <div class="mt-5 grid gap-6 md:grid-cols-2">
+      {rotations.map((r) => (
+        <div class="rounded-xl border border-stone-800 bg-stone-900/30 p-6">
+          <p class="font-semibold text-stone-100">{r.name}</p>
+          <ol class="mt-4 space-y-3">
+            {r.steps.map((s, i) => (
+              <li class="flex gap-3">
+                <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-frost-700/50 font-mono text-xs text-frost-400">
+                  {i + 1}
+                </span>
+                <span class="min-w-0 text-sm leading-relaxed text-stone-400">{s}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-stone-800 bg-stone-900/40 p-6">
+      <p class="text-sm leading-relaxed text-stone-300">
+        <span class="font-semibold text-stone-100">Core principle:</span> Will to Win is the gate,
+        Joy is the fuel. Never cast the Skill with a partial Will to Win meter — you lose the
+        duration extension and the damage amplification, cutting effective damage by roughly 30
+        percent. Spend Joy on the enhanced Skill and the back half of the chain, where multipliers
+        peak.
+      </p>
+    </div>
+  </div>
+</section>
