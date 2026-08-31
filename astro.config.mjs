@@ -6,6 +6,10 @@ export default defineConfig({
   site: "https://www.lohen-genshin.com",
   trailingSlash: "always",
   integrations: [sitemap()],
+  build: {
+    // Inline all CSS to eliminate render-blocking stylesheet requests (improves LCP)
+    inlineStylesheets: "always",
+  },
   vite: {
     plugins: [tailwindcss()],
   },
