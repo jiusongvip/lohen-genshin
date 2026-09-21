@@ -1,6 +1,8 @@
 ---
 // Build section: fully expanded guide with detailed reasoning for every weapon, artifact,
 // team, skill, and constellation. All content is in the initial HTML for crawlability.
+const charName = (p) =>
+  p.split('/').pop().replace(/^char-/, '').replace(/\.webp$/, '').replace(/^\w/, (c) => c.toUpperCase());
 const weapons = {
   signature: {
     name: "Disaster and Remorse",
@@ -422,7 +424,7 @@ const constellationPatterns = [
             {t.ava.map((a) => (
               <img
                 src={a}
-                alt=""
+                alt={`${charName(a)} icon`}
                 width="256"
                 height="256"
                 loading="lazy"
