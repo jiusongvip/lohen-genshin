@@ -99,7 +99,7 @@ const pitfalls = [
     <div class="mt-10 grid gap-6 md:grid-cols-2">
       <div class="rounded-2xl border border-stone-800 bg-stone-900/40 p-6">
         <h3 class="text-base font-semibold text-stone-100">Ascension (to level 90)</h3>
-        <dl class="mt-4 space-y-4">
+        <div class="mt-4 space-y-4">
           {ascension.map((a) => (
             <div class="flex gap-4 border-b border-stone-800/60 pb-4 last:border-0 last:pb-0">
               {a.icon ? (
@@ -121,18 +121,18 @@ const pitfalls = [
                 </span>
               )}
               <div class="min-w-0 flex-1">
-                <dt class="text-sm font-medium text-stone-200">{a.k}</dt>
-                <dd class="mt-1 text-sm text-stone-300">{a.v}</dd>
-                <dd class="mt-1 text-xs text-stone-500">{a.src}</dd>
+                <p class="text-sm font-medium text-stone-200">{a.k}</p>
+                <p class="mt-1 text-sm text-stone-300">{a.v}</p>
+                <p class="mt-1 text-xs text-stone-500">{a.src}</p>
               </div>
             </div>
           ))}
-        </dl>
+        </div>
       </div>
 
       <div class="rounded-2xl border border-stone-800 bg-stone-900/40 p-6">
         <h3 class="text-base font-semibold text-stone-100">Talent (all three to level 10)</h3>
-        <dl class="mt-4 space-y-4">
+        <div class="mt-4 space-y-4">
           {talent.map((a) => (
             <div class="flex gap-4 border-b border-stone-800/60 pb-4 last:border-0 last:pb-0">
               {a.icon ? (
@@ -154,13 +154,13 @@ const pitfalls = [
                 </span>
               )}
               <div class="min-w-0 flex-1">
-                <dt class="text-sm font-medium text-stone-200">{a.k}</dt>
-                <dd class="mt-1 text-sm text-stone-300">{a.v}</dd>
-                <dd class="mt-1 text-xs text-stone-500">{a.src}</dd>
+                <p class="text-sm font-medium text-stone-200">{a.k}</p>
+                <p class="mt-1 text-sm text-stone-300">{a.v}</p>
+                <p class="mt-1 text-xs text-stone-500">{a.src}</p>
               </div>
             </div>
           ))}
-        </dl>
+        </div>
       </div>
     </div>
 
